@@ -61,3 +61,7 @@ git push origin {branch_name}
 ## Info
 [Create a new branch](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches)\
 [GIt Branching](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
+
+## Nützliches Programm: 
+https://github.com/magicmonty/bash-git-prompt 
+
