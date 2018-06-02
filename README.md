@@ -1,6 +1,6 @@
 # Maxim
 Para descargar, ejectuar desde el terminal:
-git clone https://github.com/Eduzc07/E2I_Proyecto_1.git
+git clone https://github.com/Eduzc07/Maxim.git
 
 
 ## Create a branch
