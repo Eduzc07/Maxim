@@ -118,7 +118,7 @@ Sunshine-Version-2/.gradle
 Sunshine-Version-2/build/
 
 #Images
-Sunshine-Version-2/app/src/main/res/*.jpg
-Sunshine-Version-2/app/src/main/res/*.png
+*.jpg
+*.png
 
 
