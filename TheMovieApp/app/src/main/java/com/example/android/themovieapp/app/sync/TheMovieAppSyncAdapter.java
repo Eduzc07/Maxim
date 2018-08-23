@@ -52,6 +52,8 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int SYNC_INTERVAL = 60 * 60 * 24;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
 
+    public static String mMovieQuery = "popular";
+
 
     private static final String[] NOTIFY_MOVIE_PROJECTION = new String[] {
             MovieContract.MovieEntry.COLUMN_TITLE,
@@ -87,14 +89,14 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
             final String APPID_PARAM = "api_key";
             final String MOVIE = "movie";
-            final String TOP = "now_playing"; //top_rated //upcoming //popular
+            final String QUERY = mMovieQuery; //top_rated //upcoming //popular
             final String LANGUAGE = "Language";
             final String PAGE = "page";
             final String MOVIE_LANGUAGE = "en-US";
 
             Uri builtUri = Uri.parse(MOVIE_BASE).buildUpon()
                     .appendPath(MOVIE)
-                    .appendPath(TOP)
+                    .appendPath(QUERY)
                     .appendQueryParameter(APPID_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY)
                     .appendQueryParameter(LANGUAGE, MOVIE_LANGUAGE)
                     .appendQueryParameter(PAGE, "1")
@@ -208,6 +210,13 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 cVVector.add(movieValues);
             }
+
+            //Delete database before load new
+            getContext().getContentResolver().delete(
+                    MovieContract.MovieEntry.CONTENT_URI,
+                    null,
+                    null
+            );
 
             int inserted = 0;
             // add to database

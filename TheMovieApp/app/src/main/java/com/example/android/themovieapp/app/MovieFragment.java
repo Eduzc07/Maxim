@@ -109,11 +109,15 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        String title = getResources().getString(R.string.app_name);
+        getActivity().setTitle(title + " - " +
+                TheMovieAppSyncAdapter.mMovieQuery.substring(0,1).toUpperCase() +
+                TheMovieAppSyncAdapter.mMovieQuery.substring(1).toLowerCase());
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
+        inflater.inflate(R.menu.moviefragment, menu);
     }
 
     @Override
@@ -124,18 +128,14 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
     // since we read the location when we create the loader, all we need to do is restart things
     void onLocationChanged( ) {
-        updateWeather();
+        updateMovies();
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
-    private void updateWeather(){
-
+    private void updateMovies(){
         TheMovieAppSyncAdapter.syncImmediately(getActivity());
     }
 
-    private void openPreferredLocationInMap() {
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,15 +144,37 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_refresh) {
-//            updateWeather();
-//            return true;
-//        }
-        if (id == R.id.action_map) {
-            openPreferredLocationInMap();
+        String title = getResources().getString(R.string.app_name);
+        getActivity().setTitle(title + " - Now Playing");
+
+        if (id == R.id.action_now_playing) {
+            TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
+            getActivity().setTitle(title + " - Now Playing");
+            updateMovies();
             return true;
         }
+
+        if (id == R.id.action_popular) {
+            TheMovieAppSyncAdapter.mMovieQuery = "popular";
+            getActivity().setTitle(title + " - Popular");
+            updateMovies();
+            return true;
+        }
+
+        if (id == R.id.action_top_rated) {
+            TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
+            getActivity().setTitle(title + " - Top Rated");
+            updateMovies();
+            return true;
+        }
+
+        if (id == R.id.action_upcoming) {
+            TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
+            getActivity().setTitle(title + " - Upcoming");
+            updateMovies();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

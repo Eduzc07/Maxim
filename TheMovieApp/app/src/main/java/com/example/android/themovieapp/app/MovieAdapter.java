@@ -34,10 +34,10 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     private static final String TAG = "MovieAdapter";
+    private static final int mElementInView = 20;
 
     CursorAdapter mCursorAdapter;
     Context mContext;
-
 
     public interface OnItemClickListener {
         void onItemClick(Cursor c, int position);
@@ -152,6 +152,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         // Passing the binding operation to cursor loader
         mCursorAdapter.getCursor().moveToPosition(position); //EDITED: added this line as suggested in the comments below, thanks :)
         mCursorAdapter.bindView(viewHolder.itemView, mContext, mCursorAdapter.getCursor());
+
+
+        Log.d(TAG, "##-----------------------" + mCursorAdapter.getCount());
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 
@@ -159,5 +162,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return mCursorAdapter.getCount();
+//        return mElementInView;
     }
 }
