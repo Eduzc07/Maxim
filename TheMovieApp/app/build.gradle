@@ -16,8 +16,8 @@ android {
         }
 
         buildTypes.each {
-            it.buildConfigField 'String', 'OPEN_WEATHER_MAP_API_KEY', '"3b60af2232e2e476dccd3e935d57469c"'
             it.buildConfigField 'String', 'THE_MOVIE_DB_API_KEY', '"157e3af3d82de19f361c17d6ce57a723"'
+            it.buildConfigField 'String', 'YOUTUBE_API_KEY', '"AIzaSyCnv8WDp2SdZFz_3w_VNY4pekNLyvwNsLk"'
 
         }
     }
@@ -35,4 +35,7 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
 
     api 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }

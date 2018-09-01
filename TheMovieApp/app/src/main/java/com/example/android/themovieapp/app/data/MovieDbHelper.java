@@ -48,10 +48,17 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
                 // the ID of the location entry associated with this weather data
                 MovieEntry.COLUMN_MOVIE_ID + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_MOVIE_NUMBER + " INTEGER NOT NULL, " +
+                MovieEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
-                MovieEntry.COLUMN_POSTER + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_ORIGINAL_LANGUAGE + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_BACKDROP_PATH + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_ADULT + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
-
+                MovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_MOVIE_KEY + " TEXT NOT NULL, " +
 
                 // To assure the application have just one movie_id entry per movie
                 // per language, it's created a UNIQUE constraint with REPLACE strategy

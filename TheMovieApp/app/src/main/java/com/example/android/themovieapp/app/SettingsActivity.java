@@ -12,6 +12,8 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceFragment;
 import android.view.KeyEvent;
 
+import java.util.Locale;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
  * <p>
@@ -23,29 +25,52 @@ import android.view.KeyEvent;
 public class SettingsActivity extends PreferenceActivity
         implements Preference.OnPreferenceChangeListener {
 
+    private static Boolean mDefault = true;
+
+    // make a class to use PreferenceFragment because addPreferencesFromResource and
+    // findPreferencedeprecated in PreferenceActivity
+    public static class PrefFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            addPreferencesFromResource(R.xml.pref_general);
+
+            // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
+            // updated when the preference changes.
+
+            ListPreference prefs = (ListPreference) findPreference (getString(R.string.pref_language_key));
+            //Only works the first time
+            if (mDefault) {
+                String language = Locale.getDefault().getLanguage();
+                switch (language) {
+                    case "en":
+                        prefs.setValue(getString(R.string.pref_language_English));
+                        break;
+                    case "es":
+                        prefs.setValue(getString(R.string.pref_language_Spanish));
+                        break;
+                    case "de":
+                        prefs.setValue(getString(R.string.pref_language_German));
+                        break;
+                    default:
+                        prefs.setValue(getString(R.string.pref_language_English));
+                        break;
+                }
+                mDefault = false;
+            }
+
+            SettingsActivity m = new SettingsActivity();
+            m.bindPreferenceSummaryToValue(prefs);
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Add 'general' preferences, defined in the XML file
-        // TODO: Add preferences from XML
-        addPreferencesFromResource(R.xml.pref_general);
-//        getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
-        // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
-        // updated when the preference changes.
-        // TODO: Add preferences
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
-        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefFragment()).commit();
     }
-
-//    public static class MyPreferenceFragment extends PreferenceFragment
-//    {
-//        @Override
-//        public void onCreate(final Bundle savedInstanceState)
-//        {
-//            super.onCreate(savedInstanceState);
-//            addPreferencesFromResource(R.xml.pref_general);
-//        }
-//    }
 
     /**
      * Attaches a listener so the summary is always updated with the preference value.
@@ -83,10 +108,8 @@ public class SettingsActivity extends PreferenceActivity
         return true;
     }
 
-//    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public Intent getParentActivityIntent() {
         return super.getParentActivityIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     }
-
 }

@@ -86,9 +86,16 @@ public class TestMovieDb extends AndroidTestCase {
         final HashSet<String> locationColumnHashSet = new HashSet<String>();
         locationColumnHashSet.add(MovieContract.MovieEntry._ID);
         locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_MOVIE_ID);
-        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_OVERVIEW);
-        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_POSTER);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE);
         locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_TITLE);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_POSTER_PATH);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_ORIGINAL_LANGUAGE);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_ADULT);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_OVERVIEW);
+        locationColumnHashSet.add(MovieContract.MovieEntry.COLUMN_RELEASE_DATE);
+
 
         int columnNameIndex = c.getColumnIndex("name");
         do {

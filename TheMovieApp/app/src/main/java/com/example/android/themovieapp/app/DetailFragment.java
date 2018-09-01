@@ -18,9 +18,15 @@ package com.example.android.themovieapp.app;
 import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -39,12 +45,23 @@ import android.widget.TextView;
 
 import com.example.android.themovieapp.app.data.MovieContract;
 import com.example.android.themovieapp.app.data.MovieContract.MovieEntry;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
 * A placeholder fragment containing a simple view.
 */
 public class DetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
     private static final String LOG_TAG = DetailFragment.class.getSimpleName();
     static final String DETAIL_URI = "URI";
 
@@ -52,29 +69,52 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     private ShareActionProvider mShareActionProvider;
     private String mMovie;
+    private Bitmap mBitmap;
     private Uri mUri;
+    private String mMovieKey;
 
     private static final int DETAIL_LOADER = 0;
 
     private static final String[] DETAIL_COLUMNS = {
             MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieEntry.COLUMN_MOVIE_ID,
+            MovieEntry.COLUMN_MOVIE_NUMBER,
+            MovieEntry.COLUMN_VOTE_AVERAGE,
             MovieEntry.COLUMN_TITLE,
-            MovieEntry.COLUMN_POSTER,
-            MovieEntry.COLUMN_OVERVIEW
+            MovieEntry.COLUMN_POSTER_PATH,
+            MovieEntry.COLUMN_ORIGINAL_LANGUAGE,
+            MovieEntry.COLUMN_ORIGINAL_TITLE,
+            MovieEntry.COLUMN_BACKDROP_PATH,
+            MovieEntry.COLUMN_ADULT,
+            MovieEntry.COLUMN_OVERVIEW,
+            MovieEntry.COLUMN_RELEASE_DATE,
+            MovieEntry.COLUMN_MOVIE_KEY
     };
 
     // These indices are tied to DETAIL_COLUMNS.  If DETAIL_COLUMNS changes, these
     // must change.
     static final int COL_MOVIE_ROW = 0;
     static final int COL_MOVIE_ID = 1;
-    static final int COL_TITLE  = 2;
-    static final int COL_POSTER = 3;
-    static final int COL_OVERVIEW = 4;
+    static final int COL_MOVIE_NUMBER = 2;
+    static final int COL_VOTE_AVERAGE  = 3;
+    static final int COL_TITLE = 4;
+    static final int COL_POSTER_PATH = 5;
+    static final int COL_ORIGINAL_LANGUAGE  = 6;
+    static final int COL_ORIGINAL_TITLE = 7;
+    static final int COL_BACKDROP_PATH = 8;
+    static final int COL_ADULT = 9;
+    static final int COL_OVERVIEW = 10;
+    static final int COL_RELEASE_DATE = 11;
+    static final int COL_MOVIE_KEY = 12;
 
     private ImageView mPosterView;
     private TextView mTitleView;
+    private TextView mYear;
+    private TextView mVoteAverage;
+    private TextView mOriginalLanguage;
+    private TextView mReleaseDate;
     private TextView mOverviewView;
+    private YouTubePlayerSupportFragment mYouTubePlayerFragment;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -91,9 +131,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             mPosterView = (ImageView) rootView.findViewById(R.id.detail_poster_image);
             mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
+            mYear = (TextView) rootView.findViewById(R.id.detail_year_textview);
+            mVoteAverage = (TextView) rootView.findViewById(R.id.detail_vote_average_textview);
+            mOriginalLanguage = (TextView) rootView.findViewById(R.id.detail_original_language_textview);
+            mReleaseDate = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
             mOverviewView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
 
-            return rootView;
+            mYouTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.youtube_fragment, mYouTubePlayerFragment);
+            transaction.commit();
+        return rootView;
         }
 
     @Override
@@ -111,18 +159,35 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
+        // mShareActionProvider will be created when the las value is ready
         // If onLoadFinished happens before this, we can go ahead and set the share intent now.
-        if (mMovie != null) {
-            mShareActionProvider.setShareIntent(createShareForecastIntent());
-        }
+//        if (mBitmap != null) {
+//            mShareActionProvider.setShareIntent(createShareMovieIntent());
+//        }
     }
 
-    private Intent createShareForecastIntent(){
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mMovie + MOVIE_SHARE_HASHTAG);
-        return shareIntent;
+    private Intent createShareMovieIntent(){
+        try {
+            File file = new File(getContext().getExternalCacheDir(), "posterMovie.png");
+            FileOutputStream fOut = new FileOutputStream(file);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100,fOut);
+            fOut.flush();
+            fOut.close();
+            file.setReadable(true, false);
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, mMovie);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            shareIntent.setType("image/png");
+            return shareIntent;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -131,8 +196,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-//    void onLocationChanged( String newLocation ) {
-//        // replace the uri, since the location has changed
+    void onLanguageChanged( String newLanguage ) {
+        // replace the uri, since the location has changed
 //        Uri uri = mUri;
 //        if (null != uri) {
 //            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
@@ -140,7 +205,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 //            mUri = updatedUri;
 //            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
 //        }
-//    }
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -165,26 +230,108 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.v(LOG_TAG, "In onLoadFinished");
         if (data != null && data.moveToFirst()) {
+            //Read the poster of the movie
+            String poster = data.getString(COL_POSTER_PATH);
+//                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
+            String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
+            Picasso.with(getContext()).load(imageUri).into(target);
+
+            //Read the poster of the movie
+//            String backPoster = data.getString(COL_BACKDROP_PATH);
+////                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
+//            imageUri = "https://image.tmdb.org/t/p/w500/" + backPoster;
+//            Picasso.with(getContext()).load(imageUri).into(target);
+
             //Read the title of the movie
             String title = data.getString(COL_TITLE);
             mTitleView.setText(title);
+
+            String voteAverage = data.getString(COL_VOTE_AVERAGE);
+            double val = Double.parseDouble(voteAverage);
+
+            String rate;
+            if (val % 1 == 0){
+                rate = "\u2605" + voteAverage + ".0";
+            }else{
+                rate = "\u2605" + voteAverage;
+            }
+            mVoteAverage.setText(rate);
+
+            String originalLanguage = data.getString(COL_ORIGINAL_LANGUAGE);
+            mOriginalLanguage.setText("Language: " + originalLanguage);
+
+            String releaseDate = data.getString(COL_RELEASE_DATE);
+            String[] parts = releaseDate.split("-");
+            String year = parts[0];
+            String month = parts[1];
+            String day = parts[2];
+
+            Date date = new Date(Integer.parseInt(year)- 1900,
+                    Integer.parseInt(month),
+                    Integer.parseInt(day));
+            DateFormat dateFormat = android.text.format.DateFormat.getMediumDateFormat(getContext());
+            mReleaseDate.setText(dateFormat.format(date));
+
+            mYear.setText(year);
 
             String overview = data.getString(COL_OVERVIEW);
 //            mOverviewView.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
             mOverviewView.setText(overview);
 
-            //Read the poster of the movie
-            String poster = data.getString(COL_POSTER);
-//                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
-            String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
-            Picasso.with(getContext()).load(imageUri).into(mPosterView);
 
-            // If onCreateOptionsMenu has already happened, we need to update the share intent now.
-            if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(createShareForecastIntent());
-            }
+            //https://www.youtube.com/watch?v=3VbHg5fqBYw
+            mMovieKey = data.getString(COL_MOVIE_KEY);
+            String videoUri = "https://www.youtube.com/watch?v=" + mMovieKey;
+
+            // We still need this for the share intent
+            mMovie = MOVIE_SHARE_HASHTAG + "\n" +
+                    "I recommend you this Movie: \n *\"" + title + "\"*" + "\n" +
+                    "*Released*: " + dateFormat.format(date) + "\n" +
+                    "*Rating*: " + rate + "\n" +
+                    "Watch the trailer here!!\n" + videoUri;
+
+            Long number = data.getLong(COL_MOVIE_NUMBER);
+            Log.v(LOG_TAG, "------- number " + String.valueOf(number));
+
+            mYouTubePlayerFragment.initialize(BuildConfig.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
+                @Override
+                public void onInitializationSuccess(YouTubePlayer.Provider arg0, YouTubePlayer youTubePlayer, boolean b) {
+                    if (!b) {
+                        youTubePlayer.setFullscreen(false);
+                        youTubePlayer.loadVideo(mMovieKey);
+                        youTubePlayer.play();
+                    }
+                }
+
+                @Override
+                public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+
         }
     }
+
+    private Target target = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            mBitmap = bitmap;
+            if (mBitmap != null) {
+                mShareActionProvider.setShareIntent(createShareMovieIntent());
+            }
+            //Set it in the ImageView
+            mPosterView.setImageBitmap(bitmap);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) { }

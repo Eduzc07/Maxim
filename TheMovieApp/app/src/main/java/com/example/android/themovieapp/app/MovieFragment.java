@@ -53,6 +53,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final String SELECTED_KEY = "selected_position";
 
     private static final int FORECAST_LOADER = 0;
+    private static final int MOVIE_LOADER = 0;
 
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private static final int SPAN_COUNT = 2;
@@ -69,7 +70,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
 
     // Specify the columns we need.
-    private static final String[] MOVIE_COLUMNS = {
+    private static final String[] MOVIE_COLUMNS = new String[] {
             // In this case the id needs to be fully qualified with a table name, since
             // the content provider joins the location & weather tables in the background
             // (both have an _id column)
@@ -78,16 +79,32 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             // So the convenience is worth it.
             MovieContract.MovieEntry.TABLE_NAME + "." + MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.COLUMN_MOVIE_ID,
+            MovieContract.MovieEntry.COLUMN_MOVIE_NUMBER,
+            MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE,
             MovieContract.MovieEntry.COLUMN_TITLE,
-            MovieContract.MovieEntry.COLUMN_POSTER,
-            MovieContract.MovieEntry.COLUMN_OVERVIEW
+            MovieContract.MovieEntry.COLUMN_POSTER_PATH,
+            MovieContract.MovieEntry.COLUMN_ORIGINAL_LANGUAGE,
+            MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE,
+            MovieContract.MovieEntry.COLUMN_BACKDROP_PATH,
+            MovieContract.MovieEntry.COLUMN_ADULT,
+            MovieContract.MovieEntry.COLUMN_OVERVIEW,
+            MovieContract.MovieEntry.COLUMN_RELEASE_DATE,
+            MovieContract.MovieEntry.COLUMN_MOVIE_KEY
     };
 
     static final int COL_MOVIE_ROW = 0;
     static final int COL_MOVIE_ID = 1;
-    static final int COL_TITLE  = 2;
-    static final int COL_POSTER = 3;
-    static final int COL_OVERVIEW = 4;
+    static final int COL_MOVIE_NUMBER = 2;
+    static final int COL_VOTE_AVERAGE  = 3;
+    static final int COL_TITLE = 4;
+    static final int COL_POSTER_PATH = 5;
+    static final int COL_ORIGINAL_LANGUAGE  = 6;
+    static final int COL_ORIGINAL_TITLE = 7;
+    static final int COL_BACKDROP_PATH = 8;
+    static final int COL_ADULT = 9;
+    static final int COL_OVERVIEW = 10;
+    static final int COL_RELEASE_DATE = 11;
+    static final int COL_MOVIE_KEY = 12;
 
     /**
     * A callback interface that all activities containing this fragment must
@@ -109,9 +126,11 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+
+        //Add the name of the current Menu
         String title = getResources().getString(R.string.app_name);
         getActivity().setTitle(title + " - " +
-                TheMovieAppSyncAdapter.mMovieQuery.substring(0,1).toUpperCase() +
+                TheMovieAppSyncAdapter.mMovieQuery.substring(0, 1).toUpperCase() +
                 TheMovieAppSyncAdapter.mMovieQuery.substring(1).toLowerCase());
     }
 
@@ -122,20 +141,28 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        getLoaderManager().initLoader(FORECAST_LOADER, null, this);
+        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
-    }
-
-    // since we read the location when we create the loader, all we need to do is restart things
-    void onLocationChanged( ) {
-        updateMovies();
-        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
     private void updateMovies(){
         TheMovieAppSyncAdapter.syncImmediately(getActivity());
+        getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
     }
 
+    // since we read the location when we create the loader, all we need to do is restart things
+    void onLanguageChanged( String newLanguage ) {
+        TheMovieAppSyncAdapter.mPage = 1;
+        TheMovieAppSyncAdapter.mLanguage = newLanguage;
+        //Delete database before load new
+        getContext().getContentResolver().delete(
+            MovieContract.MovieEntry.CONTENT_URI,
+            null,
+            null
+        );
+
+        updateMovies();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -147,7 +174,9 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         String title = getResources().getString(R.string.app_name);
         getActivity().setTitle(title + " - Now Playing");
 
+
         if (id == R.id.action_now_playing) {
+            TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
             getActivity().setTitle(title + " - Now Playing");
             updateMovies();
@@ -155,6 +184,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
         if (id == R.id.action_popular) {
+            TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "popular";
             getActivity().setTitle(title + " - Popular");
             updateMovies();
@@ -162,6 +192,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
         if (id == R.id.action_top_rated) {
+            TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
             getActivity().setTitle(title + " - Top Rated");
             updateMovies();
@@ -169,6 +200,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         }
 
         if (id == R.id.action_upcoming) {
+            TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
             getActivity().setTitle(title + " - Upcoming");
             updateMovies();
@@ -209,6 +241,13 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         mMovieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Cursor cursor, int position) {
+//                String keyVideo = TheMovieAppSyncAdapter.getVideo(cursor.getString(COL_MOVIE_ID));
+//                Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + cursor.getString(COL_MOVIE_ID));
+//                Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + keyVideo);
+
+//                AsyncMovieTask getVideoTask = new AsyncMovieTask(getContext());
+//                getVideoTask.execute(cursor.getString(COL_MOVIE_ID), TheMovieAppSyncAdapter.mLanguage);
+
                 if (cursor != null) {
                     ((Callback) getActivity())
                             .onItemSelected(MovieContract.MovieEntry.buildMoviewithID(cursor.getString(COL_MOVIE_ID)));
@@ -284,15 +323,42 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 //          To only show current and future dates, filter the query to return weather only for
 //          dates after or including today.
 
-        // Sort order:  Ascending, by date.
+
         Uri movieUri = MovieContract.MovieEntry.CONTENT_URI;
 
+        long minVal = 0;
+        long maxVal = 0;
+        if (TheMovieAppSyncAdapter.mMovieQuery == "now_playing"){
+            minVal = 0;
+            maxVal = 1000;
+        }
+
+        if (TheMovieAppSyncAdapter.mMovieQuery == "popular"){
+            minVal = 1000;
+            maxVal = 2000;
+        }
+        if (TheMovieAppSyncAdapter.mMovieQuery == "top_rated"){
+            minVal = 2000;
+            maxVal = 3000;
+        }
+        if (TheMovieAppSyncAdapter.mMovieQuery == "upcoming"){
+            minVal = 3000;
+            maxVal = 4000;
+        }
+
+        String selection;
+        selection = MovieContract.MovieEntry.COLUMN_MOVIE_NUMBER + " >= " + String.valueOf(minVal) +
+        " AND " + MovieContract.MovieEntry.COLUMN_MOVIE_NUMBER + " < " + String.valueOf(maxVal);
+
+        String sortOrder = MovieContract.MovieEntry.COLUMN_MOVIE_NUMBER + " ASC";
+
+        Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + selection);
         return new CursorLoader(getContext(),
                 movieUri,
                 MOVIE_COLUMNS,
+                selection,
                 null,
-                null,
-                null);
+                sortOrder);
     }
 
     @Override

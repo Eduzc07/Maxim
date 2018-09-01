@@ -3,18 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditTextPreference
-        android:key = "@string/pref_location_key"
-        android:title = "@string/pref_location_label"
-        android:defaultValue = "@string/pref_location_default"
-        android:inputType = "text"
-        android:singleLine = "true"/>
-    
-    <ListPreference android:title="@string/pref_units_label"
-        android:key="@string/pref_units_key"
-        android:defaultValue="@string/pref_units_metric"
-        android:entryValues="@array/pref_units_values"
-        android:entries="@array/pref_units_options" />
+    <ListPreference android:title="@string/pref_language_label"
+        android:key="@string/pref_language_key"
+        android:entryValues="@array/pref_language_values"
+        android:entries="@array/pref_language_options" />
 
     <CheckBoxPreference
         android:title="@string/pref_enable_notifications_label"

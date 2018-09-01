@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.android.themovieapp.app.sync.TheMovieAppSyncAdapter;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -70,7 +71,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                 ViewHolder viewHolder = (ViewHolder) view.getTag();
 
                 //Read the title of the movie
-                String poster = cursor.getString(MovieFragment.COL_POSTER);
+                String poster = cursor.getString(MovieFragment.COL_POSTER_PATH);
 //                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
                 String imageUri = "https://image.tmdb.org/t/p/w780/" + poster;
                 Picasso.with(context).load(imageUri).into(viewHolder.getImageView());
@@ -153,8 +154,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         mCursorAdapter.getCursor().moveToPosition(position); //EDITED: added this line as suggested in the comments below, thanks :)
         mCursorAdapter.bindView(viewHolder.itemView, mContext, mCursorAdapter.getCursor());
 
+        int numPage = TheMovieAppSyncAdapter.mPage;
+        if (position == 20*numPage-2){
+            TheMovieAppSyncAdapter.mPage++;
+            TheMovieAppSyncAdapter.syncImmediately(mContext);
+        }
 
-        Log.d(TAG, "##-----------------------" + mCursorAdapter.getCount());
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 

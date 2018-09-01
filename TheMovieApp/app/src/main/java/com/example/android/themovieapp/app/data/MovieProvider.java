@@ -41,13 +41,40 @@ public class MovieProvider extends ContentProvider {
                 MovieContract.MovieEntry.TABLE_NAME);
     }
 
-    //language.setting = ?
+    //movie.movie_id = ?
     private static final String sMovieAndIDSelection =
             MovieContract.MovieEntry.TABLE_NAME +
                     "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ? ";
 
-    private Cursor getMovieByID(
-            Uri uri, String[] projection, String sortOrder) {
+    //movie.movie_id = ? AND number >= ?
+    private static final String sMovieAndIDSelectionWithNumber =
+            MovieContract.MovieEntry.TABLE_NAME+
+                    "." + MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ? AND " +
+                    MovieContract.MovieEntry.COLUMN_MOVIE_NUMBER + " >= ? ";
+
+    private Cursor getMovieByIDAndNumber(Uri uri, String[] projection, String sortOrder, long startNumber) {
+        //startNumber
+        // 0 Now Playing
+        // 1000 Popular
+        // 2000 Top Rated
+        // 3000 Upcoming
+        String movieID = MovieContract.MovieEntry.getMovieID(uri);
+        String[] selectionArgs;
+        selectionArgs = new String[]{movieID, Long.toString(startNumber)};
+
+        return sMovieByIDBuilder.query(
+                mOpenHelper.getReadableDatabase(),
+                projection,
+                sMovieAndIDSelectionWithNumber,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+
+    private Cursor getMovieByID(Uri uri, String[] projection, String sortOrder) {
         String movieID = MovieContract.MovieEntry.getMovieID(uri);
 
         return sMovieByIDBuilder.query(
@@ -167,6 +194,7 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
+//        db.close();
         return returnUri;
     }
 

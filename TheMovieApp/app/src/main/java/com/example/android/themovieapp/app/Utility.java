@@ -32,12 +32,17 @@ public class Utility {
                 context.getString(R.string.pref_location_default));
     }
 
-    public static boolean isMetric(Context context) {
+    public static String getPreferredLanguage(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getString(context.getString(R.string.pref_units_key),
-                context.getString(R.string.pref_units_metric))
-                .equals(context.getString(R.string.pref_units_metric));
+        return prefs.getString(context.getString(R.string.pref_language_key),"-1");
     }
+
+//    public static boolean isMetric(Context context) {
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+//        return prefs.getString(context.getString(R.string.pref_units_key),
+//                context.getString(R.string.pref_units_metric))
+//                .equals(context.getString(R.string.pref_units_metric));
+//    }
 
     public static String formatTemperature(Context context, double temperature) {
 //        double temp;
@@ -50,10 +55,10 @@ public class Utility {
 
         // Data stored in Celsius by default.  If user prefers to see in Fahrenheit, convert
         // the values here.
-        String suffix = "\u00B0";
-        if (!isMetric(context)) {
-            temperature = (temperature * 1.8) + 32;
-        }
+//        String suffix = "\u00B0";
+//        if (!isMetric(context)) {
+//            temperature = (temperature * 1.8) + 32;
+//        }
         // For presentation, assume the user doesn't care about tenths of a degree.
         return String.format(context.getString(R.string.format_temperature), temperature);
     }
@@ -156,13 +161,13 @@ public class Utility {
     }
 
     public static String getFormattedWind(Context context, float windSpeed, float degrees) {
-        int windFormat;
-        if (Utility.isMetric(context)) {
-            windFormat = R.string.format_wind_kmh;
-        } else {
-            windFormat = R.string.format_wind_mph;
-            windSpeed = .621371192237334f * windSpeed;
-        }
+        int windFormat = 0;
+//        if (Utility.isMetric(context)) {
+//            windFormat = R.string.format_wind_kmh;
+//        } else {
+//            windFormat = R.string.format_wind_mph;
+//            windSpeed = .621371192237334f * windSpeed;
+//        }
 
         // From wind direction in degrees, determine compass direction as a string (e.g NW)
         // You know what's fun, writing really long if/else statements with tons of possible

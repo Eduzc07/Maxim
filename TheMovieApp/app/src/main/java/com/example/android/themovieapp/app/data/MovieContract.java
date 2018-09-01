@@ -46,9 +46,17 @@ public class MovieContract {
 
         // Column with the foreign key into the location table.
         public static final String COLUMN_MOVIE_ID = "movie_id";
+        public static final String COLUMN_MOVIE_NUMBER = "movie_number";
+        public static final String COLUMN_VOTE_AVERAGE = "vote_average";
         public static final String COLUMN_TITLE = "title";
-        public static final String COLUMN_POSTER = "poster";
+        public static final String COLUMN_POSTER_PATH = "poster_path";
+        public static final String COLUMN_ORIGINAL_LANGUAGE = "original_language";
+        public static final String COLUMN_ORIGINAL_TITLE = "original_title";
+        public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
+        public static final String COLUMN_ADULT = "adult";
         public static final String COLUMN_OVERVIEW = "overview";
+        public static final String COLUMN_RELEASE_DATE = "release_date";
+        public static final String COLUMN_MOVIE_KEY = "movie_key";
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -61,6 +69,5 @@ public class MovieContract {
         public static String getMovieID(Uri uri) {
             return uri.getPathSegments().get(1);
         }
-
     }
 }

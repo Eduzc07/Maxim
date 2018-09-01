@@ -21,10 +21,15 @@
             android:textSize="30sp"
             android:padding="16dp"/>
 
+        <FrameLayout
+            android:id="@+id/youtube_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <!-- Main content: poster, low, art, weather state -->
         <LinearLayout
             android:layout_height="match_parent"
-            android:paddingTop="16dp"
+            android:paddingTop="2dp"
             android:layout_width="match_parent"
             android:orientation="horizontal">
 
@@ -35,10 +40,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src = "@mipmap/ic_launcher"
-                android:paddingStart="16dp"/>
+                android:paddingStart="2dp"/>
 
             <LinearLayout
-                android:gravity="right"
+                android:gravity="left"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -51,8 +56,31 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text = "2018"
-                    android:textSize="24sp"/>
+                    android:textSize="42sp"/>
 
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/detail_vote_average_textview"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text = "8.3"
+                    android:textSize="32sp"/>
+
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/detail_original_language_textview"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text = "en"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/detail_release_date_textview"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text = "2018-04-25"
+                    android:textSize="16sp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -61,10 +89,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceLarge"
-            android:padding="16dp"
-            android:textSize="12sp"
-            android:layout_gravity="center_vertical|right"
+            android:padding="6dp"
+            android:gravity="fill_horizontal"
+            android:textSize="14sp"
             android:text = "lkajsdfhauisdhf asudfhl ajdshf laskdhf asd "
             android:textColor="@color/grey_700" />
+
     </LinearLayout>
 </ScrollView>

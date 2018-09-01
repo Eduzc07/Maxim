@@ -74,9 +74,15 @@ public class TestUtilities extends AndroidTestCase {
     static ContentValues createMovieValues() {
         ContentValues movieValues = new ContentValues();
         movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, TEST_MOVIE_ID);
-        movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, "Dilwale Dulhania Le Jayenge");
-        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER, "/uC6TTUhPpQCmgldGyYveKRAu8JN.jpg");
-        movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, "Raj is a rich, carefree, happy-go-lucky second generation NRI. Simran is the daughter of Chaudhary Baldev Singh, who in spite of being an NRI is very strict about adherence to Indian values. Simran has left for India to be married to her childhood fiancé. Raj leaves for India with a mission at his hands, to claim his lady love under the noses of her whole family. Thus begins a saga.");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, " 8.3");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_TITLE, "Avengers: Infinity War");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, "/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_LANGUAGE, "en");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE, "Avengers: Infinity War");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH, "/bOGkgRGdhrBYJSLpXaxhXVstddV.jpg");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_ADULT, "false");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, "As the Avengers and their allies have continued to protect the world from threats too large for any one hero to handle, a new danger has emerged from the cosmic shadows: Thanos. A despot of intergalactic infamy, his goal is to collect all six Infinity Stones, artifacts of unimaginable power, and use them to inflict his twisted will on all of reality. Everything the Avengers have fought for has led up to this moment - the fate of Earth and existence itself has never been more uncertain.");
+        movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, "2018-05-15");
         return movieValues;
     }
 
