@@ -294,6 +294,12 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             String genresNames = Utility.getGenres(getContext(), genres, TheMovieAppSyncAdapter.mLanguage);
             mGenresView.setText(genresNames);
 
+            //Do not display You Tube if there is not video
+            if (mMovieKey.equals("none")) {
+                mYouTubePlayerFragment.getView().setVisibility(View.GONE);
+                return;
+            }
+
             mYouTubePlayerFragment.initialize(BuildConfig.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
                 @Override
                 public void onInitializationSuccess(YouTubePlayer.Provider arg0, YouTubePlayer youTubePlayer, boolean b) {
@@ -310,7 +316,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
                 }
             });
-
         }
     }
 

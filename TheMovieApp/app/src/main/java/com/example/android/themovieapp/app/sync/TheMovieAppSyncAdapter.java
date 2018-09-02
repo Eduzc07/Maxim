@@ -460,7 +460,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         final String SITE = "site";
         final String SIZE = "size";
 
-        String keyMovie = "none";
+        String keyMovie;
 
         //https://www.youtube.com/watch?v=3VbHg5fqBYw
 
