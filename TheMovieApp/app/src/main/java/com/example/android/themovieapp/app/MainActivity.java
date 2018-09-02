@@ -128,10 +128,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             if ( null != ff ) {
                 ff.onLanguageChanged(language);
             }
-//            DetailFragment df = (DetailFragment)getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
-//            if ( null != df ) {
-//                df.onLanguageChanged(language);
-//            }
             mLanguage = language;
         }
     }

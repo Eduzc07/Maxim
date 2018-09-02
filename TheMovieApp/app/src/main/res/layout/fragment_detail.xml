@@ -41,6 +41,15 @@
                 android:layout_height="wrap_content"
                 android:src = "@mipmap/ic_launcher" />
 
+            <ProgressBar
+                android:id="@+id/loadingPanel"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="60dp"
+                android:paddingVertical="100dp"
+                android:indeterminate="true" />
+
             <LinearLayout
                 android:gravity="start"
                 android:layout_height="wrap_content"

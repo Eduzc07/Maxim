@@ -32,7 +32,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.themovieapp.app.data.MovieContract;
@@ -49,7 +49,6 @@ import com.example.android.themovieapp.app.sync.TheMovieAppSyncAdapter;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -120,6 +119,9 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mOverviewView;
     private TextView mGenresView;
     private YouTubePlayerSupportFragment mYouTubePlayerFragment;
+    private ProgressBar mProgressBar;
+
+
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -142,11 +144,15 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mReleaseDate = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
             mOverviewView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
             mGenresView = (TextView) rootView.findViewById(R.id.detail_genres);
+            mProgressBar = (ProgressBar) rootView.findViewById(R.id.loadingPanel);
+
+            mPosterView.setVisibility(View.GONE);
 
             mYouTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.youtube_fragment, mYouTubePlayerFragment);
             transaction.commit();
+
         return rootView;
         }
 
@@ -313,7 +319,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 @Override
                 public void onInitializationFailure(YouTubePlayer.Provider arg0, YouTubeInitializationResult arg1) {
                     // TODO Auto-generated method stub
-
                 }
             });
         }
@@ -328,6 +333,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             }
             //Set it in the ImageView
             mPosterView.setImageBitmap(bitmap);
+            mProgressBar.setVisibility(View.GONE);
+            mPosterView.setVisibility(View.VISIBLE);
         }
 
         @Override

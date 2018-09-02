@@ -46,17 +46,15 @@ import com.example.android.themovieapp.app.sync.TheMovieAppSyncAdapter;
 public class MovieFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = MovieFragment.class.getSimpleName();
-//    private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
 
-    private static final int FORECAST_LOADER = 0;
     private static final int MOVIE_LOADER = 0;
 
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 2;
+    private static final int SPAN_COUNT = 2; //Number of columns in GridLayoutManager
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -160,7 +158,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             null,
             null
         );
-
         updateMovies();
     }
 
@@ -171,31 +168,31 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        String title = getResources().getString(R.string.app_name);
+        String title = getString(R.string.app_name);
         String secondName = "";
 
         if (id == R.id.action_now_playing) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
-            secondName = getResources().getString(R.string.action_now_playing);
+            secondName = getString(R.string.action_now_playing);
         }
 
         if (id == R.id.action_popular) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "popular";
-            secondName = getResources().getString(R.string.action_popular);
+            secondName = getString(R.string.action_popular);
         }
 
         if (id == R.id.action_top_rated) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
-            secondName = getResources().getString(R.string.action_top_rated);
+            secondName = getString(R.string.action_top_rated);
         }
 
         if (id == R.id.action_upcoming) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
-            secondName = getResources().getString(R.string.action_upcoming);
+            secondName = getString(R.string.action_upcoming);
         }
         getActivity().setTitle(title + " - " + secondName);
         updateMovies();
