@@ -155,11 +155,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         mCursorAdapter.bindView(viewHolder.itemView, mContext, mCursorAdapter.getCursor());
 
         int numPage = TheMovieAppSyncAdapter.mPage;
-        if (position == 20*numPage-2){
+        if (position == 20*numPage-3){
             TheMovieAppSyncAdapter.mPage++;
             TheMovieAppSyncAdapter.syncImmediately(mContext);
         }
-
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)
 

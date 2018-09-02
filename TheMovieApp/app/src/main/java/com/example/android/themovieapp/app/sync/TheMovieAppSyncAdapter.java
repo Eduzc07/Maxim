@@ -34,7 +34,11 @@ import com.example.android.themovieapp.app.DetailActivity;
 import com.example.android.themovieapp.app.MainActivity;
 import com.example.android.themovieapp.app.MovieFragment;
 import com.example.android.themovieapp.app.R;
+import com.example.android.themovieapp.app.Utility;
 import com.example.android.themovieapp.app.data.MovieContract;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +66,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
     public static String mMovieQuery = "popular";
     public static String mLanguage = "es-PE";
+    private static Bitmap mBitmap;
 
     public static int mPage = 1;
 
@@ -69,6 +74,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
     public static long mPopular = 0;
     public static long mTopRated = 0;
     public static long mUpcoming = 0;
+
 
     private static String mMostPopularMovieID;
 
@@ -214,25 +220,23 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OVERVIEW = "overview";
         final String RELEASE_DATE = "release_date";
 
-
-
         //https://www.youtube.com/watch?v=3VbHg5fqBYw
 
         try {
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 0");
             JSONObject moviesJson = new JSONObject(dataJsonStr);
 
-            int page = moviesJson.getInt(PAGES);
-            int results = moviesJson.getInt(TOTAL_RESULTS);
-            int pages = moviesJson.getInt(TOTAL_PAGES);
-
-            Random r = new Random();
-            int randomMovie = r.nextInt(results/pages);
+//            int page = moviesJson.getInt(PAGES);
+//            int results = moviesJson.getInt(TOTAL_RESULTS);
+//            int pages = moviesJson.getInt(TOTAL_PAGES);
 
             JSONArray resultMoviesArray = moviesJson.getJSONArray(RESULTS);
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<randomMovie<<<<<<<<<  -- " + randomMovie);
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  -- " + results);
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  -- " + pages);
+
+            Random r = new Random();
+            int randomMovie = r.nextInt(resultMoviesArray.length());
 
             // Insert the new weather information into the database
             Vector<ContentValues> cVVector = new Vector<ContentValues>(resultMoviesArray.length());
@@ -281,6 +285,9 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                     base += mPopular;
                     if (mPopular == randomMovie) {
                         mMostPopularMovieID = movieID;
+                        //Save the image in order to Use in the Notification
+                        String imageUri = "https://image.tmdb.org/t/p/w500" + backdropPath;
+                        mBitmap= Utility.getImageMovie(imageUri);
                     }
                 }
                 if (mMovieQuery == "top_rated"){
@@ -360,7 +367,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             Log.d(LOG_TAG, "Sync Complete. " + cVVector.size() + " Inserted");
-            Log.d(LOG_TAG, "Sync Complete. " + (mPage-1)*inserted + " Inserted");
+            Log.d(LOG_TAG, "Sync Complete. " + (mPage-1)*20 + inserted + " Inserted");
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -518,22 +525,6 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 if (cursor.moveToFirst()) {
                     Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< notifyMovie >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-                    //Read the poster of the movie
-                    String poster = cursor.getString(COL_BACKDROP_PATH);
-                    String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
-
-                    InputStream in = null;
-
-                    try {
-                        URL url = new URL(imageUri);
-                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                        connection.setDoInput(true);
-                        connection.connect();
-                        in = connection.getInputStream();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Bitmap myBitmap = BitmapFactory.decodeStream(in);
 
                     //Read the title of the movie
                     String movieTitle = cursor.getString(COL_TITLE);
@@ -565,10 +556,10 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                                     .setSubText(rating + ": " + rate)
                                     .setColor(resources.getColor(R.color.movie_light_green))
                                     .setSmallIcon(iconId)
-                                    .setLargeIcon(myBitmap)
+                                    .setLargeIcon(mBitmap)
                                     .setStyle(new NotificationCompat.BigPictureStyle()
-                                            .bigPicture(myBitmap)
-                                            .bigLargeIcon(null))
+                                            .bigPicture(mBitmap))
+//                                            .bigLargeIcon(null))
 //                                    .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(myBitmap))
 //                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(contentText))
                                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -609,7 +600,6 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                 cursor.close();
             }
         }
-
     }
 
     private Boolean updateMovieNumber (String movie_ID, long movieNumber) {

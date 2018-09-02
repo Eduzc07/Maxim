@@ -54,7 +54,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final int MOVIE_LOADER = 0;
 
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 2; //Number of columns in GridLayoutManager
+    private static final int SPAN_COUNT = 3; //Number of columns in GridLayoutManager
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,

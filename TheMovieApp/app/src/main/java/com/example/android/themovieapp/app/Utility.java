@@ -18,9 +18,17 @@ package com.example.android.themovieapp.app;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.format.Time;
+import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +52,21 @@ public class Utility {
         }
 
         return genresNames;
+    }
+
+    public static Bitmap getImageMovie(String imageUri){
+        InputStream in = null;
+        try {
+            URL url = new URL(imageUri);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            in = connection.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Bitmap myBitmap = BitmapFactory.decodeStream(in);
+        return myBitmap;
     }
 
     private static String getNameGenres(Context context, int val, String language){
