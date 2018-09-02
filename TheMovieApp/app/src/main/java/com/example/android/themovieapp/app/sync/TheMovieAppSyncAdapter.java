@@ -30,7 +30,9 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.example.android.themovieapp.app.BuildConfig;
+import com.example.android.themovieapp.app.DetailActivity;
 import com.example.android.themovieapp.app.MainActivity;
+import com.example.android.themovieapp.app.MovieFragment;
 import com.example.android.themovieapp.app.R;
 import com.example.android.themovieapp.app.data.MovieContract;
 
@@ -45,6 +47,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Vector;
 
 public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
@@ -211,6 +214,8 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OVERVIEW = "overview";
         final String RELEASE_DATE = "release_date";
 
+
+
         //https://www.youtube.com/watch?v=3VbHg5fqBYw
 
         try {
@@ -221,8 +226,11 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
             int results = moviesJson.getInt(TOTAL_RESULTS);
             int pages = moviesJson.getInt(TOTAL_PAGES);
 
+            Random r = new Random();
+            int randomMovie = r.nextInt(results/pages);
+
             JSONArray resultMoviesArray = moviesJson.getJSONArray(RESULTS);
-//            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  -- " + page);
+//            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<randomMovie<<<<<<<<<  -- " + randomMovie);
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  -- " + results);
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  -- " + pages);
 
@@ -271,7 +279,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                     base = 1000;
                     mPopular = i + (mPage-1)*20;
                     base += mPopular;
-                    if (mPopular == 0) {
+                    if (mPopular == randomMovie) {
                         mMostPopularMovieID = movieID;
                     }
                 }
@@ -290,8 +298,6 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                 //Check if the Movie is already in the DB, update de number of movie
                 if (updateMovieNumber(movieID, base))
                     continue;
-
-
 
                 String genreIdsArrayString;
                 genreIdsArray = currentMovie.getJSONArray(GENRE_IDS);
@@ -545,24 +551,21 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                     int iconId = R.drawable.ic_movie;
 
                     Resources resources = context.getResources();
-                    Bitmap largeIcon = BitmapFactory.decodeResource(resources,
-                            R.drawable.ic_movie);
-                    String titleApp = context.getString(R.string.app_name);
-//
-                    // Define the text of the forecast.
-                    String contentText = "Watch the most popular Movie!!";
+                    String rating = context.getString(R.string.pref_rating);
 
-//                    String contentText =
+                    // Define the text of the forecast.
+                    String contentText = context.getString(R.string.pref_miss);
+
                     // NotificationCompatBuilder is a very convenient way to build backward-compatible
                     // notifications.  Just throw in some data.
                     NotificationCompat.Builder mBuilder =
                             new NotificationCompat.Builder(getContext(), String.valueOf(MOVIE_NOTIFICATION_ID))
                                     .setContentTitle(contentText)
                                     .setContentText("\"" + movieTitle + "\"")
-                                    .setSubText("Rating:" + rate)
+                                    .setSubText(rating + ": " + rate)
                                     .setColor(resources.getColor(R.color.movie_light_green))
                                     .setSmallIcon(iconId)
-                                    .setLargeIcon(largeIcon)
+                                    .setLargeIcon(myBitmap)
                                     .setStyle(new NotificationCompat.BigPictureStyle()
                                             .bigPicture(myBitmap)
                                             .bigLargeIcon(null))
@@ -573,10 +576,12 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                                     .setDefaults(NotificationCompat.DEFAULT_SOUND)
                                     .setDefaults(NotificationCompat.DEFAULT_ALL);
 
-
                     // Make something interesting happen when the user clicks on the notification.
                     // In this case, opening the app is sufficient.
                     Intent resultIntent = new Intent(context, MainActivity.class);
+                    //Select the displayed Movie
+                    resultIntent.putExtra(context.getString(R.string.intent_movie),
+                            movieUri.toString());
 
                     // The stack builder object will contain an artificial back stack for the
                     // started Activity.

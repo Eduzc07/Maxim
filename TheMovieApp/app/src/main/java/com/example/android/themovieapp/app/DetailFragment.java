@@ -266,30 +266,33 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     Integer.parseInt(month),
                     Integer.parseInt(day));
             DateFormat dateFormat = android.text.format.DateFormat.getMediumDateFormat(getContext());
-            mReleaseDate.setText("Released: " + dateFormat.format(date));
 
+            String releasedText = getContext().getString(R.string.pref_released);
+            mReleaseDate.setText(releasedText + ": " + dateFormat.format(date));
             mYear.setText(year);
 
             String overview = data.getString(COL_OVERVIEW);
 //            mOverviewView.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
             mOverviewView.setText(overview);
 
-
             //https://www.youtube.com/watch?v=3VbHg5fqBYw
             mMovieKey = data.getString(COL_MOVIE_KEY);
             String videoUri = "https://www.youtube.com/watch?v=" + mMovieKey;
 
+            String youText = getContext().getString(R.string.pref_you);
+            String ratingText = getContext().getString(R.string.pref_rating);
+            String watchText = getContext().getString(R.string.pref_watch);
+
             // We still need this for the share intent
             mMovie = MOVIE_SHARE_HASHTAG + "\n" +
-                    "I recommend you this Movie: \n *\"" + title + "\"*" + "\n" +
-                    "*Released*: " + dateFormat.format(date) + "\n" +
-                    "*Rating*: " + rate + "\n" +
-                    "Watch the trailer here!!\n" + videoUri;
+                    youText + "\n *\"" + title + "\"*" + "\n" +
+                    "*" + releasedText + "*: " + dateFormat.format(date) + "\n" +
+                    "*" + ratingText + "*: " + rate + "\n" +
+                    watchText + "\n" + videoUri;
 
             String genres = data.getString(COL_GENRES);
             String genresNames = Utility.getGenres(getContext(), genres, TheMovieAppSyncAdapter.mLanguage);
             mGenresView.setText(genresNames);
-
 
             mYouTubePlayerFragment.initialize(BuildConfig.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
                 @Override

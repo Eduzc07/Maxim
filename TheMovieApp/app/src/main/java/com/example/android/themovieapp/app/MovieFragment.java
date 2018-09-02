@@ -112,10 +112,10 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     * selections.
     */
     public interface Callback {
-    /**
-    * DetailFragmentCallback for when an item has been selected.
-    */
-    public void onItemSelected(Uri dateUri);
+        /**
+        * DetailFragmentCallback for when an item has been selected.
+        */
+        public void onItemSelected(Uri dateUri);
     }
 
     public MovieFragment() {
@@ -190,7 +190,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
             secondName = getResources().getString(R.string.action_top_rated);
-
         }
 
         if (id == R.id.action_upcoming) {
@@ -346,7 +345,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
         String sortOrder = MovieContract.MovieEntry.COLUMN_MOVIE_NUMBER + " ASC";
 
-        Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + selection);
         return new CursorLoader(getContext(),
                 movieUri,
                 MOVIE_COLUMNS,

@@ -3,7 +3,8 @@
     package="com.example.android.themovieapp.app">
 
     <!-- This permission is necessary in order for Sunshine to perform network access. -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.INTERNET" />
 
     <!-- Permissions required by the sync adapter -->
     <uses-permission
@@ -13,9 +14,11 @@
     <uses-permission
         android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +31,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -51,7 +53,7 @@
                 android:value="com.example.android.themovieapp.app.MainActivity" />
         </activity>
         <provider
-            android:authorities="@string/content_authority"
+            android:authorities="com.example.android.themovieapp.app"
             android:name=".data.MovieProvider"
             android:exported="false"
             android:syncable="true" />

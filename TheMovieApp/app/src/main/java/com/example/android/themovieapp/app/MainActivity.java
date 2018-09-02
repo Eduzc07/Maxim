@@ -56,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
                 .findFragmentById(R.id.fragment_list_movies));
         movieFragment.setUseTodayLayout(!mTwoPane);
 
+        //Open the current movie displayed in Notification
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(this.getString(R.string.intent_movie));
+        if (message != null) {
+            (this).onItemSelected(Uri.parse(message));
+        }
 
         TheMovieAppSyncAdapter.mLanguage = mLanguage;
         TheMovieAppSyncAdapter.initializeSyncAdapter(this);
