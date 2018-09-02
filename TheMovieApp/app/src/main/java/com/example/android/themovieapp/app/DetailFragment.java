@@ -45,6 +45,7 @@ import android.widget.TextView;
 
 import com.example.android.themovieapp.app.data.MovieContract;
 import com.example.android.themovieapp.app.data.MovieContract.MovieEntry;
+import com.example.android.themovieapp.app.sync.TheMovieAppSyncAdapter;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -56,6 +57,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
 * A placeholder fragment containing a simple view.
@@ -88,7 +90,8 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             MovieEntry.COLUMN_ADULT,
             MovieEntry.COLUMN_OVERVIEW,
             MovieEntry.COLUMN_RELEASE_DATE,
-            MovieEntry.COLUMN_MOVIE_KEY
+            MovieEntry.COLUMN_MOVIE_KEY,
+            MovieEntry.COLUMN_GENRES
     };
 
     // These indices are tied to DETAIL_COLUMNS.  If DETAIL_COLUMNS changes, these
@@ -106,6 +109,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     static final int COL_OVERVIEW = 10;
     static final int COL_RELEASE_DATE = 11;
     static final int COL_MOVIE_KEY = 12;
+    static final int COL_GENRES = 13;
 
     private ImageView mPosterView;
     private TextView mTitleView;
@@ -114,6 +118,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mOriginalLanguage;
     private TextView mReleaseDate;
     private TextView mOverviewView;
+    private TextView mGenresView;
     private YouTubePlayerSupportFragment mYouTubePlayerFragment;
 
     public DetailFragment() {
@@ -136,6 +141,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mOriginalLanguage = (TextView) rootView.findViewById(R.id.detail_original_language_textview);
             mReleaseDate = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
             mOverviewView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
+            mGenresView = (TextView) rootView.findViewById(R.id.detail_genres);
 
             mYouTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -196,17 +202,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-    void onLanguageChanged( String newLanguage ) {
-        // replace the uri, since the location has changed
-//        Uri uri = mUri;
-//        if (null != uri) {
-//            long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
-//            Uri updatedUri = WeatherContract.WeatherEntry.buildWeatherLocationWithDate(newLocation, date);
-//            mUri = updatedUri;
-//            getLoaderManager().restartLoader(DETAIL_LOADER, null, this);
-//        }
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -222,7 +217,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 null
             );
         }
-
         return null;
     }
 
@@ -232,7 +226,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         if (data != null && data.moveToFirst()) {
             //Read the poster of the movie
             String poster = data.getString(COL_POSTER_PATH);
-//                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
             String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
             Picasso.with(getContext()).load(imageUri).into(target);
 
@@ -258,7 +251,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             mVoteAverage.setText(rate);
 
             String originalLanguage = data.getString(COL_ORIGINAL_LANGUAGE);
-            mOriginalLanguage.setText("Language: " + originalLanguage);
+            Locale newLocale = new Locale(originalLanguage);
+
+            String languageText = getContext().getString(R.string.pref_language_label);
+            mOriginalLanguage.setText(languageText +": " + newLocale.getDisplayLanguage());
 
             String releaseDate = data.getString(COL_RELEASE_DATE);
             String[] parts = releaseDate.split("-");
@@ -270,7 +266,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     Integer.parseInt(month),
                     Integer.parseInt(day));
             DateFormat dateFormat = android.text.format.DateFormat.getMediumDateFormat(getContext());
-            mReleaseDate.setText(dateFormat.format(date));
+            mReleaseDate.setText("Released: " + dateFormat.format(date));
 
             mYear.setText(year);
 
@@ -290,8 +286,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     "*Rating*: " + rate + "\n" +
                     "Watch the trailer here!!\n" + videoUri;
 
-            Long number = data.getLong(COL_MOVIE_NUMBER);
-            Log.v(LOG_TAG, "------- number " + String.valueOf(number));
+            String genres = data.getString(COL_GENRES);
+            String genresNames = Utility.getGenres(getContext(), genres, TheMovieAppSyncAdapter.mLanguage);
+            mGenresView.setText(genresNames);
+
 
             mYouTubePlayerFragment.initialize(BuildConfig.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
                 @Override

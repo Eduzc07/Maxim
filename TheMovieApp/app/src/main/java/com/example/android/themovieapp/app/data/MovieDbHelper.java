@@ -59,6 +59,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_MOVIE_KEY + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_GENRES + " TEXT NOT NULL, " +
 
                 // To assure the application have just one movie_id entry per movie
                 // per language, it's created a UNIQUE constraint with REPLACE strategy

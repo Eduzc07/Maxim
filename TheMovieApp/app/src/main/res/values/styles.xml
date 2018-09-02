@@ -6,8 +6,8 @@
     <!--</style>-->
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/sunshine_blue</item>
-        <item name="colorPrimaryDark">@color/sunshine_dark_blue</item>
+        <item name="colorPrimary">@color/movie_dark_green</item>
+        <item name="colorPrimaryDark">@color/movie_green</item>
     </style>
 
     <!--<style name="AppTheme.NoActionBar">-->
@@ -20,14 +20,14 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!-- Main activity theme. -->
-    <style name="ForecastTheme" parent="AppTheme">
+    <style name="MovieTheme" parent="AppTheme">
         <!--<item name="actionBarStyle">@style/ActionBar.Solid.TheMovieApp.NoTitle</item>-->
     </style>
 
     <!-- Settings activity theme. -->
     <style name="SettingsTheme" parent="@android:style/Theme.Material.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/sunshine_blue</item>
-        <item name="android:colorPrimaryDark">@color/sunshine_dark_blue</item>
+        <item name="android:colorPrimary">@color/movie_green</item>
+        <item name="android:colorPrimaryDark">@color/movie_dark_green</item>
     </style>
 
     <!-- main activity action bar styles -->

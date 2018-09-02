@@ -242,7 +242,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                 String adult;
                 String overview;
                 String releaseDate;
-                String keyMovie = "none";
+                String keyMovie;
 
                 JSONObject currentMovie = resultMoviesArray.getJSONObject(i);
 
@@ -292,7 +292,10 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                     continue;
 
 
+
+                String genreIdsArrayString;
                 genreIdsArray = currentMovie.getJSONArray(GENRE_IDS);
+                genreIdsArrayString = String.valueOf(genreIdsArray.length());
 
                 Log.d(LOG_TAG, "###### " + i + " movieID = " + movieID);
                 Log.d(LOG_TAG, "###### " + i + " number of Movie = " + String.valueOf(base));
@@ -303,8 +306,9 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                 Log.d(LOG_TAG, "###### " + i + "  originalTitle= " + originalTitle);
                 for (int j = 0; j < genreIdsArray.length(); j++) {
                     int gentIds = genreIdsArray.getInt(j);
-                    Log.d(LOG_TAG, "###### " + i + j + " gentIds = " + gentIds);
+                    genreIdsArrayString += "-" + String.valueOf(gentIds);
                 }
+                Log.d(LOG_TAG, "###### " + i + " genreIdsArrayString = " + genreIdsArrayString);
                 Log.d(LOG_TAG, "###### " + i + " backdropPath = " + backdropPath);
                 Log.d(LOG_TAG, "###### " + i + " adult = " + adult);
                 Log.d(LOG_TAG, "###### " + i + " overview = " + overview);
@@ -326,6 +330,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                 movieValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
                 movieValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate);
                 movieValues.put(MovieContract.MovieEntry.COLUMN_MOVIE_KEY, keyMovie);
+                movieValues.put(MovieContract.MovieEntry.COLUMN_GENRES, genreIdsArrayString);
 
                 cVVector.add(movieValues);
             }
@@ -349,7 +354,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             Log.d(LOG_TAG, "Sync Complete. " + cVVector.size() + " Inserted");
-            Log.d(LOG_TAG, "Sync Complete. " + (mPage-1)*20 + " Inserted");
+            Log.d(LOG_TAG, "Sync Complete. " + (mPage-1)*inserted + " Inserted");
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -555,7 +560,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                                     .setContentTitle(contentText)
                                     .setContentText("\"" + movieTitle + "\"")
                                     .setSubText("Rating:" + rate)
-                                    .setColor(resources.getColor(R.color.sunshine_light_blue))
+                                    .setColor(resources.getColor(R.color.movie_light_green))
                                     .setSmallIcon(iconId)
                                     .setLargeIcon(largeIcon)
                                     .setStyle(new NotificationCompat.BigPictureStyle()

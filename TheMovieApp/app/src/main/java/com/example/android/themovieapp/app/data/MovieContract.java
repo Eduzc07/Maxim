@@ -57,6 +57,7 @@ public class MovieContract {
         public static final String COLUMN_OVERVIEW = "overview";
         public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_MOVIE_KEY = "movie_key";
+        public static final String COLUMN_GENRES = "genres";
 
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

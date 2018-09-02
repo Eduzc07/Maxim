@@ -172,40 +172,34 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         int id = item.getItemId();
 
         String title = getResources().getString(R.string.app_name);
-        getActivity().setTitle(title + " - Now Playing");
-
+        String secondName = "";
 
         if (id == R.id.action_now_playing) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
-            getActivity().setTitle(title + " - Now Playing");
-            updateMovies();
-            return true;
+            secondName = getResources().getString(R.string.action_now_playing);
         }
 
         if (id == R.id.action_popular) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "popular";
-            getActivity().setTitle(title + " - Popular");
-            updateMovies();
-            return true;
+            secondName = getResources().getString(R.string.action_popular);
         }
 
         if (id == R.id.action_top_rated) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
-            getActivity().setTitle(title + " - Top Rated");
-            updateMovies();
-            return true;
+            secondName = getResources().getString(R.string.action_top_rated);
+
         }
 
         if (id == R.id.action_upcoming) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
-            getActivity().setTitle(title + " - Upcoming");
-            updateMovies();
-            return true;
+            secondName = getResources().getString(R.string.action_upcoming);
         }
+        getActivity().setTitle(title + " - " + secondName);
+        updateMovies();
 
         return super.onOptionsItemSelected(item);
     }

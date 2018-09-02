@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:textColor="@color/white"
-            android:background="@drawable/today_touch_selector"
+            android:background="@color/movie_dark_green"
             android:text = "Avengers"
             android:textSize="30sp"
             android:padding="16dp"/>
@@ -29,8 +29,8 @@
         <!-- Main content: poster, low, art, weather state -->
         <LinearLayout
             android:layout_height="match_parent"
-            android:paddingTop="2dp"
-            android:layout_width="match_parent"
+            android:padding="1dp"
+            android:layout_width="fill_parent"
             android:orientation="horizontal">
 
             <ImageView
@@ -39,15 +39,15 @@
                 android:adjustViewBounds="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src = "@mipmap/ic_launcher"
-                android:paddingStart="2dp"/>
+                android:src = "@mipmap/ic_launcher" />
 
             <LinearLayout
-                android:gravity="left"
+                android:gravity="start"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="20dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="6dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text = "2018"
-                    android:textSize="42sp"/>
+                    android:textSize="44sp"/>
 
                 <TextView
                     android:fontFamily="sans-serif-light"
@@ -64,7 +64,15 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text = "8.3"
-                    android:textSize="32sp"/>
+                    android:textSize="28sp"/>
+
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:id="@+id/detail_genres"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text = "Science Fiction"
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:fontFamily="sans-serif-light"
@@ -72,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text = "en"
-                    android:textSize="16sp"/>
+                    android:textSize="12sp"/>
 
                 <TextView
                     android:fontFamily="sans-serif-light"
@@ -80,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text = "2018-04-25"
-                    android:textSize="16sp"/>
+                    android:textSize="12sp"/>
             </LinearLayout>
         </LinearLayout>
 
