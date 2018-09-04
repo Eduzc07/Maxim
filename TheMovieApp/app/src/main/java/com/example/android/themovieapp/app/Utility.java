@@ -40,7 +40,7 @@ public class Utility {
     }
 
     public static String getGenres(Context context, String input, String language) {
-        String genresNames = context.getString(R.string.pref_genres) +": \n";
+        String genresNames ="<b>" + context.getString(R.string.pref_genres) +": </b>";
         String[] parts = input.split("-");
 
         for (int i = 1; i <= Integer.parseInt(parts[0]) ; i++) {

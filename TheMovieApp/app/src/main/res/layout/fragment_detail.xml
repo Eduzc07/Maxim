@@ -1,116 +1,155 @@
 <!-- Master layout. -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <LinearLayout
-        android:gravity="center_vertical"
-        android:layout_height="match_parent"
+    <!--Background-->
+    <ImageView
+        android:id="@+id/detail_backgroundImage"
         android:layout_width="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
 
-        <!-- Header: Title -->
-        <TextView
-            android:fontFamily="sans-serif-condensed"
-            android:id="@+id/detail_title_textview"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:textColor="@color/white"
-            android:background="@color/movie_dark_green"
-            android:text = "Avengers"
-            android:textSize="30sp"
-            android:padding="16dp"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
 
-        <FrameLayout
-            android:id="@+id/youtube_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <!-- Main content: poster, low, art, weather state -->
         <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="1dp"
-            android:layout_width="fill_parent"
-            android:orientation="horizontal">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/detail_poster_image"
-                android:layout_gravity="center"
-                android:adjustViewBounds="true"
-                android:layout_width="wrap_content"
+            <!-- Header: Title -->
+            <TextView
+                android:id="@+id/detail_title_textview"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src = "@mipmap/ic_launcher" />
+                android:background="@color/movie_dark_green"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="16dp"
+                android:text="Avengers"
+                android:textColor="@color/white"
+                android:textSize="30sp" />
 
-            <ProgressBar
-                android:id="@+id/loadingPanel"
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="60dp"
-                android:paddingVertical="100dp"
-                android:indeterminate="true" />
-
+            <!-- Main content: poster, low, art, weather state -->
             <LinearLayout
-                android:gravity="start"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="15dp"
-                android:paddingEnd="6dp"
-                android:orientation="vertical">
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="1dp">
 
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/detail_year_textview"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/detail_poster_image"
                     android:layout_width="wrap_content"
-                    android:text = "2018"
-                    android:textSize="44sp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:src="@mipmap/ic_launcher" />
 
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/detail_vote_average_textview"
-                    android:layout_height="wrap_content"
+                <ProgressBar
+                    android:id="@+id/loadingPanel"
                     android:layout_width="wrap_content"
-                    android:text = "8.3"
-                    android:textSize="28sp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminate="true"
+                    android:paddingHorizontal="60dp"
+                    android:paddingVertical="100dp" />
 
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/detail_genres"
-                    android:layout_height="wrap_content"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:text = "Science Fiction"
-                    android:textSize="16sp"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:orientation="vertical"
+                    android:paddingEnd="6dp"
+                    android:paddingStart="15dp">
 
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/detail_original_language_textview"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text = "en"
-                    android:textSize="12sp"/>
+                    <TextView
+                        android:id="@+id/detail_year_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="2018"
+                        android:textSize="44sp" />
 
-                <TextView
-                    android:fontFamily="sans-serif-light"
-                    android:id="@+id/detail_release_date_textview"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text = "2018-04-25"
-                    android:textSize="12sp"/>
+                    <TextView
+                        android:id="@+id/detail_vote_average_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="8.3"
+                        android:textSize="28sp" />
+
+                    <TextView
+                        android:id="@+id/detail_genres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Science Fiction"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/detail_original_language_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="en"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/detail_release_date_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="2018-04-25"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/detail_title_overview_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:padding="6dp"
+                android:text="@string/pre_general"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/grey_700"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_overview_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:padding="6dp"
+                android:text="lkajsdfhauisdhf asudfhl ajdshf laskdhf asd "
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/grey_700"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/detail_title_trailer_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="fill_horizontal"
+                android:padding="6dp"
+                android:text="@string/pre_trailer"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/grey_700"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/youtube_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="2dp" />
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/detail_overview_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:padding="6dp"
-            android:gravity="fill_horizontal"
-            android:textSize="14sp"
-            android:text = "lkajsdfhauisdhf asudfhl ajdshf laskdhf asd "
-            android:textColor="@color/grey_700" />
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</RelativeLayout>

@@ -17,10 +17,12 @@ package com.example.android.themovieapp.app;
 
 import android.arch.lifecycle.Lifecycle;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,6 +52,8 @@ import com.example.android.themovieapp.app.sync.TheMovieAppSyncAdapter;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -69,10 +74,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private static final String MOVIE_SHARE_HASHTAG = "#TheMovieApp";
 
     private ShareActionProvider mShareActionProvider;
+    private static boolean mIsShareActionProviderCreated = false;
+    private static boolean mIsLandscape = false;
     private String mMovie;
     private Bitmap mBitmap;
     private Uri mUri;
     private String mMovieKey;
+
 
     private static final int DETAIL_LOADER = 0;
 
@@ -116,12 +124,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private TextView mVoteAverage;
     private TextView mOriginalLanguage;
     private TextView mReleaseDate;
+    private TextView mTitleOverview;
     private TextView mOverviewView;
     private TextView mGenresView;
+    private TextView mTitleTrailer;
     private YouTubePlayerSupportFragment mYouTubePlayerFragment;
     private ProgressBar mProgressBar;
-
-
+    private ImageView mBackgroundImage;
 
     public DetailFragment() {
         setHasOptionsMenu(true);
@@ -130,6 +139,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                // In landscape
+                Log.v(LOG_TAG, "In onCreateView -- landscape");
+                mIsLandscape = true;
+            } else {
+                // In portrait
+                Log.v(LOG_TAG, "In onCreateView -- portrait");
+                mIsLandscape = false;
+            }
+
+
             Bundle arguments = getArguments();
             if (arguments != null) {
                 mUri = arguments.getParcelable(DetailFragment.DETAIL_URI);
@@ -137,14 +159,17 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             mPosterView = (ImageView) rootView.findViewById(R.id.detail_poster_image);
+            mBackgroundImage = (ImageView) rootView.findViewById(R.id.detail_backgroundImage);
             mTitleView = (TextView) rootView.findViewById(R.id.detail_title_textview);
             mYear = (TextView) rootView.findViewById(R.id.detail_year_textview);
             mVoteAverage = (TextView) rootView.findViewById(R.id.detail_vote_average_textview);
             mOriginalLanguage = (TextView) rootView.findViewById(R.id.detail_original_language_textview);
             mReleaseDate = (TextView) rootView.findViewById(R.id.detail_release_date_textview);
+            mTitleOverview = (TextView) rootView.findViewById(R.id.detail_title_overview_textview);
             mOverviewView = (TextView) rootView.findViewById(R.id.detail_overview_textview);
             mGenresView = (TextView) rootView.findViewById(R.id.detail_genres);
             mProgressBar = (ProgressBar) rootView.findViewById(R.id.loadingPanel);
+            mTitleTrailer = (TextView) rootView.findViewById(R.id.detail_title_trailer_textview);
 
             mPosterView.setVisibility(View.GONE);
 
@@ -170,6 +195,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
         // Get the provider and hold onto it to set/change the share intent.
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
 
         // mShareActionProvider will be created when the las value is ready
         // If onLoadFinished happens before this, we can go ahead and set the share intent now.
@@ -228,18 +254,29 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        Log.v(LOG_TAG, "In onLoadFinished");
+        Log.v(LOG_TAG, "In onLoadFinished --");
         if (data != null && data.moveToFirst()) {
             //Read the poster of the movie
             String poster = data.getString(COL_POSTER_PATH);
-            String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
-            Picasso.with(getContext()).load(imageUri).into(target);
+//            "w92", "w154", "w185", "w342", "w500", "w780", "original"
+            String imageUri = "https://image.tmdb.org/t/p/w500" + poster;
+            Picasso pImage = Picasso.with(getContext());
+            pImage.load(imageUri)
+                    .into(mTarget);
 
             //Read the poster of the movie
-//            String backPoster = data.getString(COL_BACKDROP_PATH);
-////                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
-//            imageUri = "https://image.tmdb.org/t/p/w500/" + backPoster;
-//            Picasso.with(getContext()).load(imageUri).into(target);
+            String backPoster;
+            if (mIsLandscape) {
+                backPoster = data.getString(COL_BACKDROP_PATH);
+            } else {
+                backPoster = data.getString(COL_POSTER_PATH);
+            }
+//                String imageUri = "https://image.tmdb.org/t/p/w500/" + poster;
+//                "w300", "w780", "w1280", "original"
+            String imageBackUri = "https://image.tmdb.org/t/p/original" + backPoster;
+            Picasso pBackgroundImage = Picasso.with(getContext());
+            pBackgroundImage.load(imageBackUri)
+                    .into(mBackgroundTarget);
 
             //Read the title of the movie
             String title = data.getString(COL_TITLE);
@@ -256,11 +293,19 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             }
             mVoteAverage.setText(rate);
 
+            String genres = data.getString(COL_GENRES);
+            String genresNames = Utility.getGenres(getContext(), genres, TheMovieAppSyncAdapter.mLanguage);
+            mGenresView.setText(Html.fromHtml(
+                    genresNames));
+
+            //Build the Language
             String originalLanguage = data.getString(COL_ORIGINAL_LANGUAGE);
             Locale newLocale = new Locale(originalLanguage);
-
+            String str = newLocale.getDisplayLanguage();
+            String currentLanguage = str.substring(0, 1).toUpperCase() + str.substring(1);
             String languageText = getContext().getString(R.string.pref_language_label);
-            mOriginalLanguage.setText(languageText +": " + newLocale.getDisplayLanguage());
+            mOriginalLanguage.setText(Html.fromHtml(
+                    "<b>" + languageText +": </b>" + currentLanguage));
 
             String releaseDate = data.getString(COL_RELEASE_DATE);
             String[] parts = releaseDate.split("-");
@@ -268,18 +313,23 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             String month = parts[1];
             String day = parts[2];
 
-            Date date = new Date(Integer.parseInt(year)- 1900,
+            Date date = new Date(Integer.parseInt(year) - 1900,
                     Integer.parseInt(month),
                     Integer.parseInt(day));
             DateFormat dateFormat = android.text.format.DateFormat.getMediumDateFormat(getContext());
 
             String releasedText = getContext().getString(R.string.pref_released);
-            mReleaseDate.setText(releasedText + ": " + dateFormat.format(date));
+            mReleaseDate.setText(Html.fromHtml(
+                    "<b>" + releasedText + ": </b>" + dateFormat.format(date)));
             mYear.setText(year);
 
             String overview = data.getString(COL_OVERVIEW);
 //            mOverviewView.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
-            mOverviewView.setText(overview);
+            mOverviewView.setText(overview );
+
+            if (overview == null || overview.isEmpty()) {
+                mTitleOverview.setVisibility(View.GONE);
+            }
 
             //https://www.youtube.com/watch?v=3VbHg5fqBYw
             mMovieKey = data.getString(COL_MOVIE_KEY);
@@ -296,16 +346,13 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                     "*" + ratingText + "*: " + rate + "\n" +
                     watchText + "\n" + videoUri;
 
-            String genres = data.getString(COL_GENRES);
-            String genresNames = Utility.getGenres(getContext(), genres, TheMovieAppSyncAdapter.mLanguage);
-            mGenresView.setText(genresNames);
-
             //Do not display You Tube if there is not video
             if (mMovieKey.equals("none")) {
+                mTitleTrailer.setVisibility(View.GONE);
                 mYouTubePlayerFragment.getView().setVisibility(View.GONE);
                 return;
             }
-
+            mYouTubePlayerFragment.setRetainInstance(true);
             mYouTubePlayerFragment.initialize(BuildConfig.YOUTUBE_API_KEY, new YouTubePlayer.OnInitializedListener() {
                 @Override
                 public void onInitializationSuccess(YouTubePlayer.Provider arg0, YouTubePlayer youTubePlayer, boolean b) {
@@ -324,17 +371,36 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
         }
     }
 
-    private Target target = new Target() {
+    private Target mTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
             mBitmap = bitmap;
-            if (mBitmap != null) {
+            if (mBitmap != null && !mIsShareActionProviderCreated) {
                 mShareActionProvider.setShareIntent(createShareMovieIntent());
+                mIsShareActionProviderCreated = true;
             }
             //Set it in the ImageView
             mPosterView.setImageBitmap(bitmap);
             mProgressBar.setVisibility(View.GONE);
             mPosterView.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+        }
+    };
+
+    private Target mBackgroundTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+            drawable.setAlpha(60);
+            mBackgroundImage.setImageDrawable(drawable);
+            Log.v(LOG_TAG, "Loaded");
         }
 
         @Override

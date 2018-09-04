@@ -58,10 +58,11 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
     public final String LOG_TAG = TheMovieAppSyncAdapter.class.getSimpleName();
     // Interval at which to sync with the MovieDB, in seconds.
     // 60 seconds (1 minute) * 60 minutes (1 hour) * 24 hours = 1 day
-    public static final int SYNC_INTERVAL = 60 * 60 * 24;
+//    public static final int SYNC_INTERVAL = 60 * 60 * 24;
+    public static final int SYNC_INTERVAL = 1;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 //    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 ;
+    private static final long DAY_IN_MILLIS = 1000 * 30  ;
     private static final int MOVIE_NOTIFICATION_ID = 3004;
 
     public static String mMovieQuery = "popular";
@@ -544,6 +545,9 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                     Resources resources = context.getResources();
                     String rating = context.getString(R.string.pref_rating);
 
+                    int iconRoundId = R.mipmap.ic_launcher_round;
+                    Bitmap bmIcon = BitmapFactory.decodeResource(resources, iconRoundId);
+
                     // Define the text of the forecast.
                     String contentText = context.getString(R.string.pref_miss);
 
@@ -556,7 +560,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                                     .setSubText(rating + ": " + rate)
                                     .setColor(resources.getColor(R.color.movie_light_green))
                                     .setSmallIcon(iconId)
-                                    .setLargeIcon(mBitmap)
+                                    .setLargeIcon(bmIcon)
                                     .setStyle(new NotificationCompat.BigPictureStyle()
                                             .bigPicture(mBitmap))
 //                                            .bigLargeIcon(null))
@@ -731,7 +735,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Finally, let's do a sync to get things started
          */
-//        syncImmediately(context);
+        syncImmediately(context);
     }
 
     public static void initializeSyncAdapter(Context context) {

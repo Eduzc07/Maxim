@@ -49,4 +49,7 @@
     <string name="pref_watch">Watch the trailer here!!</string>
     <string name="pref_miss">Do not miss this Movie!!</string>
 
+    <string name="pre_general">Overview:</string>
+    <string name="pre_trailer">Trailer:</string>
+
 </resources>

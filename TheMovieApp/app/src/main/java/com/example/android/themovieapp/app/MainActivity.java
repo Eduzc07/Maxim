@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
 
         MovieFragment movieFragment =  ((MovieFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_list_movies));
-        movieFragment.setUseTodayLayout(!mTwoPane);
 
         //Open the current movie displayed in Notification
         Intent intent = getIntent();

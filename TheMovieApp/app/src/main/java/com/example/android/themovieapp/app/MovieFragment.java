@@ -47,14 +47,13 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
     public static final String LOG_TAG = MovieFragment.class.getSimpleName();
     private int mPosition = ListView.INVALID_POSITION;
-    private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
 
     private static final int MOVIE_LOADER = 0;
 
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 3; //Number of columns in GridLayoutManager
+    private static final int SPAN_COUNT = 2; //Number of columns in GridLayoutManager
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -312,8 +311,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 //          fragment only uses one loader, so we don't care about checking the id.
 //          To only show current and future dates, filter the query to return weather only for
 //          dates after or including today.
-
-
         Uri movieUri = MovieContract.MovieEntry.CONTENT_URI;
 
         long minVal = 0;
@@ -365,12 +362,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         mMovieAdapter.swapCursor(null);
     }
 
-    public void setUseTodayLayout(boolean useTodayLayout) {
-        mUseTodayLayout = useTodayLayout;
-//        if (mForecastAdapter != null) {
-//            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
-//        }
-    }
 }
 
 
