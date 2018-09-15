@@ -35,10 +35,8 @@ import com.squareup.picasso.Picasso;
  */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     private static final String TAG = "MovieAdapter";
-    private static final int mElementInView = 20;
 
-    private Boolean mPrepareSync = false;
-
+    public Boolean mPrepareSync = false;
     CursorAdapter mCursorAdapter;
     Context mContext;
 
@@ -55,7 +53,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public MovieAdapter (Context context, Cursor c) {
         mContext = context;
 
-        mCursorAdapter = new CursorAdapter(mContext, c, 0) {
+        mCursorAdapter = new CursorAdapter(mContext, c, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER) {
             @Override
             public View newView(Context context, Cursor cursor, ViewGroup parent) {
                 // Inflate the view here
@@ -81,7 +79,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         };
     }
 
-        // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
+    // BEGIN_INCLUDE(recyclerViewSampleViewHolder)
     /**
      * Provide a reference to the type of views that you are using (custom ViewHolder)
      */
@@ -105,11 +103,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             movieView = (ImageView) view.findViewById(R.id.list_item_image);
         }
 
-        public void bind(final Cursor cursor, final OnItemClickListener listener) {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    cursor.moveToPosition(getAdapterPosition());
-                    listener.onItemClick(cursor, getAdapterPosition());
+        public void bind(final CursorAdapter cursorAdapter, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Cursor cursor = cursorAdapter.getCursor();
+                    if (!cursor.isClosed()){
+                        cursor.moveToPosition( getAdapterPosition() );
+                        listener.onItemClick( cursor, getAdapterPosition() );
+                    }
                 }
             });
         }
@@ -141,7 +143,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         final ViewHolder vHolder = new ViewHolder(v);
         //Here is faster than in onBindViewHolder
-        vHolder.bind(mCursorAdapter.getCursor(), mListener);
+        vHolder.bind(mCursorAdapter, mListener);
         return vHolder;
     }
     // END_INCLUDE(recyclerViewOnCreateViewHolder)
@@ -156,7 +158,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         int numPage = TheMovieAppSyncAdapter.mPage;
 
-
         //Do not load more than one page at creation of View
         if (!mPrepareSync){
             if (position == 20-1){
@@ -170,7 +171,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         if (position == 20*numPage-3) {
             TheMovieAppSyncAdapter.mPage++;
             if (position == mCursorAdapter.getCount()-3){
-                Log.d(TAG, "#################################### sync");
                 TheMovieAppSyncAdapter.syncImmediately(mContext);
             }
         }

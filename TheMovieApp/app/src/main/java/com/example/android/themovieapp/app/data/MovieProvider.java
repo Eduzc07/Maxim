@@ -180,7 +180,6 @@ public class MovieProvider extends ContentProvider {
         Uri returnUri;
 
         switch (match) {
-
             case MOVIE: {
                 long _id = db.insert(MovieContract.MovieEntry.TABLE_NAME,null, values);
                 if (_id > 0)

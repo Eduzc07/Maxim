@@ -52,8 +52,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
 //        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
-        MovieFragment movieFragment =  ((MovieFragment)getSupportFragmentManager()
-                .findFragmentById(R.id.fragment_list_movies));
+//        MovieFragment movieFragment =  ((MovieFragment)getSupportFragmentManager()
+//                .findFragmentById(R.id.fragment_list_movies));
 
         //Open the current movie displayed in Notification
         Intent intent = getIntent();
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             (this).onItemSelected(Uri.parse(message));
         }
 
-        TheMovieAppSyncAdapter.mPage = 1;
-        TheMovieAppSyncAdapter.mLanguage = mLanguage;
+        loadLastMovieType();
+
         TheMovieAppSyncAdapter.initializeSyncAdapter(this);
     }
 
@@ -87,36 +87,9 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             startActivity(intent);
             return true;
         }
-//
-//        if (id == R.id.action_map) {
-//            openPreferredLocationInMap();
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }
-
-//    private void openPreferredLocationInMap(){
-////        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-////        String location = prefs.getString(getString(R.string.pref_location_key),
-////                getString(R.string.pref_location_default));
-//
-//        String location = Utility.getPreferredLocation(this);
-//
-//        // Using the URI scheme for showing a location found on a map.  This super-handy
-//        // intent can is detailed in the "Common Intents" page of Android's developer site:
-//        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
-//                .appendQueryParameter("q",location)
-//                .build();
-//
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        intent.setData(geoLocation);
-//        if(intent.resolveActivity(getPackageManager()) != null){
-//            startActivity(intent);
-//        }else{
-//            Log.d(LOG_TAG,"Couldn't call" + location + ", no Location exist.");
-//        }
-//    }
 
     @Override
     protected void onResume() {
@@ -154,5 +127,45 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
                     .setData(contentUri);
             startActivity(intent);
         }
+    }
+
+    private void loadLastMovieType() {
+        //Read the Last Movie Option
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        int id = prefs.getInt(getString(R.string.pref_Movie_Type), R.id.action_popular );
+
+        String title = getString(R.string.app_name);
+        String secondName = "";
+
+        switch (id) {
+            case R.id.action_now_playing:
+                TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
+                secondName = " - " + getString(R.string.action_now_playing);
+                break;
+
+            case R.id.action_popular:
+                TheMovieAppSyncAdapter.mMovieQuery = "popular";
+                secondName = " - " + getString(R.string.action_popular);
+                break;
+
+            case R.id.action_top_rated:
+                TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
+                secondName = " - " + getString(R.string.action_top_rated);
+                break;
+
+            case R.id.action_upcoming:
+                TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
+                secondName = " - " + getString(R.string.action_upcoming);
+                break;
+        }
+
+        TheMovieAppSyncAdapter.mPage = 1;
+        TheMovieAppSyncAdapter.mLanguage = mLanguage;
+
+        MovieFragment movieFragment =  ((MovieFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_list_movies));
+
+        movieFragment.mCurrentSelection = id;
+        setTitle(title + secondName);
     }
 }

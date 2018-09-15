@@ -16,9 +16,11 @@
 package com.example.android.themovieapp.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -56,7 +58,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private static final int SPAN_COUNT = 3; //Number of columns in GridLayoutManager
 
-    private static int mCurrentSelection = R.id.action_popular; //Popular
+    public int mCurrentSelection = R.id.action_popular; //Popular
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -186,33 +188,52 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         String title = getString(R.string.app_name);
         String secondName = "";
 
-        if (id == R.id.action_now_playing) {
-            TheMovieAppSyncAdapter.mPage = 1;
-            TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
-            secondName = " - " + getString(R.string.action_now_playing);
+        switch (id) {
+            case R.id.action_now_playing:
+                TheMovieAppSyncAdapter.mPage = 1;
+                TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
+                secondName = " - " + getString(R.string.action_now_playing);
+                break;
+
+            case R.id.action_popular:
+                TheMovieAppSyncAdapter.mPage = 1;
+                TheMovieAppSyncAdapter.mMovieQuery = "popular";
+                secondName = " - " + getString(R.string.action_popular);
+                break;
+
+            case R.id.action_top_rated:
+                TheMovieAppSyncAdapter.mPage = 1;
+                TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
+                secondName = " - " + getString(R.string.action_top_rated);
+                break;
+
+            case R.id.action_upcoming:
+                TheMovieAppSyncAdapter.mPage = 1;
+                TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
+                secondName = " - " + getString(R.string.action_upcoming);
+                break;
         }
 
-        if (id == R.id.action_popular) {
-            TheMovieAppSyncAdapter.mPage = 1;
-            TheMovieAppSyncAdapter.mMovieQuery = "popular";
-            secondName = " - " + getString(R.string.action_popular);
-        }
+        //Does not load twice the first time
+        mMovieAdapter.mPrepareSync = false;
 
-        if (id == R.id.action_top_rated) {
-            TheMovieAppSyncAdapter.mPage = 1;
-            TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
-            secondName = " - " + getString(R.string.action_top_rated);
-        }
-
-        if (id == R.id.action_upcoming) {
-            TheMovieAppSyncAdapter.mPage = 1;
-            TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
-            secondName = " - " + getString(R.string.action_upcoming);
-        }
+        //Delete database before load new
+        getContext().getContentResolver().delete(
+                MovieContract.MovieEntry.CONTENT_URI,
+                null,
+                null
+        );
 
         mCurrentSelection = id;
         getActivity().setTitle(title + secondName);
         updateMovies();
+
+        //Save the Current Option selected
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        String lastMovieType = getContext().getString(R.string.pref_Movie_Type);
+        editor.putInt(lastMovieType, id);
+        editor.commit();
 
         return super.onOptionsItemSelected(item);
     }
@@ -248,13 +269,6 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         mMovieAdapter.setOnItemClickListener(new MovieAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Cursor cursor, int position) {
-//                String keyVideo = TheMovieAppSyncAdapter.getVideo(cursor.getString(COL_MOVIE_ID));
-//                Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + cursor.getString(COL_MOVIE_ID));
-//                Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + keyVideo);
-
-//                AsyncMovieTask getVideoTask = new AsyncMovieTask(getContext());
-//                getVideoTask.execute(cursor.getString(COL_MOVIE_ID), TheMovieAppSyncAdapter.mLanguage);
-
                 if (cursor != null) {
                     ((Callback) getActivity())
                             .onItemSelected(MovieContract.MovieEntry.buildMoviewithID(cursor.getString(COL_MOVIE_ID)));
@@ -367,6 +381,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(LOG_TAG, ">>>>>>>>>>>>>>>onLoadFinished>>>>>>>>-----");
         mMovieAdapter.swapCursor(data);
 //        if (mPosition != ListView.INVALID_POSITION) {
 //            // If we don't need to restart the loader, and there's a desired position to restore
@@ -377,6 +392,8 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+
+        Log.d(LOG_TAG, ">>>>>>>>>>>>>>>onLoaderReset>>>>>>>>-----");
         mMovieAdapter.swapCursor(null);
     }
 

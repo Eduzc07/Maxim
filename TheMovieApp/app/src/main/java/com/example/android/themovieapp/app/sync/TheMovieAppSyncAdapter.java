@@ -350,9 +350,9 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
             //Delete database before load new
 //            getContext().getContentResolver().delete(
-//                    MovieContract.MovieEntry.CONTENT_URI,
-//                    null,
-//                    null
+//                MovieContract.MovieEntry.CONTENT_URI,
+//                null,
+//                null
 //            );
 
             int inserted = 0;
