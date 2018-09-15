@@ -59,10 +59,10 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
     // Interval at which to sync with the MovieDB, in seconds.
     // 60 seconds (1 minute) * 60 minutes (1 hour) * 24 hours = 1 day
 //    public static final int SYNC_INTERVAL = 60 * 60 * 24;
-    public static final int SYNC_INTERVAL = 1;
+    public static final int SYNC_INTERVAL = 60 * 60 * 2; //Seconds
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 //    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 24;
-    private static final long DAY_IN_MILLIS = 1000 * 30  ;
+    private static final long DAY_IN_MILLIS = 1000 * 60 * 60 * 1;
     private static final int MOVIE_NOTIFICATION_ID = 3004;
 
     public static String mMovieQuery = "popular";
@@ -75,7 +75,6 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
     public static long mPopular = 0;
     public static long mTopRated = 0;
     public static long mUpcoming = 0;
-
 
     private static String mMostPopularMovieID;
 
@@ -133,8 +132,8 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
             final String MOVIE = "movie";
             final String QUERY = mMovieQuery; //top_rated //upcoming //popular
             final String LANGUAGE = "language";
-            final String PAGE = "page";
             final String MOVIE_LANGUAGE = mLanguage;
+            final String PAGE = "page";
 
             Uri builtUri = Uri.parse(MOVIE_BASE).buildUpon()
                     .appendPath(MOVIE)
@@ -146,7 +145,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
             URL url = new URL(builtUri.toString());
 
-            Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + builtUri.toString());
+//            Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + builtUri.toString());
 
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -221,8 +220,6 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         final String OVERVIEW = "overview";
         final String RELEASE_DATE = "release_date";
 
-        //https://www.youtube.com/watch?v=3VbHg5fqBYw
-
         try {
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 0");
             JSONObject moviesJson = new JSONObject(dataJsonStr);
@@ -237,10 +234,11 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 //            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  -- " + pages);
 
             Random r = new Random();
-            int randomMovie = r.nextInt(resultMoviesArray.length());
+            int numPerPage = resultMoviesArray.length();
+            int randomMovie = r.nextInt(numPerPage);
 
             // Insert the new weather information into the database
-            Vector<ContentValues> cVVector = new Vector<ContentValues>(resultMoviesArray.length());
+            Vector<ContentValues> cVVector = new Vector<ContentValues>(numPerPage);
 
             for (int i = 0; i < resultMoviesArray.length(); i++) {
                 // These are the values that will be collected.
@@ -276,13 +274,13 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
                 if (mMovieQuery == "now_playing"){
                     base = 0;
-                    mNowPlaying = i + (mPage-1)*20;
+                    mNowPlaying = i + (mPage-1)*numPerPage;
                     base += mNowPlaying;
                 }
 
                 if (mMovieQuery == "popular"){
                     base = 1000;
-                    mPopular = i + (mPage-1)*20;
+                    mPopular = i + (mPage-1)*numPerPage;
                     base += mPopular;
                     if (mPopular == randomMovie) {
                         mMostPopularMovieID = movieID;
@@ -293,41 +291,42 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
                 }
                 if (mMovieQuery == "top_rated"){
                     base = 2000;
-                    mTopRated = i + (mPage-1)*20;
+                    mTopRated = i + (mPage-1)*numPerPage;
                     base += mTopRated;
                 }
                 if (mMovieQuery == "upcoming"){
                     base = 3000;
-                    mUpcoming = i + (mPage-1)*20;
+                    mUpcoming = i + (mPage-1)*numPerPage;
                     base += mUpcoming;
                 }
 
-
                 //Check if the Movie is already in the DB, update de number of movie
-                if (updateMovieNumber(movieID, base))
-                    continue;
+//                if (updateMovieNumber(movieID, base))
+//                    continue;
 
                 String genreIdsArrayString;
                 genreIdsArray = currentMovie.getJSONArray(GENRE_IDS);
                 genreIdsArrayString = String.valueOf(genreIdsArray.length());
-
-                Log.d(LOG_TAG, "###### " + i + " movieID = " + movieID);
-                Log.d(LOG_TAG, "###### " + i + " number of Movie = " + String.valueOf(base));
-                Log.d(LOG_TAG, "###### " + i + " voteAverage = " + voteAverage);
-                Log.d(LOG_TAG, "###### " + i + " title = " + title);
-                Log.d(LOG_TAG, "###### " + i + " posterPath = " + posterPath);
-                Log.d(LOG_TAG, "###### " + i + " originalLanguage = " + originalLanguage);
-                Log.d(LOG_TAG, "###### " + i + "  originalTitle= " + originalTitle);
                 for (int j = 0; j < genreIdsArray.length(); j++) {
                     int gentIds = genreIdsArray.getInt(j);
                     genreIdsArrayString += "-" + String.valueOf(gentIds);
                 }
-                Log.d(LOG_TAG, "###### " + i + " genreIdsArrayString = " + genreIdsArrayString);
-                Log.d(LOG_TAG, "###### " + i + " backdropPath = " + backdropPath);
-                Log.d(LOG_TAG, "###### " + i + " adult = " + adult);
-                Log.d(LOG_TAG, "###### " + i + " overview = " + overview);
-                Log.d(LOG_TAG, "###### " + i + " releaseDate = " + releaseDate);
-                Log.d(LOG_TAG, "###### " + i + " keyMovie = " + keyMovie);
+
+
+                Log.d(LOG_TAG, " ------------------------");
+                Log.d(LOG_TAG, "###### " + base + " movieID = " + movieID);
+//                Log.d(LOG_TAG, "###### " + base + " number of Movie = " + String.valueOf(base));
+//                Log.d(LOG_TAG, "###### " + base + " voteAverage = " + voteAverage);
+                Log.d(LOG_TAG, "###### " + base + " title = " + title);
+//                Log.d(LOG_TAG, "###### " + base + " posterPath = " + posterPath);
+//                Log.d(LOG_TAG, "###### " + base + " originalLanguage = " + originalLanguage);
+//                Log.d(LOG_TAG, "###### " + base + "  originalTitle= " + originalTitle);
+//                Log.d(LOG_TAG, "###### " + base + " genreIdsArrayString = " + genreIdsArrayString);
+//                Log.d(LOG_TAG, "###### " + base + " backdropPath = " + backdropPath);
+//                Log.d(LOG_TAG, "###### " + base + " adult = " + adult);
+//                Log.d(LOG_TAG, "###### " + base + " overview = " + overview);
+//                Log.d(LOG_TAG, "###### " + base + " releaseDate = " + releaseDate);
+//                Log.d(LOG_TAG, "###### " + base + " keyMovie = " + keyMovie);
                 Log.d(LOG_TAG, " ------------------------");
 
                 //Adding to ContentValues
@@ -368,7 +367,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
             }
 
             Log.d(LOG_TAG, "Sync Complete. " + cVVector.size() + " Inserted");
-            Log.d(LOG_TAG, "Sync Complete. " + (mPage-1)*20 + inserted + " Inserted");
+            Log.d(LOG_TAG, "Sync Complete. " + String.valueOf((mPage-1)*numPerPage + inserted) + " Inserted");
 
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -403,7 +402,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
             URL url = new URL(builtUri.toString());
 
-            Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + builtUri.toString());
+//            Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>-----" + builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -473,7 +472,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         //https://www.youtube.com/watch?v=3VbHg5fqBYw
 
         try {
-            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 0");
+//            Log.d(LOG_TAG, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 0");
             JSONObject videosJson = new JSONObject(dataJsonStr);
 
 //            String id = videosJson.getString(ID);
@@ -646,7 +645,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         }
 
         Log.d(LOG_TAG, "####################newMovieId################");
-        movieCursor.close();
+//        movieCursor.close();
 
         // Wait, that worked?  Yes!
         return valueToReturn;
@@ -661,13 +660,12 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // we can enable inexact timers in our periodic sync
             SyncRequest request = new SyncRequest.Builder().
-            syncPeriodic(syncInterval, flexTime).
-            setSyncAdapter(account, authority).
-            setExtras(new Bundle()).build();
-                ContentResolver.requestSync(request);
+                syncPeriodic(syncInterval, flexTime).
+                setSyncAdapter(account, authority).
+                setExtras(new Bundle()).build();
+            ContentResolver.requestSync(request);
         } else {
-            ContentResolver.addPeriodicSync(account,
-            authority, new Bundle(), syncInterval);
+            ContentResolver.addPeriodicSync(account, authority, new Bundle(), syncInterval);
         }
     }
 
@@ -723,8 +721,8 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static void onAccountCreated(Account newAccount, Context context) {
         /*
-        * Since we've created an account
-        */
+         * Since we've created an account
+         */
         TheMovieAppSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
         /*
@@ -735,7 +733,7 @@ public class TheMovieAppSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Finally, let's do a sync to get things started
          */
-        syncImmediately(context);
+//        syncImmediately(context);
     }
 
     public static void initializeSyncAdapter(Context context) {

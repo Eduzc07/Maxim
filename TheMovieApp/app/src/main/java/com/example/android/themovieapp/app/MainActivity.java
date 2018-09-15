@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             (this).onItemSelected(Uri.parse(message));
         }
 
+        TheMovieAppSyncAdapter.mPage = 1;
         TheMovieAppSyncAdapter.mLanguage = mLanguage;
         TheMovieAppSyncAdapter.initializeSyncAdapter(this);
     }
@@ -129,6 +130,8 @@ public class MainActivity extends AppCompatActivity implements MovieFragment.Cal
             }
             mLanguage = language;
         }
+
+        Log.d(LOG_TAG, ">>>>>>>>>>>>>>>>>>>>>>>----- onResume" );
     }
 
     @Override

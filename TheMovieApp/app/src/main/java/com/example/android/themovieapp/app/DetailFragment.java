@@ -81,7 +81,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private Uri mUri;
     private String mMovieKey;
 
-
     private static final int DETAIL_LOADER = 0;
 
     private static final String[] DETAIL_COLUMNS = {
@@ -150,7 +149,6 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
                 Log.v(LOG_TAG, "In onCreateView -- portrait");
                 mIsLandscape = false;
             }
-
 
             Bundle arguments = getArguments();
             if (arguments != null) {
@@ -397,10 +395,10 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
     private Target mBackgroundTarget = new Target() {
         @Override
         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-            drawable.setAlpha(60);
-            mBackgroundImage.setImageDrawable(drawable);
-            Log.v(LOG_TAG, "Loaded");
+//            BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
+//            drawable.setAlpha(60);
+//            mBackgroundImage.setImageDrawable(drawable);
+            mBackgroundImage.setImageBitmap(bitmap);
         }
 
         @Override

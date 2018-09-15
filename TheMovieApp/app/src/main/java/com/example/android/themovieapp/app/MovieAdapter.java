@@ -37,6 +37,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     private static final String TAG = "MovieAdapter";
     private static final int mElementInView = 20;
 
+    private Boolean mPrepareSync = false;
+
     CursorAdapter mCursorAdapter;
     Context mContext;
 
@@ -148,16 +150,29 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Log.d(TAG, "Element " + position + " set.");
-
         // Passing the binding operation to cursor loader
         mCursorAdapter.getCursor().moveToPosition(position); //EDITED: added this line as suggested in the comments below, thanks :)
         mCursorAdapter.bindView(viewHolder.itemView, mContext, mCursorAdapter.getCursor());
 
         int numPage = TheMovieAppSyncAdapter.mPage;
-        if (position == 20*numPage-3){
+
+
+        //Do not load more than one page at creation of View
+        if (!mPrepareSync){
+            if (position == 20-1){
+                mPrepareSync = true;
+            }
+            return;
+        }
+
+        Log.d(TAG, "Element " + position + " set." + String.valueOf(mCursorAdapter.getCount()));
+        Log.d(TAG, "mPage " + TheMovieAppSyncAdapter.mPage);
+        if (position == 20*numPage-3) {
             TheMovieAppSyncAdapter.mPage++;
-            TheMovieAppSyncAdapter.syncImmediately(mContext);
+            if (position == mCursorAdapter.getCount()-3){
+                Log.d(TAG, "#################################### sync");
+                TheMovieAppSyncAdapter.syncImmediately(mContext);
+            }
         }
     }
     // END_INCLUDE(recyclerViewOnBindViewHolder)

@@ -34,6 +34,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.android.themovieapp.app.data.MovieContract;
@@ -53,7 +54,9 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
     private static final int MOVIE_LOADER = 0;
 
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 2; //Number of columns in GridLayoutManager
+    private static final int SPAN_COUNT = 3; //Number of columns in GridLayoutManager
+
+    private static int mCurrentSelection = R.id.action_popular; //Popular
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -126,9 +129,23 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
 
         //Add the name of the current Menu
         String title = getResources().getString(R.string.app_name);
-        getActivity().setTitle(title + " - " +
-                TheMovieAppSyncAdapter.mMovieQuery.substring(0, 1).toUpperCase() +
-                TheMovieAppSyncAdapter.mMovieQuery.substring(1).toLowerCase());
+
+        switch (mCurrentSelection) {
+            case  R.id.action_now_playing:
+                title += " - " + getString(R.string.action_now_playing);
+                break;
+            case  R.id.action_popular:
+                title += " - " + getString(R.string.action_popular);
+                break;
+            case  R.id.action_top_rated:
+                title += " - " + getString(R.string.action_top_rated);
+                break;
+            case  R.id.action_upcoming:
+                title += " - " + getString(R.string.action_upcoming);
+                break;
+        }
+
+        getActivity().setTitle(title);
     }
 
     @Override
@@ -166,34 +183,35 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         String title = getString(R.string.app_name);
         String secondName = "";
 
         if (id == R.id.action_now_playing) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "now_playing";
-            secondName = getString(R.string.action_now_playing);
+            secondName = " - " + getString(R.string.action_now_playing);
         }
 
         if (id == R.id.action_popular) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "popular";
-            secondName = getString(R.string.action_popular);
+            secondName = " - " + getString(R.string.action_popular);
         }
 
         if (id == R.id.action_top_rated) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "top_rated";
-            secondName = getString(R.string.action_top_rated);
+            secondName = " - " + getString(R.string.action_top_rated);
         }
 
         if (id == R.id.action_upcoming) {
             TheMovieAppSyncAdapter.mPage = 1;
             TheMovieAppSyncAdapter.mMovieQuery = "upcoming";
-            secondName = getString(R.string.action_upcoming);
+            secondName = " - " + getString(R.string.action_upcoming);
         }
-        getActivity().setTitle(title + " - " + secondName);
+
+        mCurrentSelection = id;
+        getActivity().setTitle(title + secondName);
         updateMovies();
 
         return super.onOptionsItemSelected(item);
