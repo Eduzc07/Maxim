@@ -1,16 +1,12 @@
 package com.example.android.themovieapp.app;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceFragment;
-import android.view.KeyEvent;
 
 import java.util.Locale;
 

@@ -15,23 +15,16 @@
  */
 package com.example.android.themovieapp.app;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.text.format.Time;
-import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Utility {
     public static String getPreferredLanguage(Context context) {
@@ -50,7 +43,6 @@ public class Utility {
                 genresNames += ", ";
             }
         }
-
         return genresNames;
     }
 
@@ -265,8 +257,6 @@ public class Utility {
                     name = " ";
             }
         }
-
-
         return name;
     }
 }
