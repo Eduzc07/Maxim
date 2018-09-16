@@ -146,4 +146,6 @@ TheMovieApp/build/
 *.jpg
 *.png
 
-
+#Do not Commit Keys
+Sunshine-Version-2/app/build.gradle
+TheMovieApp/app/build.gradle
