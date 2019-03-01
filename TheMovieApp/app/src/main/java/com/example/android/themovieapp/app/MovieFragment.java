@@ -325,7 +325,7 @@ public class MovieFragment extends Fragment implements LoaderManager.LoaderCallb
         mRecyclerView.scrollToPosition(scrollPosition);
     }
 
-        @Override
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         // When tablets rotate, the currently selected list item needs to be saved.
         // When no item is selected, mPosition will be set to Listview.INVALID_POSITION,
