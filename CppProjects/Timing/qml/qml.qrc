@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>mainMenu.qml</file>
+        <file>lista.csv</file>
+        <file>RiderModel.qml</file>
+        <file>MainList.qml</file>
+        <file>dataloader.mjs</file>
+        <file>TimeList.qml</file>
+        <file>RiderResultModel.qml</file>
+        <file>ResultList.qml</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>background_dh.jpg</file>
+    </qresource>
+</RCC>
