@@ -9,8 +9,6 @@ ListModel {
         club: "saqras"
         home: "Cusco"
         number: "16"
-        startTime: "00:00:00"
-        endTime: "00:00:00"
         chronoTime: "00:00.000"
         diffTime: "+00:00.000"
     }

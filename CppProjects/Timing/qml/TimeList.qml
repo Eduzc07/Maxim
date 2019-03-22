@@ -4,9 +4,8 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: root
-    width: 480
-    height: 90*count()
-
+    width: 150*count()
+    height: 150
     signal stop(var idx)
 
     ListModel {
@@ -45,8 +44,8 @@ Item {
 //        timeModel.insert(0, newTime)
     }
 
-    function getStartTime(){
-        return timeModel.get(0).start
+    function getStartTime(idx){
+        return timeModel.get(idx).startTime
     }
 
     function getStartMin(idx){
@@ -98,89 +97,74 @@ Item {
         Component {
             id: contactDelegate
             Item {
-                width: 480
-                height: 90
-                Row {
-                    spacing: 0
-                    Rectangle {
-                        color: 'transparent'
-                        width: 90
-                        height: 90
-                        border.width: 1
-                        border.color: "black"
+                width: 150
+                height: 150
 
-                        Text {
-                            anchors.centerIn: parent
-                            text: "#" + number
-                            font.family: "Helvetica"
-                            font.pointSize: 22
-                            font.bold: true
-                        }
-                    }
-
-                    Rectangle {
-                        color: 'transparent'
-                        width: 90
-                        height: 90
-                        border.width: 1
-                        border.color: "black"
-                        Text {
-                            anchors.centerIn: parent
-                            text: position
-                            font.family: "Helvetica"
-                            font.pointSize: 18
-                            font.bold: true
-                        }
-                    }
+                Rectangle {
+                    color: 'transparent'
+                    anchors.fill: parent
 
                     Column {
-                        width: 210
-                        height: 90
-                        spacing: 10
-                        Text {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: time
-                            font.family: "Helvetica"
-                            font.pointSize: 18
-                        }
-                        Button {
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: "Stop"
-                            onClicked: stop(index)
-                        }
-                    }
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        spacing: 0
 
-                    Rectangle {
-                        color: 'transparent'
-                        width: 90
-                        height: 90
-                        border.width: 1
-                        border.color: "black"
-                        Text {
-                            anchors.centerIn: parent
-                            text: diffTime
-                            font.family: "Helvetica"
-                            font.pointSize: 12
+                        Rectangle {
+                            color: 'transparent'
+                            width: 150
+                            height: 50
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: number
+                                font.family: "Helvetica"
+                                font.pointSize: 22
+                                font.bold: true
+                            }
+                        }
+
+                        Rectangle {
+                            color: 'transparent'
+                            width: 150
+                            height: 50
+                            Text {
+                                anchors.centerIn: parent
+                                text: time
+                                font.family: "Helvetica"
+                                font.pointSize: 18
+                            }
+                        }
+
+                        Rectangle {
+                            color: 'transparent'
+                            width: 150
+                            height: 50
+                            Button {
+                                anchors.centerIn: parent
+                                text: "Stop"
+                                onClicked: stop(index)
+                                enabled: time !== "00:00.000"
+                            }
                         }
                     }
                 }
             }
         }
+    }
 
-        ListView {
-            id: timelist
-            anchors.fill: parent
-            model: timeModel
-            delegate: contactDelegate
-            highlight: Rectangle {
-                width: 480
-                height: 60
-                color: "lightsteelblue"
-                radius: 5
-            }
-            focus: true
+    ListView {
+        id: timelist
+        anchors.fill: parent
+        model: timeModel
+        delegate: contactDelegate
+        highlight: Rectangle {
+            width: 150
+            height: 150
+            color: "lightsteelblue"
+            radius: 5
+        }
+        focus: true
+        orientation: ListView.Horizontal
 //            verticalLayoutDirection: ListView.BottomToTop
 //            clip: true
-        }
     }
 }

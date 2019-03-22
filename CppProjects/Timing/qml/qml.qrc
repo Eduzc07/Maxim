@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>mainMenu.qml</file>
+        <file>MainMenu.qml</file>
         <file>lista.csv</file>
         <file>RiderModel.qml</file>
         <file>MainList.qml</file>
@@ -9,8 +9,23 @@
         <file>TimeList.qml</file>
         <file>RiderResultModel.qml</file>
         <file>ResultList.qml</file>
+        <file>ToolTime.qml</file>
+        <file>PrettyTimeList.qml</file>
+        <file>ToolView.qml</file>
+        <file>RiderTime.qml</file>
+        <file>BarOption.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>background_dh.jpg</file>
+        <file>icon.png</file>
+        <file>peru-flag.png</file>
+        <file>rider_1.jpg</file>
+        <file>rider_3.jpg</file>
+        <file>rider_2.jpg</file>
+        <file>rider_4.jpg</file>
+        <file>wallpaperNumber.jpg</file>
+        <file>fullscreen.png</file>
+        <file>flag.png</file>
+        <file>rider_5.jpg</file>
     </qresource>
 </RCC>

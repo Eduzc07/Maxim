@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.1)
 
 project(Timing LANGUAGES CXX)
 
-
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
