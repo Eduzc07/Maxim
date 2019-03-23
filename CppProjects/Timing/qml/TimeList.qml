@@ -4,8 +4,6 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: root
-    width: 150*count()
-    height: 150
     signal stop(var idx)
 
     ListModel {
@@ -85,6 +83,86 @@ Item {
 
     Rectangle {
         anchors.fill: parent
+        color: "cadetblue"
+        opacity: 0.6
+        border.width: 1
+        border.color: "black"
+    }
+
+    Rectangle {
+        id: info
+        width: 150
+        height: 200
+        color: 'lightgrey'
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.topMargin: 25
+        anchors.leftMargin: 25
+
+        border.width: 1
+        border.color: "black"
+
+        Column {
+            anchors.horizontalCenter: parent.horizontalCenter
+            spacing: 0
+
+            Rectangle {
+                color: 'transparent'
+                width: 150
+                height: 50
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "Corredor"
+                    font.family: "Helvetica"
+                    font.pointSize: 22
+                    font.bold: true
+                }
+            }
+
+            Rectangle {
+                color: 'transparent'
+                width: 150
+                height: 50
+                Text {
+                    anchors.centerIn: parent
+                    text: qsTr("\u27A4")
+                    font.family: "Helvetica"
+                    font.pointSize: 18
+                }
+            }
+
+            Rectangle {
+                color: 'transparent'
+                width: 150
+                height: 50
+                Text {
+                    anchors.centerIn: parent
+                    text: "Tiempo"
+                    font.family: "Helvetica"
+                    font.pointSize: 18
+                }
+            }
+
+            Rectangle {
+                color: 'transparent'
+                width: 150
+                height: 50
+                Text {
+                    anchors.centerIn: parent
+                    text: qsTr("\u27A4")
+                    font.family: "Helvetica"
+                    font.pointSize: 18
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        anchors.left: info.right
+        anchors.top: info.top
+        width: 150*count()
+        height: 200
         color: "transparent"
         Rectangle {
             anchors.fill: parent
@@ -98,7 +176,7 @@ Item {
             id: contactDelegate
             Item {
                 width: 150
-                height: 150
+                height: 200
 
                 Rectangle {
                     color: 'transparent'
@@ -113,12 +191,31 @@ Item {
                             width: 150
                             height: 50
 
+                            Rectangle {
+                                anchors.fill: parent
+                                color: "forestgreen"
+                                opacity: 0.3
+                                radius: 10
+                            }
+
                             Text {
                                 anchors.centerIn: parent
                                 text: number
                                 font.family: "Helvetica"
                                 font.pointSize: 22
                                 font.bold: true
+                            }
+                        }
+
+                        Rectangle {
+                            color: 'transparent'
+                            width: 150
+                            height: 50
+                            Button {
+                                anchors.centerIn: parent
+                                text: "Stop"
+                                onClicked: stop(index)
+                                enabled: time !== "00:00.000"
                             }
                         }
 
@@ -140,8 +237,7 @@ Item {
                             height: 50
                             Button {
                                 anchors.centerIn: parent
-                                text: "Stop"
-                                onClicked: stop(index)
+                                text: "N.S.P."
                                 enabled: time !== "00:00.000"
                             }
                         }
@@ -149,22 +245,21 @@ Item {
                 }
             }
         }
-    }
 
-    ListView {
-        id: timelist
-        anchors.fill: parent
-        model: timeModel
-        delegate: contactDelegate
-        highlight: Rectangle {
-            width: 150
-            height: 150
-            color: "lightsteelblue"
-            radius: 5
+        ListView {
+            id: timelist
+            anchors.fill: parent
+            model: timeModel
+            delegate: contactDelegate
+            highlight: Rectangle {
+                width: 150
+                height: 200
+                color: "lightsteelblue"
+            }
+            focus: true
+            orientation: ListView.Horizontal
+    //            verticalLayoutDirection: ListView.BottomToTop
+            clip: true
         }
-        focus: true
-        orientation: ListView.Horizontal
-//            verticalLayoutDirection: ListView.BottomToTop
-//            clip: true
     }
 }

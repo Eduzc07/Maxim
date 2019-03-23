@@ -11,7 +11,6 @@ Item{
     width: 540 + riderHeight;
     height: riderHeight + riderHeight*defRank + title.height
 
-
     function updateResult(task){
         var msg = {'action': task,'list': readdata.listRanking, 'model': riderResultModel};
         myWorker.sendMessage(msg);

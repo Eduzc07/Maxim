@@ -27,5 +27,7 @@
         <file>fullscreen.png</file>
         <file>flag.png</file>
         <file>rider_5.jpg</file>
+        <file>cusco.jpg</file>
+        <file>rider_6.jpg</file>
     </qresource>
 </RCC>

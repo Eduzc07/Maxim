@@ -336,9 +336,9 @@ Item{
             }
             focus: true
             clip:true
-            displaced: Transition {
-                NumberAnimation { properties: "x,y"; duration: 1000 }
-            }
+//            displaced: Transition {
+//                NumberAnimation { properties: "x,y"; duration: 1000 }
+//            }
 
             flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds

@@ -13,6 +13,7 @@ Item {
     id: root
     anchors.fill: parent
     visible: true
+    focus: true
 
     property var locale: Qt.locale()
     property int stInterval: 0
@@ -48,6 +49,14 @@ Item {
         }
         if (event.key === Qt.Key_F) {
             showFullScreen()
+            event.accepted = true;
+        }
+
+        if (event.key === Qt.Key_Space) {
+            if (timeList.count() !== 0
+                && timeList.getInfo(0).time !== "00:00.000"){
+                timeList.stop(0)
+            }
             event.accepted = true;
         }
     }
@@ -99,8 +108,9 @@ Item {
 
         Image {
             opacity: 0.8
+            anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
-            source: "images/background_dh.jpg"
+            source: "images/rider_6.jpg"
         }
         ToolView{
             id: toolView
@@ -422,6 +432,8 @@ Item {
 
             //Load Start Time Final
             bottomRighttArea.startTime = readdata.partida
+
+            root.focus = true
         }
         onClickButton2: {
             fileOpen()
@@ -503,12 +515,17 @@ Item {
 
     TimeList {
         id: timeList
+        focus: true
+        visible: true
         property string lastCategory: ""
         property string currentCategory: ""
+
+        width: root.width - 10
+        height: 250
         anchors.bottom: parent.bottom
         anchors.left: parent.left
 
-        anchors.margins: 50
+        anchors.margins: 5
         onStop: {
             stopTime(idx, finalTime)
             timeList.setShow(idx, false)
@@ -622,9 +639,9 @@ Item {
 
     ComboBox {
         id: comboBoxList
-        anchors.horizontalCenter: resultList.horizontalCenter
-        anchors.top: resultList.bottom
-        anchors.margins: 30
+        anchors.right: resultList.right
+        anchors.top: resultList.top
+        anchors.margins: 5
         textRole: "key"
         visible: false
         model: listMenu
@@ -658,6 +675,7 @@ Item {
             PropertyChanges { target: topLeftArea; enabled: false}
             PropertyChanges { target: bottomRighttArea; visible: true}
             PropertyChanges { target: comboBoxList; visible: true}
+            PropertyChanges { target: timeList; visible: false}
         }
     ]
 }

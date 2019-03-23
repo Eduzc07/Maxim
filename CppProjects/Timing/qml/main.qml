@@ -37,9 +37,10 @@ Window {
 
         Image {
             id: background
-            opacity: 0.8
+//            opacity: 0.8
+            anchors.fill: parent
             fillMode: Image.PreserveAspectCrop
-            source: "images/background_dh.jpg"
+            source: "images/cusco.jpg"
         }
 
         MainMenu{

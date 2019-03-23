@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
         return -1;
 
     QQuickWindow* quickWindow = qobject_cast<QQuickWindow*>(appMainWindow.rootObjects()[0]);
-    quickWindow->setMinimumSize(QSize(600,480));
+    quickWindow->setMinimumSize(QSize(600, 480));
+    quickWindow->setMaximumSize(screenGeometry.size());
     quickWindow->setTitle("Timing Program");
 
 
