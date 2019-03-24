@@ -53,6 +53,13 @@ int ProcessTime::getDiff(QString time)
 
 int ProcessTime::getPos(QString time)
 {
+    int nsp = QString::compare(time, "N.S.P.", Qt::CaseInsensitive);
+    if (nsp == 0){
+        m_elapsed = "";
+        m_flatElapsed = m_elapsed;
+        return 999999;
+    }
+
     QTime currentTime = QTime::fromString("00:" + time);
 
     qint64 millisecondsDiff = currentTime.msecsSinceStartOfDay();
@@ -78,6 +85,7 @@ int ProcessTime::getPos(QString time)
     int diff_ms = static_cast<int>(millisecondsDiff);
     m_elapsed = sign + QTime::fromMSecsSinceStartOfDay(diff_ms).toString("mm:ss.zzz");
     m_flatElapsed = m_elapsed;
+    pos++;
     return pos;
 }
 

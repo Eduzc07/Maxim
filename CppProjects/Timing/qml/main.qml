@@ -27,6 +27,7 @@ Window {
         onTriggered: {
             mainArea.contentWidth = root.width
             mainArea.contentHeight = root.height
+            mainMenu.setRank(parseInt((root.height - 540 )/40))
         }
     }
 

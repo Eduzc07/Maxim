@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 Item {
     id: root
     signal stop(var idx)
+    signal cancel(var idx)
 
     ListModel {
         id: timeModel
@@ -214,8 +215,8 @@ Item {
                             Button {
                                 anchors.centerIn: parent
                                 text: "Stop"
-                                onClicked: stop(index)
                                 enabled: time !== "00:00.000"
+                                onClicked: stop(index)
                             }
                         }
 
@@ -239,6 +240,7 @@ Item {
                                 anchors.centerIn: parent
                                 text: "N.S.P."
                                 enabled: time !== "00:00.000"
+                                onClicked: cancel(index)
                             }
                         }
                     }

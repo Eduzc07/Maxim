@@ -33,7 +33,12 @@ Item{
     }
 
     function setPosition(idx, position){
-        var pos = Number(position).toLocaleString()
+        var pos = "0"
+        if (position === 999999)
+            pos = "-"
+        else
+            pos = Number(position).toLocaleString()
+
         riderResultModel.setProperty(idx, "position", pos)
     }
 

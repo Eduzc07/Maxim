@@ -57,11 +57,11 @@ public:
     void setPartida(const QString &partida);
 
     Q_INVOKABLE void runDefaults();
-    Q_INVOKABLE void readFile();
+    Q_INVOKABLE void readFile(QString);
     Q_INVOKABLE void saveFile(QString);
     Q_INVOKABLE void addResult(QString);
-    Q_INVOKABLE void saveResult();
-    Q_INVOKABLE void saveStartList();
+    Q_INVOKABLE void saveResult(QString);
+    Q_INVOKABLE void saveStartList(QString);
     Q_INVOKABLE void storageRider(QString);
     Q_INVOKABLE void getColorRider(QString);
 
@@ -90,8 +90,8 @@ private:
     QString m_color;
 
     QTime m_qStart;
-    int m_intervalRider = 10;
-    int m_intervalCat = 20;
+    int m_intervalRider = 60;
+    int m_intervalCat = 120;
     int m_posStart = 0;
 
     QList<QString> m_riderRanking;

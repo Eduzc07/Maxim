@@ -26,7 +26,7 @@ ReadData::ReadData(QObject *parent) :
 void ReadData::runDefaults()
 {
     QTime nextTime = QTime().currentTime();
-    QTime t = nextTime.addSecs(1*60); //30 min
+    QTime t = nextTime.addSecs(30*60); //30 min
     m_qStart.setHMS(t.hour(), t.minute(), 0);
     m_StartTime = m_qStart.toString("hh:mm:ss");
     emit startTimeChanged();
@@ -65,9 +65,13 @@ void ReadData::setPartida(const QString &partida)
     m_qStart = QTime::fromString(partida);
 }
 
-void ReadData::readFile()
+void ReadData::readFile(QString inputFile )
 {
-    QFile file(":/lista.csv");
+    auto fileN = inputFile.split("//");
+    QString name = fileN[1];
+    QFile file(name);
+
+//    QFile file(":/lista.csv");
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text)){
         return;
     }
@@ -222,11 +226,16 @@ void ReadData::addResult(QString result)
 }
 
 
-void ReadData::saveResult()
+void ReadData::saveResult(QString filename)
 {
+    auto fileN = filename.split("//");
+    QString name = fileN[1];
+    QFile file(name);
+//    QFile file("Result.csv");
+
+
     buildResult();
     generalResult();
-    QFile file("Result.csv");
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream stream( &file );
         for (int i = 0; i < m_allCatResultTime.size(); ++i) {
@@ -252,29 +261,52 @@ void ReadData::generalResult()
             }
         );
 
-    QTime time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
-    QString time = time0.toString("mm:ss.zzz") + ",+00:00.000";
-    QString data = QString("%1,%2,%3").arg(1)
-            .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
-            .arg(time);
+    QTime time0;
+    QString time;
+    QString data;
+    //.N.S.P.
+    if (m_qvData.at(0).at(0) == (59*60*1000)){
+        data = QString("%1,%2,%3").arg("-")
+                .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
+                .arg("N.S.P., ");
+    }else{
+        time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
+        time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+        data = QString("%1,%2,%3").arg(1)
+                .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
+                .arg(time);
+    }
+
+
     m_allCatResultTime.append(data);
 
     for (int i = 1; i < m_qvData.size(); ++i) {
-        QTime time1 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(i).at(0));;
-        time = time1.toString("mm:ss.zzz");
-        qint64 millisecondsDiff = time0.msecsTo(time1);
-        int t_ms = static_cast<int>(millisecondsDiff);
+        int number = m_qvData.at(i).at(1);
+        //.N.S.P.
+        if (m_qvData.at(i).at(0) == (59*60*1000)){
+            data = QString("%1,%2,%3").arg("-")
+                    .arg(m_ridersDB.value(number))
+                    .arg("N.S.P., ");
+        } else {
+            QTime time1 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(i).at(0));;
+            time = time1.toString("mm:ss.zzz");
+            qint64 millisecondsDiff = time0.msecsTo(time1);
+            int t_ms = static_cast<int>(millisecondsDiff);
 
-        time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
-        //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
-        QString data = QString("%1,%2,%3").arg(i+1)
-                .arg(m_ridersDB.value(m_qvData.at(i).at(1)))
-                .arg(time);
+            time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
+            //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
+            data = QString("%1,%2,%3").arg(i+1)
+                    .arg(m_ridersDB.value(number))
+                    .arg(time);
+        }
+
+
+
         m_allCatResultTime.append(data);
     }
 }
 
-void ReadData::saveStartList()
+void ReadData::saveStartList(QString filename)
 {
     m_riderStartTime.clear();
     m_riderStartTime.append("Lugar,Nombre,Categoria,Club,Procedencia,Numero,Hora de Partida");
@@ -305,7 +337,8 @@ void ReadData::saveStartList()
         m_posStart += (m_intervalCat/m_intervalRider - 1);
     }
 
-    saveFile("file://StartList.csv");
+    //"file://StartList.csv"
+    saveFile(filename);
 }
 
 void ReadData::storageRider(QString result)
@@ -465,11 +498,27 @@ void ReadData::getColorRider(QString result)
 void ReadData::buildResult()
 {
     for (int j = 0; j < m_CatData.size(); ++j) {
-        QTime time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(0).at(0));
-        QString time = time0.toString("mm:ss.zzz") + ",+00:00.000";
-        QString data = QString("%1,%2,%3").arg(1)
-                .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
-                .arg(time);
+        QTime time0;
+        QString time;
+        QString data;
+
+        //.N.S.P.
+        if (m_CatData.at(j).at(0).at(0) == (59*60*1000)){
+            data = QString("%1,%2,%3").arg("-")
+                    .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
+                    .arg("N.S.P., ");
+        }else{
+            time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(0).at(0));
+            time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+            data = QString("%1,%2,%3").arg(1)
+                    .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
+                    .arg(time);
+        }
+
+
+
+
+
         m_allCatResultTime.append(data);
         //Save All the Results
         QVector<int> timeChrono = {m_CatData.at(j).at(0)};
@@ -478,16 +527,23 @@ void ReadData::buildResult()
         for (int i = 1; i < m_CatData.at(j).size(); ++i) {
             int number = m_CatData.at(j).at(i).at(1);
 
-            QTime time1 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(i).at(0));;
-            time = time1.toString("mm:ss.zzz");
-            qint64 millisecondsDiff = time0.msecsTo(time1);
-            int t_ms = static_cast<int>(millisecondsDiff);
-            time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
-
-            //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
-            QString data = QString("%1,%2,%3").arg(i+1)
+            //.N.S.P.
+            if (m_CatData.at(j).at(i).at(0) == (59*60*1000)){
+                data = QString("%1,%2,%3").arg("-")
+                        .arg(m_ridersDB.value(number))
+                        .arg("N.S.P., ");
+            } else {
+                QTime time1 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(i).at(0));
+                time = time1.toString("mm:ss.zzz");
+                qint64 millisecondsDiff = time0.msecsTo(time1);
+                int t_ms = static_cast<int>(millisecondsDiff);
+                time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
+                //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
+                data = QString("%1,%2,%3").arg(i+1)
                         .arg(m_ridersDB.value(number))
                         .arg(time);
+            }
+
             m_allCatResultTime.append(data);
 
             //Save All the Results
@@ -505,34 +561,50 @@ void ReadData::createCatResults(int pos)
     m_ListRanking.clear();
 //    emit listRankingChanged();
 
-
     //If there is not a category, is all results
     if (pos == 999){
         getTotalResults();
         return;
     }
 
-    QTime time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(pos).at(0).at(0));
-    QString time = time0.toString("mm:ss.zzz") + ",+00:00.000";
-    QString data = QString("%1,%2,%3").arg(1)
-            .arg(m_ridersDB.value(m_CatData.at(pos).at(0).at(1)))
-            .arg(time);
+    QTime time0;
+    QString time;
+    QString data;
+
+    //.N.S.P.
+    if (m_CatData.at(pos).at(0).at(0) == (59*60*1000)){
+        data = QString("%1,%2,%3").arg("-")
+                .arg(m_ridersDB.value(m_CatData.at(pos).at(0).at(1)))
+                .arg("N.S.P., ");
+    }else{
+        time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(pos).at(0).at(0));
+        time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+        data = QString("%1,%2,%3").arg(1)
+                .arg(m_ridersDB.value(m_CatData.at(pos).at(0).at(1)))
+                .arg(time);
+    }
+
     //Append!!!!
     m_riderRanking.append(data);
 
     for (int i = 1; i < m_CatData.at(pos).size(); ++i) {
         int number = m_CatData.at(pos).at(i).at(1);
-
-        QTime time1 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(pos).at(i).at(0));;
-        time = time1.toString("mm:ss.zzz");
-        qint64 millisecondsDiff = time0.msecsTo(time1);
-        int t_ms = static_cast<int>(millisecondsDiff);
-        time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
-
-        //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
-        QString data = QString("%1,%2,%3").arg(i+1)
-                .arg(m_ridersDB.value(number))
-                .arg(time);
+        //.N.S.P.
+        if (m_CatData.at(pos).at(i).at(0) == (59*60*1000)){
+            data = QString("%1,%2,%3").arg("-")
+                    .arg(m_ridersDB.value(number))
+                    .arg("N.S.P., ");
+        } else {
+            QTime time1 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(pos).at(i).at(0));;
+            time = time1.toString("mm:ss.zzz");
+            qint64 millisecondsDiff = time0.msecsTo(time1);
+            int t_ms = static_cast<int>(millisecondsDiff);
+            time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
+            //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
+            data = QString("%1,%2,%3").arg(i+1)
+                    .arg(m_ridersDB.value(number))
+                    .arg(time);
+        }
         m_riderRanking.append(data);
 
     }
@@ -558,7 +630,7 @@ void ReadData::getTotalResults()
         }
     }
 
-    m_iPos=1;
+    m_iPos = 1;
 
     std::sort(m_qvData.begin(),m_qvData.end() ,[](const QVector<int>& left,const QVector<int>& right)->bool{
                 if(left.empty() && right.empty())
@@ -571,24 +643,44 @@ void ReadData::getTotalResults()
             }
         );
 
-    QTime time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
-    QString time = time0.toString("mm:ss.zzz") + ",+00:00.000";
-    QString data = QString("%1,%2,%3").arg(1)
-            .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
-            .arg(time);
+    QTime time0;
+    QString time;
+    QString data;
+    //.N.S.P.
+    if (m_qvData.at(0).at(0) == (59*60*1000)){
+        data = QString("%1,%2,%3").arg("-")
+                .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
+                .arg("N.S.P., ");
+    }else{
+        time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
+        time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+        data = QString("%1,%2,%3").arg(1)
+                .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
+                .arg(time);
+    }
+
     m_riderRanking.append(data);
 
     for (int i = 1; i < m_qvData.size(); ++i) {
-        QTime time1 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(i).at(0));;
-        time = time1.toString("mm:ss.zzz");
-        qint64 millisecondsDiff = time0.msecsTo(time1);
-        int t_ms = static_cast<int>(millisecondsDiff);
+        int number = m_qvData.at(i).at(1);
+        //.N.S.P.
+        if (m_qvData.at(i).at(0) == (59*60*1000)){
+            data = QString("%1,%2,%3").arg("-")
+                    .arg(m_ridersDB.value(number))
+                    .arg("N.S.P., ");
+        } else {
+            QTime time1 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(i).at(0));;
+            time = time1.toString("mm:ss.zzz");
+            qint64 millisecondsDiff = time0.msecsTo(time1);
+            int t_ms = static_cast<int>(millisecondsDiff);
 
-        time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
-        //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
-        QString data = QString("%1,%2,%3").arg(i+1)
-                .arg(m_ridersDB.value(m_qvData.at(i).at(1)))
-                .arg(time);
+            time += ",+" + QTime::fromMSecsSinceStartOfDay(t_ms).toString("mm:ss.zzz");
+            //    "Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia"
+            data = QString("%1,%2,%3").arg(i+1)
+                    .arg(m_ridersDB.value(number))
+                    .arg(time);
+        }
+
         m_riderRanking.append(data);
     }
     m_ListRanking = QVariant::fromValue(m_riderRanking);

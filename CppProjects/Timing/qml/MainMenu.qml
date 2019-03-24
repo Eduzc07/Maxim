@@ -66,6 +66,17 @@ Item {
         subWindow.showNormal()
     }
 
+    function setStateResult(){
+
+        toolView.displaLastRider()
+        root.state = "Result"
+        readdata.getCatComboBox()
+
+        //Save Automatically
+        readdata.saveResult("file://Result.csv")
+        readdata.saveStartList("file://StartList.csv")
+    }
+
     WorkerScript{
         id: myWorker
         source: "dataloader.mjs"
@@ -192,8 +203,11 @@ Item {
         if (idx === 0)
             toolView.updateTime = true;
 
-        if (timeList.count()===0)
+        if (timeList.count() === 0){
+            if (mainList.count() > 0)
+                toolView.displayFirstRider = false
             return
+        }
 
         var rider = {"backColor": "gray",
             "pos": "-",
@@ -217,6 +231,12 @@ Item {
         toolView.displayFirstRider = true
     }
 
+    function setRank(value){
+        mainList.defRank = value
+        resultList.defRank = value
+    }
+
+
 
 
     Timer {
@@ -230,7 +250,6 @@ Item {
             if (countList === 0 && mainList.count() > 0){
 //                clean()
                 toolView.displayFirstRider = false
-                return
             }
 
 //            if (countList > 0)
@@ -411,32 +430,22 @@ Item {
         anchors.top: root.top
         anchors.left: root.left
         enableB2: false
+        nameButton1: "Abrir"
+        nameButton2: "Guardar"
         onClickButton1: {
-//            var currentDate = new Date()
-//            var dateVal = currentDate.toLocaleTimeString(locale,"hh:mm:ss");
-//            var time = procTime.getDiffSeg(dateVal, topLeftArea.startTime)
-//            if (time < 60*10){
-//                showMessage()
-//                return
-//            }
+            var currentDate = new Date()
+            var dateVal = currentDate.toLocaleTimeString(locale,"hh:mm:ss");
+            var time = procTime.getDiffSeg(dateVal, topLeftArea.startTime)
+            if (time < 60*10){
+                showMessage()
+                return
+            }
 
-            readdata.partida = topLeftArea.startTime
-            readdata.invRider = topLeftArea.timeRider
-            readdata.invCat = topLeftArea.timeCat
-
-            mainTimer.nextStart = topLeftArea.startTime
-
-            mainList.clearList()
-            readdata.readFile()
-            enableB2 = true
-
-            //Load Start Time Final
-            bottomRighttArea.startTime = readdata.partida
-
-            root.focus = true
+            fileOpen()
+            bOpen = true
         }
         onClickButton2: {
-            fileOpen()
+            fileSave()
             bSave = true
         }
 
@@ -487,17 +496,12 @@ Item {
         nameButton1: "Resultado"
         nameButton2: "Hora de Partida"
         onClickButton1: {
-            readdata.saveResult()
+            fileSave()
+            bResult = true
         }
-        onClickButton2:{
-            //            fileDialog.open()
-            //            bSave = true
-            readdata.partida = bottomRighttArea.startTime
-            readdata.invRider = bottomRighttArea.timeRider
-            readdata.invCat = bottomRighttArea.timeCat
-
-            readdata.saveStartList()
-
+        onClickButton2: {
+            fileSave()
+            bStartList = true
             root.state = "LoadList"
         }
     }
@@ -527,11 +531,10 @@ Item {
 
         anchors.margins: 5
         onStop: {
-            stopTime(idx, finalTime)
+            stopTime(idx, finalTime) //Save in endTime
             timeList.setShow(idx, false)
 
             //StopTime in Display
-            cleanTime.start()
             toolView.updateTime = false
 
             if (idx !== 0){
@@ -566,11 +569,8 @@ Item {
                     "riderFlag": "images/peru-flag.png"})
 
             //Leave the last rider in window
-            if (mainList.count() === 0 && timeList.count() === 1){
-                toolView.displaLastRider()
-                root.state = "Result"
-                readdata.getCatComboBox()
-            }
+            if (mainList.count() === 0 && timeList.count() === 1)
+                setStateResult()
 
             if (lastCategory === timeList.getInfo(idx).categoria){
                 timeList.removeIdx(idx)
@@ -593,7 +593,7 @@ Item {
                                        "club": timeList.getInfo(idx).club,
                                        "home": timeList.getInfo(idx).home,
                                        "number": timeList.getInfo(idx).number,
-                                           "chronoTime": timeList.getInfo(idx).time,
+                                       "chronoTime": timeList.getInfo(idx).time,
                                        "diffTime": "+00:00.000"})
 
                 procTime.setTimeRef(timeList.getInfo(idx).time)
@@ -603,7 +603,7 @@ Item {
             }
 
             var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
-            timeList.setPosDiff(idx, pos, procTime.elapsed)
+//            timeList.setPosDiff(idx, pos, procTime.elapsed)
 
             //Save result
             resultList.insert(pos-1,{"position": "1",
@@ -616,12 +616,77 @@ Item {
                                   "diffTime": "+00:00.000"})
 
             for(var id = 0; id < resultList.count(); id++){
-                var post = procTime.getPos(resultList.getInfo(id).chronoTime) + 1
+                var post = procTime.getPos(resultList.getInfo(id).chronoTime)
                 resultList.setPosition(id, post)
                 resultList.setElapsed(id, procTime.elapsed)
             }
 
             timeList.removeIdx(idx)
+        }
+
+        onCancel:{
+            var timeNSP = "59:00.000"//60 min
+            timeList.setTime(idx, timeNSP)
+
+            //Send to cpp
+            var data = timeList.getInfo(idx).number + ","
+            data += timeList.getInfo(idx).time + ","
+            data += timeList.getInfo(idx).categoria
+            readdata.storageRider(data)
+
+            //Leave the last rider in window
+            if (mainList.count() === 0 && timeList.count() === 1){
+                toolView.displaLastRider()
+                root.state = "Result"
+                readdata.getCatComboBox()
+            }
+
+            if (lastCategory === timeList.getInfo(idx).categoria){
+                timeList.removeIdx(idx)
+                return
+            }
+
+            if (currentCategory !== timeList.getInfo(idx).categoria){
+                lastCategory = currentCategory
+                currentCategory = timeList.getInfo(idx).categoria
+                resultList.clearList()
+                procTime.cleanRanking()
+            }
+
+            var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
+
+            //Save result
+            resultList.addList({"position": "-",
+                                  "name": timeList.getInfo(idx).name,
+                                  "categoria": timeList.getInfo(idx).categoria,
+                                  "club": timeList.getInfo(idx).club,
+                                  "home": timeList.getInfo(idx).home,
+                                  "number": timeList.getInfo(idx).number,
+                                  "chronoTime": "N.S.P.",
+                                  "diffTime": ""})
+
+            if (timeList.count() === 1){
+                //Display result
+                toolView.add({"backColor": "blue",
+                        "pos": "-",
+                        "name": timeList.getInfo(idx).name,
+                        "num": timeList.getInfo(idx).number,
+                        "club": timeList.getInfo(idx).club,
+                        "home": timeList.getInfo(idx).home,
+                        "cat": timeList.getInfo(idx).categoria,
+                        "time": "N.S.P.",
+                        "diff": readdata.flatElapsed,
+                        "showDiff": false,
+                        "riderImage": "images/rider_5.jpg",
+                        "riderFlag": "images/peru-flag.png"})
+            }
+
+            timeList.removeIdx(idx)
+
+            //Display next rider inmediatly when more are coming
+            if (timeList.count() > 0)
+                displayRider(0)
+
         }
     }
 

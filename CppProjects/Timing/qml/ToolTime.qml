@@ -12,6 +12,9 @@ Item {
     property alias enableB2: button2.enabled
 
     property bool bSave: false
+    property bool bOpen: false
+    property bool bResult: false
+    property bool bStartList: false
     property string nameButton1: "Load"
     property string nameButton2: "Save"
 
@@ -26,6 +29,12 @@ Item {
     }
 
     function fileOpen(){
+        fileDialog.selectExisting = true
+        fileDialog.open()
+    }
+
+    function fileSave(){
+        fileDialog.selectExisting = false
         fileDialog.open()
     }
 
@@ -45,8 +54,44 @@ Item {
         nameFilters: [ "CSV (*.csv)" ]
         onAccepted: {
             if (topLeftArea.bSave){
+                selectExisting = false
                 readdata.saveFile(fileDialog.fileUrls)
                 topLeftArea.bSave = false
+            }
+
+            if (topLeftArea.bOpen){
+                topLeftArea.bOpen = false
+
+                readdata.partida = topLeftArea.startTime
+                readdata.invRider = topLeftArea.timeRider
+                readdata.invCat = topLeftArea.timeCat
+
+                mainTimer.nextStart = topLeftArea.startTime
+
+                mainList.clearList()
+                readdata.readFile(fileDialog.fileUrls)//ReadFile
+                topLeftArea.enableB2 = true
+
+                //Load Start Time Final
+                bottomRighttArea.startTime = readdata.partida
+
+                root.focus = true
+            }
+
+            if (bottomRighttArea.bResult){
+                readdata.saveResult(fileDialog.fileUrls)
+                bottomRighttArea.bStartList = true
+            }
+
+            if (bottomRighttArea.bStartList){
+                readdata.saveStartList(fileDialog.fileUrls)
+                bottomRighttArea.bStartList = false
+
+                readdata.partida = bottomRighttArea.startTime
+                readdata.invRider = bottomRighttArea.timeRider
+                readdata.invCat = bottomRighttArea.timeCat
+
+                readdata.saveStartList()
             }
         }
     }
