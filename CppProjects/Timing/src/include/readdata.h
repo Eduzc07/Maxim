@@ -69,6 +69,8 @@ public:
     Q_INVOKABLE void getTotalResults();
     Q_INVOKABLE void getCatComboBox();
 
+    Q_INVOKABLE void clearData();
+
 signals:
     void userNameChanged();
     void riderChanged();
@@ -90,8 +92,8 @@ private:
     QString m_color;
 
     QTime m_qStart;
-    int m_intervalRider = 60;
-    int m_intervalCat = 120;
+    int m_intervalRider = 10;
+    int m_intervalCat = 20;
     int m_posStart = 0;
 
     QList<QString> m_riderRanking;

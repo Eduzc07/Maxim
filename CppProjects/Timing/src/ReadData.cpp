@@ -26,7 +26,7 @@ ReadData::ReadData(QObject *parent) :
 void ReadData::runDefaults()
 {
     QTime nextTime = QTime().currentTime();
-    QTime t = nextTime.addSecs(30*60); //30 min
+    QTime t = nextTime.addSecs(1*60); //30 min
     m_qStart.setHMS(t.hour(), t.minute(), 0);
     m_StartTime = m_qStart.toString("hh:mm:ss");
     emit startTimeChanged();
@@ -269,14 +269,13 @@ void ReadData::generalResult()
         data = QString("%1,%2,%3").arg("-")
                 .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
                 .arg("N.S.P., ");
-    }else{
+    } else {
         time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
         time = time0.toString("mm:ss.zzz") + ",+00:00.000";
         data = QString("%1,%2,%3").arg(1)
                 .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
                 .arg(time);
     }
-
 
     m_allCatResultTime.append(data);
 
@@ -299,8 +298,6 @@ void ReadData::generalResult()
                     .arg(m_ridersDB.value(number))
                     .arg(time);
         }
-
-
 
         m_allCatResultTime.append(data);
     }
@@ -333,8 +330,10 @@ void ReadData::saveStartList(QString filename)
             m_posStart++;
             lugar++;
         }
-        m_riderStartTime.append(",,,,,,");
         m_posStart += (m_intervalCat/m_intervalRider - 1);
+
+        if (j < m_CatData.size() - 1)
+            m_riderStartTime.append(",,,,,,");
     }
 
     //"file://StartList.csv"
@@ -497,6 +496,9 @@ void ReadData::getColorRider(QString result)
 
 void ReadData::buildResult()
 {
+    m_allCatResultTime.clear();
+    m_qvData.clear();
+
     for (int j = 0; j < m_CatData.size(); ++j) {
         QTime time0;
         QString time;
@@ -507,18 +509,15 @@ void ReadData::buildResult()
             data = QString("%1,%2,%3").arg("-")
                     .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
                     .arg("N.S.P., ");
-        }else{
+        } else {
+
+            qDebug() << m_ridersDB.value(m_CatData.at(j).at(0).at(1));
             time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(0).at(0));
             time = time0.toString("mm:ss.zzz") + ",+00:00.000";
             data = QString("%1,%2,%3").arg(1)
                     .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
                     .arg(time);
         }
-
-
-
-
-
         m_allCatResultTime.append(data);
         //Save All the Results
         QVector<int> timeChrono = {m_CatData.at(j).at(0)};
@@ -526,6 +525,7 @@ void ReadData::buildResult()
 
         for (int i = 1; i < m_CatData.at(j).size(); ++i) {
             int number = m_CatData.at(j).at(i).at(1);
+//            qDebug() << "============> " << m_ridersDB.value(number);
 
             //.N.S.P.
             if (m_CatData.at(j).at(i).at(0) == (59*60*1000)){
@@ -533,6 +533,8 @@ void ReadData::buildResult()
                         .arg(m_ridersDB.value(number))
                         .arg("N.S.P., ");
             } else {
+
+
                 QTime time1 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(i).at(0));
                 time = time1.toString("mm:ss.zzz");
                 qint64 millisecondsDiff = time0.msecsTo(time1);
@@ -708,7 +710,30 @@ void ReadData::getCatComboBox()
     emit listRankingChanged("CatMenu");
 }
 
+void ReadData::clearData()
+{
+    m_riderRanking.clear();
+    m_ListRanking.clear();
 
+    m_riderRanking.clear();
+    m_ListRanking.clear();
 
+    m_riderStartTime.clear();
+    m_allCatResultTime.clear();
+
+    m_iCatResultTime.clear();
+    m_iTotalResultTime.clear();
+
+    m_qvData.clear(); //Save all the times
+
+    m_iCatName.clear();
+    m_CatData.clear();
+
+    m_ridersDB.clear();
+    m_iPos = 1;
+
+    m_riderStartTime.append("Lugar,Nombre,Categoria,Club,Procedencia,Numero,Hora de Partida");
+    m_allCatResultTime.append("Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia");
+}
 
 

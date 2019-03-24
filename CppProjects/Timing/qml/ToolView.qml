@@ -72,6 +72,10 @@ Item {
         riderTime.bLastOne = true
     }
 
+    function displayClean(){
+        riderTime.clean()
+    }
+
 
     Column {
         spacing: 0

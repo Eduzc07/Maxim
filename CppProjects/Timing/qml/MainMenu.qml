@@ -75,6 +75,8 @@ Item {
         //Save Automatically
         readdata.saveResult("file://Result.csv")
         readdata.saveStartList("file://StartList.csv")
+
+        resultList.defRank = parseInt((root.height - 420 )/40)
     }
 
     WorkerScript{
@@ -231,13 +233,11 @@ Item {
         toolView.displayFirstRider = true
     }
 
-    function setRank(value){
+    function setRank(value, timeValue){
         mainList.defRank = value
         resultList.defRank = value
+        timeList.defRank = timeValue
     }
-
-
-
 
     Timer {
         id: cleanTime
@@ -285,7 +285,7 @@ Item {
             //To display Start
             toolView.runTime = time
             //Start to display startTime
-            if (time === 10 && !bTimeStart && mainList.count()!==0){
+            if (time === 10 && !bTimeStart && mainList.count()!== 0){
                 root.state = "Race"
                 bTimeStart = true
             }
@@ -433,16 +433,23 @@ Item {
         nameButton1: "Abrir"
         nameButton2: "Guardar"
         onClickButton1: {
-            var currentDate = new Date()
-            var dateVal = currentDate.toLocaleTimeString(locale,"hh:mm:ss");
-            var time = procTime.getDiffSeg(dateVal, topLeftArea.startTime)
-            if (time < 60*10){
-                showMessage()
-                return
-            }
+//            var currentDate = new Date()
+//            var dateVal = currentDate.toLocaleTimeString(locale,"hh:mm:ss");
+//            var time = procTime.getDiffSeg(dateVal, topLeftArea.startTime)
+//            if (time < 60*10){
+//                showMessage()
+//                return
+//            }
 
             fileOpen()
             bOpen = true
+
+            //Prepare to start all
+            root.state = "LoadList"
+            mainTimer.bTimeStart = false
+            mainTimer.bRunTime = true
+            toolView.displayClean()
+            resultList.defRank = parseInt((root.height - 540 )/40)
         }
         onClickButton2: {
             fileSave()
@@ -502,7 +509,7 @@ Item {
         onClickButton2: {
             fileSave()
             bStartList = true
-            root.state = "LoadList"
+//            root.state = "LoadList"
         }
     }
 
@@ -624,7 +631,7 @@ Item {
             timeList.removeIdx(idx)
         }
 
-        onCancel:{
+        onCancel: {
             var timeNSP = "59:00.000"//60 min
             timeList.setTime(idx, timeNSP)
 
@@ -737,7 +744,7 @@ Item {
         },
         State {
             name: "Result"
-            PropertyChanges { target: topLeftArea; enabled: false}
+//            PropertyChanges { target: topLeftArea; enabled: false}
             PropertyChanges { target: bottomRighttArea; visible: true}
             PropertyChanges { target: comboBoxList; visible: true}
             PropertyChanges { target: timeList; visible: false}

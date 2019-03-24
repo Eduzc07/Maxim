@@ -53,13 +53,11 @@ Item {
         selectExisting: false
         nameFilters: [ "CSV (*.csv)" ]
         onAccepted: {
-            if (topLeftArea.bSave){
-                selectExisting = false
-                readdata.saveFile(fileDialog.fileUrls)
-                topLeftArea.bSave = false
-            }
-
             if (topLeftArea.bOpen){
+                //Clear last results
+                resultList.clearList()
+                readdata.clearData()
+
                 topLeftArea.bOpen = false
 
                 readdata.partida = topLeftArea.startTime
@@ -78,9 +76,15 @@ Item {
                 root.focus = true
             }
 
+            if (topLeftArea.bSave){
+                selectExisting = false
+                readdata.saveFile(fileDialog.fileUrls)
+                topLeftArea.bSave = false
+            }
+
             if (bottomRighttArea.bResult){
                 readdata.saveResult(fileDialog.fileUrls)
-                bottomRighttArea.bStartList = true
+                bottomRighttArea.bResult = false
             }
 
             if (bottomRighttArea.bStartList){
@@ -91,7 +95,7 @@ Item {
                 readdata.invRider = bottomRighttArea.timeRider
                 readdata.invCat = bottomRighttArea.timeCat
 
-                readdata.saveStartList()
+                readdata.saveStartList(fileDialog.fileUrls)
             }
         }
     }

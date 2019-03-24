@@ -27,7 +27,10 @@ Window {
         onTriggered: {
             mainArea.contentWidth = root.width
             mainArea.contentHeight = root.height
-            mainMenu.setRank(parseInt((root.height - 540 )/40))
+
+            //Define number of elements in ListView
+            mainMenu.setRank(parseInt((root.height - 540 )/40),
+                             parseInt((root.width - 70 )/150))
         }
     }
 

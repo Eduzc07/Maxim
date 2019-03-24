@@ -4,6 +4,9 @@ import QtQuick.Layouts 1.12
 
 Item {
     id: root
+    property int defRank: 3
+    property int numberRiders: {return count()>defRank?defRank:count()}
+
     signal stop(var idx)
     signal cancel(var idx)
 
@@ -160,13 +163,15 @@ Item {
     }
 
     Rectangle {
+        id: baseList
         anchors.left: info.right
         anchors.top: info.top
-        width: 150*count()
+        width: 150*root.defRank
         height: 200
         color: "transparent"
         Rectangle {
-            anchors.fill: parent
+            width: 150*numberRiders
+            height: 200
             color: "white"
             opacity: 0.5
             border.width: 1
@@ -250,7 +255,8 @@ Item {
 
         ListView {
             id: timelist
-            anchors.fill: parent
+            width: baseList.width;
+            height: baseList.height
             model: timeModel
             delegate: contactDelegate
             highlight: Rectangle {
@@ -262,6 +268,10 @@ Item {
             orientation: ListView.Horizontal
     //            verticalLayoutDirection: ListView.BottomToTop
             clip: true
+
+            flickableDirection: Flickable.HorizontalFlick
+            boundsBehavior: Flickable.StopAtBounds
+            ScrollBar.horizontal: ScrollBar {active: true}
         }
     }
 }

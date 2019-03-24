@@ -410,7 +410,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     color: "limegreen"
-                    opacity: 0.8
+                    opacity: 1.0
                     border.color: "green"
                     border.width: 1
 
@@ -449,16 +449,9 @@ Item {
 
             states: [
                 State {
-                    when: (runTime > 3 && runTime <= 5 && topArea.time === "00:00.000")
+                    when: (runTime > 2 && runTime <= 5 && topArea.time === "00:00.000")
                     PropertyChanges { target: timeToStart; visible: true}
                     PropertyChanges { target: redLightBack; visible: false}
-                    PropertyChanges { target: yellowLightBack; visible: false}
-                    PropertyChanges { target: greenLightBack; visible: false}
-                },
-                State {
-                    when: (runTime === 3 && topArea.time === "00:00.000")
-                    PropertyChanges { target: timeToStart; visible: true}
-                    PropertyChanges { target: redLightBack; visible: true}
                     PropertyChanges { target: yellowLightBack; visible: false}
                     PropertyChanges { target: greenLightBack; visible: false}
                 },
@@ -466,11 +459,18 @@ Item {
                     when: (runTime === 2 && topArea.time === "00:00.000")
                     PropertyChanges { target: timeToStart; visible: true}
                     PropertyChanges { target: redLightBack; visible: true}
+                    PropertyChanges { target: yellowLightBack; visible: false}
+                    PropertyChanges { target: greenLightBack; visible: false}
+                },
+                State {
+                    when: (runTime === 1 && topArea.time === "00:00.000")
+                    PropertyChanges { target: timeToStart; visible: true}
+                    PropertyChanges { target: redLightBack; visible: true}
                     PropertyChanges { target: yellowLightBack; visible: true}
                     PropertyChanges { target: greenLightBack; visible: false}
                 },
                 State {
-                    when: (runTime == 1 && topArea.time === "00:00.000")
+                    when: (runTime == 0 && topArea.time === "00:00.000")
                     PropertyChanges { target: timeToStart; visible: true}
                     PropertyChanges { target: redLightBack; visible: true}
                     PropertyChanges { target: yellowLightBack; visible: true}
