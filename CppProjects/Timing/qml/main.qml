@@ -30,7 +30,7 @@ Window {
 
             //Define number of elements in ListView
             mainMenu.setRank(parseInt((root.height - 540 )/40),
-                             parseInt((root.width - 70 )/150))
+                             parseInt((root.width - 220 )/150))
         }
     }
 
@@ -71,4 +71,30 @@ Window {
         sourceImage: "images/flag.png"
         onSetFullScreen: mainMenu.showSubWindow()
     }
+
+
+//    Rectangle {
+//        width: 200; height: 200
+
+//        Flickable {
+//            id: flickable
+//            width: 200; height: 200
+//            contentWidth: image.width; contentHeight: image.height
+//            Rectangle {
+//                id: image
+//                width: 800; height: 800
+//                color: "red"
+//            }
+
+//        }
+
+//        Rectangle {
+//            id: scrollbar
+//            anchors.right: flickable.right
+//            y: flickable.visibleArea.yPosition * flickable.height
+//            width: 10
+//            height: flickable.visibleArea.heightRatio * flickable.height
+//            color: "black"
+//        }
+//    }
 }

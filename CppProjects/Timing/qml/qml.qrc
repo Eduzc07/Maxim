@@ -14,6 +14,7 @@
         <file>ToolView.qml</file>
         <file>RiderTime.qml</file>
         <file>BarOption.qml</file>
+        <file>RankingView.qml</file>
     </qresource>
     <qresource prefix="/images">
         <file>background_dh.jpg</file>

@@ -92,9 +92,11 @@ private:
     QString m_color;
 
     QTime m_qStart;
-    int m_intervalRider = 10;
-    int m_intervalCat = 20;
+    int m_intervalRider = 30;
+    int m_intervalCat = 60;
     int m_posStart = 0;
+
+    int m_iterRanking = 0;
 
     QList<QString> m_riderRanking;
     QVariant m_ListRanking;

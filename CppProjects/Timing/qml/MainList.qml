@@ -45,7 +45,7 @@ Item{
     }
 
     function remove(idx){
-        riderModel.remove(idx)
+        riderModel.remove(idx)        
     }
 
     Rectangle {
@@ -342,7 +342,7 @@ Item{
 
             flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds
-            ScrollBar.vertical: ScrollBar {active: true}
+            ScrollBar.vertical: ScrollBar {active: true}            
         }
     }
 }

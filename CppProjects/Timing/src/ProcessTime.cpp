@@ -72,6 +72,13 @@ int ProcessTime::getPos(QString time)
 
     //Get difference from the first
     millisecondsDiff = m_firstTime.msecsTo(currentTime);
+
+    if( millisecondsDiff == 0){
+        m_elapsed = "";
+        m_flatElapsed = m_elapsed;
+        return 1;
+    }
+
     QString sign = "+";
     m_color = "red";
 

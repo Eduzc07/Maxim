@@ -455,6 +455,8 @@ void ReadData::searchNewRanking(int num, int cat)
 
 void ReadData::getColorRider(QString result)
 {
+    m_ranking = "0";
+
     auto values = result.split(",");
     QString time = values[0];       //Get time
     QString cat = values[1];        //Get cat
@@ -492,6 +494,30 @@ void ReadData::getColorRider(QString result)
 
     if (t_ms <= 0)
         m_color = "gray";
+
+    //Get current Position
+    QVector<int> timeChrono = {t_ms, 0};
+    categoryTime.append(timeChrono);
+
+    std::sort(categoryTime.begin(),categoryTime.end() ,[](const QVector<int>& left,const QVector<int>& right)->bool{
+                if(left.empty() && right.empty())
+                    return false;
+                if(left.empty())
+                    return true;
+                if(right.empty())
+                    return false;
+                return left.first()<right.first();
+            }
+        );
+
+    int newPos = 0;
+    for (newPos = 0; newPos < categoryTime.size(); newPos++) {
+        if (0 == categoryTime.at(newPos).at(1))
+            break;
+    }
+
+    //Result rider
+    m_ranking = QString::number(newPos); //New Position
 }
 
 void ReadData::buildResult()

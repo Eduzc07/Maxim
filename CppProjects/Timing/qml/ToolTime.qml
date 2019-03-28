@@ -64,6 +64,9 @@ Item {
                 readdata.invRider = topLeftArea.timeRider
                 readdata.invCat = topLeftArea.timeCat
 
+                //Load General time Interval
+                m_timeInterval = topLeftArea.timeRider
+
                 mainTimer.nextStart = topLeftArea.startTime
 
                 mainList.clearList()
@@ -189,6 +192,11 @@ Item {
                         anchors.fill: parent
                         cursorShape: Qt.IBeamCursor
                         acceptedButtons: Qt.NoButton
+                    }
+
+                    onEditingFinished: {
+                        var value = parseInt(timeRiderField.text)
+                        timeCatField.text = Number(2*value).toLocaleString()
                     }
                 }
                 TextField {

@@ -12,6 +12,7 @@ Item {
 
     Component.onCompleted: riderDisplay.clear()
     signal ready()
+    signal riderWaiting(var rider)
 
     ListModel {
         id: riderDisplay
@@ -53,12 +54,14 @@ Item {
         interval: 5000
         repeat: false
         onTriggered: {
+            ready()
             if (bLastOne && riderDisplay.count === 1)
                 return
 
             riderDisplay.remove(0)
             if (riderDisplay.count > 0){
                 displayRiders()
+                displayRidersInRank()
                 cleanTime.start()
             } else {
                 clean()
@@ -93,7 +96,18 @@ Item {
         showDiff = riderDisplay.get(0).showDiff
         riderImage = riderDisplay.get(0).riderImage
         riderFlag = riderDisplay.get(0).riderFlag
-        showHome = true
+        showHome = true}
+
+    function displayRidersInRank(){
+        //Display in Ranking
+        var rider = {
+            "position": riderDisplay.get(0).pos,
+            "flag": riderDisplay.get(0).riderFlag,
+            "name": riderDisplay.get(0).name,
+            "time": riderDisplay.get(0).time,
+            "diff": riderDisplay.get(0).diff,
+            "colorRider": "green"}
+        riderWaiting(rider)
     }
 
     function clean(){

@@ -30,6 +30,7 @@ Item {
         mainList.clearList()
         timeList.clearList()
         resultList.clearList()
+        toolView.displayClean()
         readdata.runDefaults()
 
         var day = new Date().toLocaleString(Qt.locale("es_PE"), "dd")
@@ -51,7 +52,6 @@ Item {
             showFullScreen()
             event.accepted = true;
         }
-
         if (event.key === Qt.Key_Space) {
             if (timeList.count() !== 0
                 && timeList.getInfo(0).time !== "00:00.000"){
@@ -128,7 +128,10 @@ Item {
         ToolView{
             id: toolView
             anchors.fill: parent
-            onEmptyList: displayRider(0)
+            onEmptyList: {
+                timeList.updateRan = true
+                displayRider(0)
+            }
         }
 
         BarOption{
@@ -170,6 +173,7 @@ Item {
                 data += timeList.getInfo(0).categoria
                 readdata.getColorRider(data)
                 toolView.setColor(readdata.color)
+                toolView.setPos(readdata.ranking)
 
             }
         }
@@ -202,8 +206,25 @@ Item {
 //    }
 
     function displayRider(idx) {
-        if (idx === 0)
+        if (idx === 0){
             toolView.updateTime = true;
+        }
+
+        if (timeList.count() > 0 && timeList.updateRan){
+
+            if ((timeList.lastCategory !== timeList.getInfo(idx).categoria)
+                && (timeList.currentCategory !== timeList.getInfo(idx).categoria))
+                toolView.displayClean()
+
+            var rank = {
+                "position": "-",
+                "flag": "images/peru-flag.png",
+                "name": timeList.getInfo(idx).name,
+                "time": "00:00.000",
+                "diff": "",
+                "colorRider": "green"}
+            toolView.addRanking(idx, rank);
+        }
 
         if (timeList.count() === 0){
             if (mainList.count() > 0)
@@ -231,6 +252,7 @@ Item {
         toolView.setDiff(diffRider)
 
         toolView.displayFirstRider = true
+
     }
 
     function setRank(value, timeValue){
@@ -530,7 +552,7 @@ Item {
         visible: true
         property string lastCategory: ""
         property string currentCategory: ""
-
+        property bool updateRan: true
         width: root.width - 10
         height: 250
         anchors.bottom: parent.bottom
@@ -545,8 +567,11 @@ Item {
             toolView.updateTime = false
 
             if (idx !== 0){
+                if (updateRan)
+                    toolView.deleteFirst()
                 displayRider(idx)
                 toolView.setTime(timeList.getInfo(idx).time)
+                updateRan = false
             }
 
             //Send to cpp
@@ -603,8 +628,9 @@ Item {
                                        "chronoTime": timeList.getInfo(idx).time,
                                        "diffTime": "+00:00.000"})
 
+                toolView.setRankingDiff(diffSecRider)
                 procTime.setTimeRef(timeList.getInfo(idx).time)
-                timeList.setPosDiff(idx, 1,"+00:00.000")
+//                timeList.setPosDiff(idx, 1,"+00:00.000")
                 timeList.removeIdx(idx)
                 return
             }
@@ -628,12 +654,17 @@ Item {
                 resultList.setElapsed(id, procTime.elapsed)
             }
 
+
+            toolView.setRankingDiff(diffSecRider)
+
             timeList.removeIdx(idx)
         }
 
         onCancel: {
             var timeNSP = "59:00.000"//60 min
             timeList.setTime(idx, timeNSP)
+
+            toolView.deleteFirst()
 
             //Send to cpp
             var data = timeList.getInfo(idx).number + ","

@@ -9,6 +9,10 @@ Item {
     property bool displayFirstRider: false
     property int runTime: 60
 
+    property int lastPos: 0
+
+    signal emptyList()
+
     Keys.onPressed: {
         if (event.key === Qt.Key_Escape) {
             subWindow.showNormal()
@@ -20,7 +24,6 @@ Item {
         }
     }
 
-    signal emptyList()
 
     function setRider(rider){
         riderTime.backColor = rider.backColor
@@ -46,6 +49,29 @@ Item {
         riderTime.diff = value.diff
         riderTime.showDiff = value.showDiff
         riderTime.pos = value.pos
+
+//        rankingWCModel.setProperty(lastPos, "position", value.pos)
+//        rankingWCModel.setProperty(lastPos, "diff", value.diff)
+
+
+    }
+
+    function setRankingDiff(value){
+        rankingWCModel.setProperty(lastPos, "position", value.pos)
+        rankingWCModel.setProperty(lastPos, "diff", value.diff)
+
+        var id = 0
+        if(lastPos == 0 && resultList.count()>1){
+            for(id = 0; id < rankingWCModel.count; id++){
+                var post = procTime.getPos(resultList.getInfo(id).chronoTime)
+                rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
+                rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
+            }
+        }else{
+            for(id = lastPos; id < rankingWCModel.count; id++)
+                rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
+        }
+
     }
 
     function setTime(value){
@@ -55,6 +81,13 @@ Item {
         if (value === "")
             value = "00:00.000"
         riderTime.time = value
+
+//        if (lastPos > rankingWCModel.count )
+//            return
+
+//        console.log("===============3======>", lastPos)
+
+        rankingWCModel.setProperty(lastPos, "time", value)
     }
 
     function setColor(value){
@@ -74,8 +107,56 @@ Item {
 
     function displayClean(){
         riderTime.clean()
+        rankingWCModel.clear()
     }
 
+    function addRanking(idx, value){
+        var data = timeList.getInfo(idx).time + ","
+        data += timeList.getInfo(idx).categoria
+        readdata.getColorRider(data)
+
+//        if (readdata.ranking > rankingWCModel.count )
+//            return
+
+//        console.log("===============2======>", readdata.ranking)
+
+
+        //Request Current idx
+        rankingWCModel.insert(readdata.ranking, value)
+        lastPos = readdata.ranking
+
+        rankingView.setViewPos(lastPos)
+    }
+
+    function checkRanking(){
+        for(var id = 0; id < rankingWCModel.count; id++){
+            var post = procTime.getPos(resultList.getInfo(id).chronoTime)
+            rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
+            rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
+            rankingWCModel.setProperty(id, "colorRider", "blue")
+        }
+    }
+
+    function setPos(value){
+        var vNum = parseInt(value)
+        if (vNum === lastPos)
+            return
+
+//        if (vNum > rankingWCModel.count )
+//            return
+
+//        console.log("=====================>", vNum)
+
+        lastPos = parseInt(value)
+        rankingWCModel.setProperty(vNum, "position", value)
+        rankingWCModel.move(vNum - 1, vNum, 1)
+
+        rankingView.setViewPos(vNum)
+    }
+
+    function deleteFirst(){
+        rankingWCModel.remove(lastPos)
+    }
 
     Column {
         spacing: 0
@@ -83,14 +164,51 @@ Item {
             id: riderTime
             width: root.width
             height: root.height / 2
+            onReady: root.checkRanking()
+
+            onRiderWaiting:{
+                checkRanking()
+                var idx = parseInt(rider.position) - 1
+                //Request Current idx
+                rankingWCModel.insert(idx, rider)
+
+                for(var id = idx; id < rankingWCModel.count; id++)
+                    rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
+            }
         }
 
-        Rectangle {
+        RankingView {
+            id: rankingView
             width: root.width
             height: root.height / 2
-            color: "black"
-            opacity: 0.8
+        }
+    }
+
+    ListModel {
+        id: rankingWCModel
+        ListElement {
+            position: "999"
+            flag: "images/peru-flag.png"
+            name: "Zarate E"
+            time: "00:00.000"
+            diff: ""
+            colorRider: "green"
+        }
+        ListElement {
+            position: "1"
+            flag: "images/peru-flag.png"
+            name: "Bruic L"
+            time: "00:00.000"
+            diff: ""
+            colorRider: "blue"
+        }
+        ListElement {
+            position: "2"
+            flag: "images/peru-flag.png"
+            name: "Brosnan T"
+            time: "00:00.000"
+            diff: "+00:02.012"
+            colorRider: "blue"
         }
     }
 }
-
