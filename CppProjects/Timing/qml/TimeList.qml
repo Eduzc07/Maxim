@@ -17,7 +17,7 @@ Item {
             time: "00:00.000"
             startTime: "00:00:00.000"
             endTime: "00:00:00.000"
-            diffTime: "+00:00.000"
+            diffTime: " "
             show: false
             //Rider Info
             position: "1"

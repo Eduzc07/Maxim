@@ -146,14 +146,6 @@ Item {
         }
     }
 
-//    function paddZeros(time){
-//        var s = time.toString();
-//        if (s.length < 2) {
-//            s = "0" + s;
-//        }
-//        return s
-//    }
-
     function runningTime(currentDate){
         finalTime = currentDate.toLocaleTimeString(root.locale,"hh:mm:ss.zzz");
         for(var id = 0; id < timeList.count();id++){
@@ -174,7 +166,6 @@ Item {
                 readdata.getColorRider(data)
                 toolView.setColor(readdata.color)
                 toolView.setPos(readdata.ranking)
-
             }
         }
     }
@@ -212,9 +203,9 @@ Item {
 
         if (timeList.count() > 0 && timeList.updateRan){
 
-            if ((timeList.lastCategory !== timeList.getInfo(idx).categoria)
-                && (timeList.currentCategory !== timeList.getInfo(idx).categoria))
-                toolView.displayClean()
+            console.log("---lastCategory---------> ", timeList.lastCategory)
+            console.log("----currentCategory--------> ", timeList.currentCategory)
+            console.log("---timeList.getInfo(idx).categoria---------> ", timeList.getInfo(idx).categoria)
 
             var rank = {
                 "position": "-",
@@ -223,7 +214,28 @@ Item {
                 "time": "00:00.000",
                 "diff": "",
                 "colorRider": "green"}
-            toolView.addRanking(idx, rank);
+
+            if ((timeList.lastCategory !== timeList.getInfo(idx).categoria)
+                && (timeList.currentCategory !== timeList.getInfo(idx).categoria)){
+                toolView.displayClean()
+                console.log("---Clean---------> ")
+
+                toolView.wcCategory = timeList.getInfo(idx).categoria
+                toolView.timeNewCatUpdate = true
+                rank.time = timeList.getInfo(idx).time
+
+//                toolView.addRanking(idx, rank); //New Category
+            }
+
+            if (idx !== 0 && (timeList.currentCategory === timeList.getInfo(idx).categoria)){
+                toolView.timeNewCatUpdate = true
+                rank.time = timeList.getInfo(idx).time
+            }
+
+//            if ((timeList.currentCategory === timeList.getInfo(idx).categoria)){
+                console.log("---add---------> ")
+                toolView.addRanking(idx, rank);
+//            }
         }
 
         if (timeList.count() === 0){
@@ -246,7 +258,7 @@ Item {
         toolView.setRiderExtra(riderImage, riderFlag)
 
         toolView.setTime("00:00.000")
-        var diffRider = {"diff": "+00:00.000",
+        var diffRider = {"diff": " ",
             "showDiff": false,
             "pos": "-"}
         toolView.setDiff(diffRider)
@@ -307,9 +319,13 @@ Item {
             //To display Start
             toolView.runTime = time
             //Start to display startTime
-            if (time === 10 && !bTimeStart && mainList.count()!== 0){
+            if (time === 10 && !bTimeStart && mainList.count() !== 0){
                 root.state = "Race"
                 bTimeStart = true
+                //Load First Cat to Start
+                console.log("============", mainList.getRiderInfo().categoria)
+                timeList.currentCategory = mainList.getRiderInfo().categoria
+                toolView.wcCategory = mainList.getRiderInfo().categoria
             }
 
             if (!bTimeStart || !bRunTime)
@@ -472,6 +488,7 @@ Item {
             mainTimer.bRunTime = true
             toolView.displayClean()
             resultList.defRank = parseInt((root.height - 540 )/40)
+
         }
         onClickButton2: {
             fileSave()
@@ -568,11 +585,11 @@ Item {
 
             if (idx !== 0){
                 if (updateRan)
-                    toolView.deleteFirst()
+                    toolView.deleteFirst(idx)
                 displayRider(idx)
                 toolView.setTime(timeList.getInfo(idx).time)
                 updateRan = false
-            }
+            }            
 
             //Send to cpp
             var data = timeList.getInfo(idx).number + ","
@@ -586,6 +603,7 @@ Item {
                 "showDiff": true,
                 "pos": readdata.ranking}
             toolView.setDiff(diffSecRider)
+            toolView.setRankingDiff(diffSecRider)
 
             toolView.add({"backColor": readdata.color,
                     "pos": readdata.ranking,
@@ -626,7 +644,7 @@ Item {
                                        "home": timeList.getInfo(idx).home,
                                        "number": timeList.getInfo(idx).number,
                                        "chronoTime": timeList.getInfo(idx).time,
-                                       "diffTime": "+00:00.000"})
+                                       "diffTime": " "})
 
                 toolView.setRankingDiff(diffSecRider)
                 procTime.setTimeRef(timeList.getInfo(idx).time)
@@ -646,7 +664,7 @@ Item {
                                   "home": timeList.getInfo(idx).home,
                                   "number": timeList.getInfo(idx).number,
                                   "chronoTime": timeList.getInfo(idx).time,
-                                  "diffTime": "+00:00.000"})
+                                  "diffTime": " "})
 
             for(var id = 0; id < resultList.count(); id++){
                 var post = procTime.getPos(resultList.getInfo(id).chronoTime)
@@ -655,8 +673,6 @@ Item {
             }
 
 
-            toolView.setRankingDiff(diffSecRider)
-
             timeList.removeIdx(idx)
         }
 
@@ -664,7 +680,7 @@ Item {
             var timeNSP = "59:00.000"//60 min
             timeList.setTime(idx, timeNSP)
 
-            toolView.deleteFirst()
+            toolView.deleteFirst(idx)
 
             //Send to cpp
             var data = timeList.getInfo(idx).number + ","
@@ -680,7 +696,26 @@ Item {
             }
 
             if (lastCategory === timeList.getInfo(idx).categoria){
+                if (timeList.count() === 1){
+                    //Display result
+                    toolView.add({"backColor": "blue",
+                            "pos": "-",
+                            "name": timeList.getInfo(idx).name,
+                            "num": timeList.getInfo(idx).number,
+                            "club": timeList.getInfo(idx).club,
+                            "home": timeList.getInfo(idx).home,
+                            "cat": timeList.getInfo(idx).categoria,
+                            "time": "N.S.P.",
+                            "diff": readdata.flatElapsed,
+                            "showDiff": false,
+                            "riderImage": "images/rider_5.jpg",
+                            "riderFlag": "images/peru-flag.png"})
+                }
+
                 timeList.removeIdx(idx)
+                //Display next rider inmediatly when more are coming
+                if (timeList.count() > 0)
+                    displayRider(0)
                 return
             }
 

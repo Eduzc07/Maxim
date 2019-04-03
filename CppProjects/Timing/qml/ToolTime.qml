@@ -75,7 +75,6 @@ Item {
 
                 //Load Start Time Final
                 bottomRighttArea.startTime = readdata.partida
-
                 root.focus = true
             }
 

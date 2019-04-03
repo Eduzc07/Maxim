@@ -42,7 +42,7 @@ Item {
     property string cat: "Cat"
 
     property string time: "00:00.000"
-    property string diff: "+00:00.100"
+    property string diff: "+00:00.000"
     property bool showDiff: false
 
     property string riderImage: ""
@@ -96,7 +96,8 @@ Item {
         showDiff = riderDisplay.get(0).showDiff
         riderImage = riderDisplay.get(0).riderImage
         riderFlag = riderDisplay.get(0).riderFlag
-        showHome = true}
+        showHome = true
+    }
 
     function displayRidersInRank(){
         //Display in Ranking
@@ -463,7 +464,7 @@ Item {
 
             states: [
                 State {
-                    when: (runTime > 2 && runTime <= 5 && topArea.time === "00:00.000")
+                    when: (runTime > 2 && runTime <= 3 && topArea.time === "00:00.000")
                     PropertyChanges { target: timeToStart; visible: true}
                     PropertyChanges { target: redLightBack; visible: false}
                     PropertyChanges { target: yellowLightBack; visible: false}

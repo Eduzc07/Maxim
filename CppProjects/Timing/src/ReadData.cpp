@@ -271,7 +271,7 @@ void ReadData::generalResult()
                 .arg("N.S.P., ");
     } else {
         time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
-        time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+        time = time0.toString("mm:ss.zzz") + ", ";
         data = QString("%1,%2,%3").arg(1)
                 .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
                 .arg(time);
@@ -539,7 +539,7 @@ void ReadData::buildResult()
 
             qDebug() << m_ridersDB.value(m_CatData.at(j).at(0).at(1));
             time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(0).at(0));
-            time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+            time = time0.toString("mm:ss.zzz") + ", ";
             data = QString("%1,%2,%3").arg(1)
                     .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
                     .arg(time);
@@ -606,7 +606,7 @@ void ReadData::createCatResults(int pos)
                 .arg("N.S.P., ");
     }else{
         time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(pos).at(0).at(0));
-        time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+        time = time0.toString("mm:ss.zzz") + ", ";
         data = QString("%1,%2,%3").arg(1)
                 .arg(m_ridersDB.value(m_CatData.at(pos).at(0).at(1)))
                 .arg(time);
@@ -681,7 +681,7 @@ void ReadData::getTotalResults()
                 .arg("N.S.P., ");
     }else{
         time0 = QTime::fromMSecsSinceStartOfDay(m_qvData.at(0).at(0));
-        time = time0.toString("mm:ss.zzz") + ",+00:00.000";
+        time = time0.toString("mm:ss.zzz") + ", ";
         data = QString("%1,%2,%3").arg(1)
                 .arg(m_ridersDB.value(m_qvData.at(0).at(1)))
                 .arg(time);

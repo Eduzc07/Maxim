@@ -8,6 +8,8 @@ Item {
     property bool updateTime: false
     property bool displayFirstRider: false
     property int runTime: 60
+    property string wcCategory: ""
+    property bool timeNewCatUpdate: true
 
     property int lastPos: 0
 
@@ -23,7 +25,6 @@ Item {
             event.accepted = true;
         }
     }
-
 
     function setRider(rider){
         riderTime.backColor = rider.backColor
@@ -53,23 +54,25 @@ Item {
 //        rankingWCModel.setProperty(lastPos, "position", value.pos)
 //        rankingWCModel.setProperty(lastPos, "diff", value.diff)
 
-
     }
 
     function setRankingDiff(value){
+        if (riderTime.bDisplaying)
+            return
+
         rankingWCModel.setProperty(lastPos, "position", value.pos)
         rankingWCModel.setProperty(lastPos, "diff", value.diff)
 
         var id = 0
         if(lastPos == 0 && resultList.count()>1){
             for(id = 0; id < rankingWCModel.count; id++){
-                var post = procTime.getPos(resultList.getInfo(id).chronoTime)
+                procTime.getPos(resultList.getInfo(id).chronoTime)
                 rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
                 rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
             }
         }else{
             for(id = lastPos; id < rankingWCModel.count; id++)
-                rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
+                rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())            
         }
 
     }
@@ -80,12 +83,11 @@ Item {
 
         if (value === "")
             value = "00:00.000"
+
         riderTime.time = value
 
-//        if (lastPos > rankingWCModel.count )
-//            return
-
-//        console.log("===============3======>", lastPos)
+        if (wcCategory !== timeList.getInfo(0).categoria)
+            return
 
         rankingWCModel.setProperty(lastPos, "time", value)
     }
@@ -115,15 +117,13 @@ Item {
         data += timeList.getInfo(idx).categoria
         readdata.getColorRider(data)
 
-//        if (readdata.ranking > rankingWCModel.count )
-//            return
-
-//        console.log("===============2======>", readdata.ranking)
-
+        if ((wcCategory !== timeList.getInfo(idx).categoria) && timeNewCatUpdate)
+            return
 
         //Request Current idx
         rankingWCModel.insert(readdata.ranking, value)
         lastPos = readdata.ranking
+        timeNewCatUpdate = true
 
         rankingView.setViewPos(lastPos)
     }
@@ -134,6 +134,9 @@ Item {
             rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
             rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
             rankingWCModel.setProperty(id, "colorRider", "blue")
+//            console.log("Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", id)
+//            console.log("Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", resultList.getInfo(id).chronoTime)
+//            console.log("Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", procTime.flatElapsed)
         }
     }
 
@@ -142,19 +145,25 @@ Item {
         if (vNum === lastPos)
             return
 
+        lastPos = parseInt(value)
 //        if (vNum > rankingWCModel.count )
 //            return
+        if (wcCategory !== timeList.getInfo(0).categoria)
+            return
 
-//        console.log("=====================>", vNum)
+        if(vNum === 0)
+            return
 
-        lastPos = parseInt(value)
         rankingWCModel.setProperty(vNum, "position", value)
         rankingWCModel.move(vNum - 1, vNum, 1)
 
         rankingView.setViewPos(vNum)
     }
 
-    function deleteFirst(){
+    function deleteFirst(idx){
+        if (wcCategory !== timeList.getInfo(idx).categoria)
+            return
+
         rankingWCModel.remove(lastPos)
     }
 
@@ -167,10 +176,14 @@ Item {
             onReady: root.checkRanking()
 
             onRiderWaiting:{
-                checkRanking()
                 var idx = parseInt(rider.position) - 1
                 //Request Current idx
                 rankingWCModel.insert(idx, rider)
+
+                checkRanking()
+                rankingWCModel.setProperty(idx, "colorRider", "green")
+
+                console.log("onRiderWaiting --->", rider.diff)
 
                 for(var id = idx; id < rankingWCModel.count; id++)
                     rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
