@@ -92,8 +92,8 @@ private:
     QString m_color;
 
     QTime m_qStart;
-    int m_intervalRider = 30;
-    int m_intervalCat = 60;
+    int m_intervalRider = 60;
+    int m_intervalCat = 120;
     int m_posStart = 0;
 
     int m_iterRanking = 0;

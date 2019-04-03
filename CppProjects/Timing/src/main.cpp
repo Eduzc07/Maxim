@@ -3,7 +3,6 @@
 #include <QQuickView>
 #include <QScreen>
 
-#include "include/backend.h"
 #include "include/readdata.h"
 #include "include/processtime.h"
 
@@ -13,8 +12,6 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/images/icon.png"));
 
-
-    qmlRegisterType<BackEnd>("io.qt.examples.backend", 1, 0, "BackEnd");
     qmlRegisterType<ReadData>("io.qt.readdata", 1, 0, "ReadData");
     qmlRegisterType<ProcessTime>("io.qt.processtime", 1, 0, "ProcessTime");
 

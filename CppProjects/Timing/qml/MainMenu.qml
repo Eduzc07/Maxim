@@ -4,7 +4,6 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.12
 import QtQuick.Dialogs 1.3
 
-import io.qt.examples.backend 1.0
 import io.qt.readdata 1.0
 import io.qt.processtime 1.0
 import "."
@@ -156,10 +155,6 @@ Item {
             if (id == 0 && toolView.updateTime){
                 toolView.setTime(time)
 
-                    //Display result
-//                    procTime.getColor(timeList.getInfo(0).time)
-//                    toolView.setColor(procTime.color)
-
                 //Display result
                 var data = timeList.getInfo(0).time + ","
                 data += timeList.getInfo(0).categoria
@@ -170,31 +165,6 @@ Item {
         }
     }
 
-//    function clean(){
-//        var rider = {"backColor": "red",
-//            "pos": "-",
-//            "name": "Nombre",
-//            "num": "#",
-//            "club": "Club",
-//            "home": "Proc.",
-//            "cat": "Cat"}
-//        toolView.setRider(rider)
-
-////        var riderImage = "images/rider_4.jpg"
-////        var riderFlag = "images/peru-flag.png"
-
-//        var riderImage = ""
-//        var riderFlag = ""
-
-//        toolView.setRiderExtra(riderImage, riderFlag)
-//        toolView.setTime("00:00.000")
-//        toolView.setColor("gray")
-
-//        var diffRider = {"diff": "+00:00.000",
-//            "showDiff": false,
-//            "pos": "-"}
-//        toolView.setDiff(diffRider)
-//    }
 
     function displayRider(idx) {
         if (idx === 0){
@@ -202,10 +172,6 @@ Item {
         }
 
         if (timeList.count() > 0 && timeList.updateRan){
-
-            console.log("---lastCategory---------> ", timeList.lastCategory)
-            console.log("----currentCategory--------> ", timeList.currentCategory)
-            console.log("---timeList.getInfo(idx).categoria---------> ", timeList.getInfo(idx).categoria)
 
             var rank = {
                 "position": "-",
@@ -218,7 +184,6 @@ Item {
             if ((timeList.lastCategory !== timeList.getInfo(idx).categoria)
                 && (timeList.currentCategory !== timeList.getInfo(idx).categoria)){
                 toolView.displayClean()
-                console.log("---Clean---------> ")
 
                 toolView.wcCategory = timeList.getInfo(idx).categoria
                 toolView.timeNewCatUpdate = true
@@ -233,7 +198,6 @@ Item {
             }
 
 //            if ((timeList.currentCategory === timeList.getInfo(idx).categoria)){
-                console.log("---add---------> ")
                 toolView.addRanking(idx, rank);
 //            }
         }
@@ -282,14 +246,9 @@ Item {
             var countList = timeList.count()
 
             if (countList === 0 && mainList.count() > 0){
-//                clean()
                 toolView.displayFirstRider = false
             }
 
-//            if (countList > 0)
-//                displayRider(0)
-
-            console.log ("cleanTime---> " + countList)
         }
     }
 
@@ -323,7 +282,6 @@ Item {
                 root.state = "Race"
                 bTimeStart = true
                 //Load First Cat to Start
-                console.log("============", mainList.getRiderInfo().categoria)
                 timeList.currentCategory = mainList.getRiderInfo().categoria
                 toolView.wcCategory = mainList.getRiderInfo().categoria
             }
@@ -494,7 +452,6 @@ Item {
             fileSave()
             bSave = true
         }
-
         onSignalMessageOk: readdata.runDefaults()
     }
 

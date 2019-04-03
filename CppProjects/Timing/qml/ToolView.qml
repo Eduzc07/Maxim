@@ -50,10 +50,6 @@ Item {
         riderTime.diff = value.diff
         riderTime.showDiff = value.showDiff
         riderTime.pos = value.pos
-
-//        rankingWCModel.setProperty(lastPos, "position", value.pos)
-//        rankingWCModel.setProperty(lastPos, "diff", value.diff)
-
     }
 
     function setRankingDiff(value){
