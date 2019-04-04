@@ -10,7 +10,6 @@
         <file>RiderResultModel.qml</file>
         <file>ResultList.qml</file>
         <file>ToolTime.qml</file>
-        <file>PrettyTimeList.qml</file>
         <file>ToolView.qml</file>
         <file>RiderTime.qml</file>
         <file>BarOption.qml</file>

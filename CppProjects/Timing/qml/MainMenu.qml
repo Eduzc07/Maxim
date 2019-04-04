@@ -66,7 +66,6 @@ Item {
     }
 
     function setStateResult(){
-
         toolView.displaLastRider()
         root.state = "Result"
         readdata.getCatComboBox()
@@ -481,7 +480,6 @@ Item {
             }
             Text {
                 id: fullTime
-                //        text: readdata.userName
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.family: "Helvetica"
                 font.pointSize: 32
@@ -505,7 +503,6 @@ Item {
         onClickButton2: {
             fileSave()
             bStartList = true
-//            root.state = "LoadList"
         }
     }
 
@@ -560,7 +557,7 @@ Item {
                 "showDiff": true,
                 "pos": readdata.ranking}
             toolView.setDiff(diffSecRider)
-            toolView.setRankingDiff(diffSecRider)
+            toolView.setRankingDiff(diffSecRider, idx)
 
             toolView.add({"backColor": readdata.color,
                     "pos": readdata.ranking,
@@ -604,31 +601,41 @@ Item {
                                        "diffTime": " "})
 
                 toolView.setRankingDiff(diffSecRider)
-                procTime.setTimeRef(timeList.getInfo(idx).time)
+//                procTime.setTimeRef(timeList.getInfo(idx).time)
 //                timeList.setPosDiff(idx, 1,"+00:00.000")
                 timeList.removeIdx(idx)
                 return
             }
 
-            var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
+//            var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
 //            timeList.setPosDiff(idx, pos, procTime.elapsed)
 
+            var pos = readdata.ranking
+            var intPos = parseInt(pos)
             //Save result
-            resultList.insert(pos-1,{"position": "1",
+            resultList.insert(intPos-1,{"position": pos,
                                   "name": timeList.getInfo(idx).name,
                                   "categoria": timeList.getInfo(idx).categoria,
                                   "club": timeList.getInfo(idx).club,
                                   "home": timeList.getInfo(idx).home,
                                   "number": timeList.getInfo(idx).number,
                                   "chronoTime": timeList.getInfo(idx).time,
-                                  "diffTime": " "})
+                                  "diffTime": readdata.flatElapsed})
 
-            for(var id = 0; id < resultList.count(); id++){
-                var post = procTime.getPos(resultList.getInfo(id).chronoTime)
-                resultList.setPosition(id, post)
-                resultList.setElapsed(id, procTime.elapsed)
+            var id = 0
+            if (intPos === 1){
+                //Update Position and Diff
+                procTime.setTimeRef(resultList.getInfo(0).chronoTime)
+                for(id = 0; id < resultList.count(); id++){
+                    procTime.getPos(resultList.getInfo(id).chronoTime)
+                    resultList.setPosition(id, id + 1)
+                    resultList.setElapsed(id, procTime.elapsed)
+                }
+            }else{
+                //Update Position
+                for(id = intPos; id < resultList.count(); id++)
+                    resultList.setPosition(id, id + 1)
             }
-
 
             timeList.removeIdx(idx)
         }
@@ -646,11 +653,8 @@ Item {
             readdata.storageRider(data)
 
             //Leave the last rider in window
-            if (mainList.count() === 0 && timeList.count() === 1){
-                toolView.displaLastRider()
-                root.state = "Result"
-                readdata.getCatComboBox()
-            }
+            if (mainList.count() === 0 && timeList.count() === 1)
+                setStateResult()
 
             if (lastCategory === timeList.getInfo(idx).categoria){
                 if (timeList.count() === 1){

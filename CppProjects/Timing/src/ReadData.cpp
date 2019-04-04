@@ -233,7 +233,6 @@ void ReadData::saveResult(QString filename)
     QFile file(name);
 //    QFile file("Result.csv");
 
-
     buildResult();
     generalResult();
     if (file.open(QIODevice::WriteOnly)) {
@@ -525,6 +524,8 @@ void ReadData::buildResult()
     m_allCatResultTime.clear();
     m_qvData.clear();
 
+    m_allCatResultTime.append("Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia");
+
     for (int j = 0; j < m_CatData.size(); ++j) {
         QTime time0;
         QString time;
@@ -536,8 +537,6 @@ void ReadData::buildResult()
                     .arg(m_ridersDB.value(m_CatData.at(j).at(0).at(1)))
                     .arg("N.S.P., ");
         } else {
-
-            qDebug() << m_ridersDB.value(m_CatData.at(j).at(0).at(1));
             time0 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(0).at(0));
             time = time0.toString("mm:ss.zzz") + ", ";
             data = QString("%1,%2,%3").arg(1)
@@ -559,8 +558,6 @@ void ReadData::buildResult()
                         .arg(m_ridersDB.value(number))
                         .arg("N.S.P., ");
             } else {
-
-
                 QTime time1 = QTime::fromMSecsSinceStartOfDay(m_CatData.at(j).at(i).at(0));
                 time = time1.toString("mm:ss.zzz");
                 qint64 millisecondsDiff = time0.msecsTo(time1);
@@ -761,5 +758,3 @@ void ReadData::clearData()
     m_riderStartTime.append("Lugar,Nombre,Categoria,Club,Procedencia,Numero,Hora de Partida");
     m_allCatResultTime.append("Lugar,Nombre,Categoria,Club,Procedencia,Numero,Tiempo Final,Diferencia");
 }
-
-

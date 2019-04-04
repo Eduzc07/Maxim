@@ -32,7 +32,6 @@ Item {
         }
     }
 
-
     property color backColor: "gray"
     property string pos: "-"
     property string name: "Nombre"
@@ -337,48 +336,6 @@ Item {
                     font.bold: true
                 }
             }
-
-//            RowLayout {
-//                width: topArea.topWidth
-//                height: topArea.topHeight/3 + 40
-//                anchors.margins: 20
-//                spacing: 0
-
-//                Rectangle {
-//                    Layout.fillWidth: true
-//                    Layout.preferredWidth: topArea.topWidth/2
-//                    Layout.fillHeight: true
-//                    Layout.alignment: Qt.AlignHCenter
-//                    color: 'transparent'
-////                        border.width: 1
-////                        border.color: "black"
-//                    Text {
-//                        anchors.centerIn: parent
-//                        text: topArea.time
-//                        color: "white"
-//                        font.family: "Helvetica"
-//                        font.pointSize: 80*factSize
-//                        font.bold: true
-//                    }
-//                }
-//                Rectangle {
-//                    Layout.fillWidth: true
-//                    Layout.preferredWidth: topArea.topWidth/2
-//                    Layout.fillHeight: true
-//                    Layout.alignment: Qt.AlignHCenter
-//                    color: 'transparent'
-////                        border.width: 1
-////                        border.color: "black"
-//                    visible: topArea.showDiff
-//                    Text {
-//                        anchors.centerIn: parent
-//                        text: topArea.diff
-//                        color: "white"
-//                        font.family: "Helvetica"
-//                        font.pointSize: 70*factSize
-//                    }
-//                }
-//            }
         }
 
         Rectangle {

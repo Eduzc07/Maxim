@@ -52,17 +52,24 @@ Item {
         riderTime.pos = value.pos
     }
 
-    function setRankingDiff(value){
+    function setRankingDiff(value, idx){
         if (riderTime.bDisplaying)
+            return
+
+        if ((wcCategory !== timeList.getInfo(idx).categoria))
+            return
+
+        if(lastPos > rankingWCModel.count)
             return
 
         rankingWCModel.setProperty(lastPos, "position", value.pos)
         rankingWCModel.setProperty(lastPos, "diff", value.diff)
 
         var id = 0
-        if(lastPos == 0 && resultList.count()>1){
+        if(lastPos == 0 && resultList.count()>0){
+            procTime.setTimeRef(rankingWCModel.get(0).time)
             for(id = 0; id < rankingWCModel.count; id++){
-                procTime.getPos(resultList.getInfo(id).chronoTime)
+                procTime.getPos(rankingWCModel.get(id).time)
                 rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
                 rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
             }
@@ -70,7 +77,6 @@ Item {
             for(id = lastPos; id < rankingWCModel.count; id++)
                 rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())            
         }
-
     }
 
     function setTime(value){
@@ -125,14 +131,12 @@ Item {
     }
 
     function checkRanking(){
+        procTime.setTimeRef(rankingWCModel.get(0).time)
         for(var id = 0; id < rankingWCModel.count; id++){
-            var post = procTime.getPos(resultList.getInfo(id).chronoTime)
+            var post = procTime.getPos(rankingWCModel.get(id).time)
             rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
             rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
             rankingWCModel.setProperty(id, "colorRider", "blue")
-//            console.log("Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", id)
-//            console.log("Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", resultList.getInfo(id).chronoTime)
-//            console.log("Here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", procTime.flatElapsed)
         }
     }
 

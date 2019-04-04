@@ -31,7 +31,6 @@ public:
     Q_INVOKABLE void cleanRanking();
     Q_INVOKABLE int getDiffSeg(QString, QString);
     Q_INVOKABLE void getColor(QString);
-    Q_INVOKABLE void storageRider(QString);
 
 signals:
     void elapsedChanged();
@@ -43,10 +42,7 @@ private:
     QString m_color;
 
     QTime m_firstTime;
-    QVector<int> integerVector;
-
-    QVector<QString> m_iCatName;
-    QVector<QVector<QVector<int>>> m_CatData;
+    QVector<int> integerVector;    
 };
 
 #endif // PROCESSTIME_H

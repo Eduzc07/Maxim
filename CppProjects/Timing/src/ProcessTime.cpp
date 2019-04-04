@@ -37,6 +37,12 @@ int ProcessTime::getDiff(QString time)
     QString sign = "+";
     m_color = "red";
 
+    if (millisecondsDiff == 0){
+        m_elapsed = "";
+        m_flatElapsed = "";
+        return 0;
+    }
+
     if (millisecondsDiff < 0){
         millisecondsDiff = currentTime.msecsTo(m_firstTime);
         colorSign = "<font color=\"green\">-";
@@ -142,71 +148,4 @@ void ProcessTime::getColor(QString time)
 
     if (t_ms <= 0)
         m_color = "gray";
-}
-
-void ProcessTime::storageRider(QString result)
-{
-    qDebug()<< "==========result=========="<< result;
-    auto values = result.split(",");
-    int number = values[0].toInt(); //Save Numebr
-    QString time = values[1];       //Save time
-    QString cat = values[2];        //Save cat
-
-    QTime currentTime = QTime::fromString("00:" + time);
-    qint64 millisecondsDiff = currentTime.msecsSinceStartOfDay();
-    int t_ms = static_cast<int>(millisecondsDiff);
-
-
-    //If it is a new Category, create it
-    if (m_iCatName.size() == 0) {
-        m_iCatName.append(cat);
-        QVector<int> timeChrono = {t_ms, number};
-        QVector<QVector<int>> cat;
-        cat.append(timeChrono);
-        m_CatData.append(cat);
-
-        //First rider
-        return;
-    }
-
-    int posCat = 9999;
-    for (int i = 0; i < m_iCatName.size(); ++i) {
-        if (m_iCatName.at(i) == cat){
-            posCat = i;
-            break;
-        }
-    }
-
-    if (posCat == 9999){
-        m_iCatName.append(cat);
-        QVector<int> timeChrono = {t_ms, number};
-        QVector<QVector<int>> cat;
-        cat.append(timeChrono);
-        m_CatData.append(cat);
-        return;
-    }
-
-    QVector<QVector<int>> categoryTime = m_CatData.value(posCat);
-    QVector<int> timeChrono = {t_ms, number};
-    categoryTime.append(timeChrono);
-
-    std::sort(categoryTime.begin(),categoryTime.end() ,[](const QVector<int>& left,const QVector<int>& right)->bool{
-                if(left.empty() && right.empty())
-                    return false;
-                if(left.empty())
-                    return true;
-                if(right.empty())
-                    return false;
-                return left.first()<right.first();
-            }
-        );
-
-    m_CatData.replace(posCat, categoryTime);
-
-    for (int j = 0; j < m_CatData.size(); ++j) {
-        qDebug()<< "==>" << m_iCatName.at(j);
-        for (int i = 0; i < m_CatData.at(j).size(); ++i) {
-            qDebug()<< "==>" << m_CatData.at(j).at(i);
-        }
-    }
 }
