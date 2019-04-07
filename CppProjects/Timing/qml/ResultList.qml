@@ -128,7 +128,12 @@ Item{
                 ColumnLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    spacing: -5
+                    spacing: {
+                        switch (Qt.platform.os) {
+                        case "linux": return -5
+                        case "windows": return 0
+                        }
+                    }
                     Text {
                         Layout.leftMargin: 10
                         text: "Nombre"
@@ -260,7 +265,12 @@ Item{
                         ColumnLayout {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            spacing: -5
+                            spacing: {
+                                switch (Qt.platform.os) {
+                                case "linux": return -5
+                                case "windows": return 0
+                                }
+                            }
                             Text {
                                 Layout.leftMargin: 10
                                 text: name

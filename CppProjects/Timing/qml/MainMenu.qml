@@ -629,8 +629,13 @@ Item {
                 }
             }else{
                 //Update Position
-                for(id = intPos; id < resultList.count(); id++)
-                    resultList.setPosition(id, id + 1)
+                for(id = intPos; id < resultList.count(); id++){
+                    if (resultList.getInfo(id).chronoTime === "N.S.P."){
+                        resultList.setPosition(id, 999999)
+                    }else{
+                        resultList.setPosition(id, id + 1)
+                    }
+                }
             }
 
             timeList.removeIdx(idx)
@@ -682,7 +687,9 @@ Item {
                 resultList.clearList()
             }
 
-            var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
+//            var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
+            var pos = readdata.ranking
+            var intPos = parseInt(pos)
 
             //Save result
             resultList.addList({"position": "-",
