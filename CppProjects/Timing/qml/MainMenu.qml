@@ -88,7 +88,12 @@ Item {
         height: 480
         minimumWidth: 600
         minimumHeight: 480
-        flags: Qt.SubWindow
+        flags: {
+            switch (Qt.platform.os) {
+            case "linux": return Qt.SubWindow
+            case "windows": return Qt.Window
+            }
+        }
         visible: true
 
         Component.onCompleted: {
@@ -247,7 +252,6 @@ Item {
             if (countList === 0 && mainList.count() > 0){
                 toolView.displayFirstRider = false
             }
-
         }
     }
 
@@ -298,8 +302,6 @@ Item {
                 if (mainList.count() === 0)
                     return
 
-                console.log ("Prepare Flag--->")
-
                 timeList.addList(
                             { "numStar": mainList.getPosition(),
                                 "number": mainList.getNumber(),
@@ -331,8 +333,7 @@ Item {
             }
 
             if (time === 0 && flagStart){
-                console.log ("Start--->")
-                console.log ("StartTime--->" + mainList.getStartTime())
+                console.log ("Start---> " +  mainList.getNumber() + "---> Time: " +  mainList.getStartTime())
 
                 flagStart = false
                 flagDisplay = true
@@ -512,9 +513,9 @@ Item {
         font.pointSize: 18
         color: "white"
         anchors.top: mainList.top
-        anchors.left: mainList.right
-        anchors.topMargin: 90
-        anchors.leftMargin: 10
+        anchors.right: mainList.right
+        anchors.topMargin: 10
+        anchors.rightMargin: 10
     }
 
     TimeList {
@@ -585,7 +586,6 @@ Item {
                 lastCategory = currentCategory
                 currentCategory = timeList.getInfo(idx).categoria
                 resultList.clearList()
-                procTime.cleanRanking()
             }
 
             if (resultList.count() === 0) {
@@ -601,14 +601,10 @@ Item {
                                        "diffTime": " "})
 
                 toolView.setRankingDiff(diffSecRider)
-//                procTime.setTimeRef(timeList.getInfo(idx).time)
 //                timeList.setPosDiff(idx, 1,"+00:00.000")
                 timeList.removeIdx(idx)
                 return
             }
-
-//            var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
-//            timeList.setPosDiff(idx, pos, procTime.elapsed)
 
             var pos = readdata.ranking
             var intPos = parseInt(pos)
@@ -684,7 +680,6 @@ Item {
                 lastCategory = currentCategory
                 currentCategory = timeList.getInfo(idx).categoria
                 resultList.clearList()
-                procTime.cleanRanking()
             }
 
             var pos = procTime.getDiff(timeList.getInfo(idx).time) + 1
@@ -745,7 +740,6 @@ Item {
         visible: false
         model: listMenu
         onActivated: readdata.createCatResults(listMenu.get(currentIndex).value)
-
         Timer {
             id: timerMenu
             interval: 25

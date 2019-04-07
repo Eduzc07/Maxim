@@ -67,9 +67,19 @@ void ReadData::setPartida(const QString &partida)
 
 void ReadData::readFile(QString inputFile )
 {
+    qDebug()<< "-----" << inputFile;
+#ifdef WIN32
+    // Windows code here
+    auto fileN = inputFile.split("///");
+#else
+    // UNIX code here
     auto fileN = inputFile.split("//");
+#endif
+
     QString name = fileN[1];
     QFile file(name);
+
+    qDebug()<< "-----" << name;
 
 //    QFile file(":/lista.csv");
     if(!file.open(QIODevice::ReadOnly|QIODevice::Text)){
@@ -341,7 +351,7 @@ void ReadData::saveStartList(QString filename)
 
 void ReadData::storageRider(QString result)
 {
-    qDebug()<< "==========result=========="<< result;
+    qDebug()<< "Result: ==>"<< result;
     auto values = result.split(",");
     int number = values[0].toInt(); //Save Numebr
     QString time = values[1];       //Save time
@@ -404,12 +414,12 @@ void ReadData::storageRider(QString result)
 
     m_CatData.replace(posCat, categoryTime);
 
-    for (int j = 0; j < m_CatData.size(); ++j) {
-        qDebug()<< "==>" << m_iCatName.at(j);
-        for (int i = 0; i < m_CatData.at(j).size(); ++i) {
-            qDebug()<< "==>" << m_CatData.at(j).at(i);
-        }
-    }
+//    for (int j = 0; j < m_CatData.size(); ++j) {
+//        qDebug()<< "==>" << m_iCatName.at(j);
+//        for (int i = 0; i < m_CatData.at(j).size(); ++i) {
+//            qDebug()<< "==>" << m_CatData.at(j).at(i);
+//        }
+//    }
 
     searchNewRanking(number, posCat);
 }

@@ -212,42 +212,14 @@ Item {
 //                height: heightRider
 //                color: "lightsteelblue"
 //            }
+
+            move: Transition {
+                NumberAnimation { properties: "x,y"; duration: 300 }
+            }
             focus: true
             clip: true
-//            flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds
         }
     }
-
-//            states: [
-//                State {
-//                    when: (runTime > 2 && runTime <= 5 && topArea.time === "00:00.000")
-//                    PropertyChanges { target: timeToStart; visible: true}
-//                    PropertyChanges { target: redLightBack; visible: false}
-//                    PropertyChanges { target: yellowLightBack; visible: false}
-//                    PropertyChanges { target: greenLightBack; visible: false}
-//                },
-//                State {
-//                    when: (runTime === 2 && topArea.time === "00:00.000")
-//                    PropertyChanges { target: timeToStart; visible: true}
-//                    PropertyChanges { target: redLightBack; visible: true}
-//                    PropertyChanges { target: yellowLightBack; visible: false}
-//                    PropertyChanges { target: greenLightBack; visible: false}
-//                },
-//                State {
-//                    when: (runTime === 1 && topArea.time === "00:00.000")
-//                    PropertyChanges { target: timeToStart; visible: true}
-//                    PropertyChanges { target: redLightBack; visible: true}
-//                    PropertyChanges { target: yellowLightBack; visible: true}
-//                    PropertyChanges { target: greenLightBack; visible: false}
-//                },
-//                State {
-//                    when: (runTime == 0 && topArea.time === "00:00.000")
-//                    PropertyChanges { target: timeToStart; visible: true}
-//                    PropertyChanges { target: redLightBack; visible: true}
-//                    PropertyChanges { target: yellowLightBack; visible: true}
-//                    PropertyChanges { target: greenLightBack; visible: true}
-//                }
-//            ]
 }
 

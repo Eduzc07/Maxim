@@ -71,7 +71,7 @@ Item {
             for(id = 0; id < rankingWCModel.count; id++){
                 procTime.getPos(rankingWCModel.get(id).time)
                 rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
-                rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
+                rankingWCModel.setProperty(id, "diff", procTime.elapsed)
             }
         }else{
             for(id = lastPos; id < rankingWCModel.count; id++)
@@ -135,7 +135,7 @@ Item {
         for(var id = 0; id < rankingWCModel.count; id++){
             var post = procTime.getPos(rankingWCModel.get(id).time)
             rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())
-            rankingWCModel.setProperty(id, "diff", procTime.flatElapsed)
+            rankingWCModel.setProperty(id, "diff", procTime.elapsed)
             rankingWCModel.setProperty(id, "colorRider", "blue")
         }
     }
@@ -146,8 +146,6 @@ Item {
             return
 
         lastPos = parseInt(value)
-//        if (vNum > rankingWCModel.count )
-//            return
         if (wcCategory !== timeList.getInfo(0).categoria)
             return
 
@@ -182,8 +180,6 @@ Item {
 
                 checkRanking()
                 rankingWCModel.setProperty(idx, "colorRider", "green")
-
-                console.log("onRiderWaiting --->", rider.diff)
 
                 for(var id = idx; id < rankingWCModel.count; id++)
                     rankingWCModel.setProperty(id, "position", Number(id + 1).toLocaleString())

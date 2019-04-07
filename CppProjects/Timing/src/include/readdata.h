@@ -50,7 +50,6 @@ public:
     QString color() const { return m_color;}
     QVariant listRanking() const { return m_ListRanking;}
 
-
     void setUserName(const QString &userName);
     void setInvRider(const QString &qsInvRider);
     void setInvCat(const QString &qsInvCat);
@@ -99,25 +98,22 @@ private:
     int m_iterRanking = 0;
 
     QList<QString> m_riderRanking;
-    QVariant m_ListRanking;
+    QVariant m_ListRanking;     //List to send qml
 
     QVector<QString> m_riderStartTime;
     QVector<QString> m_allCatResultTime;
-//    QVector<QString> m_catResultTime;
 
     QVector<int> m_iCatResultTime;
     QVector<QVector<int>> m_iTotalResultTime;
 
     QVector<QVector<int>> m_qvData; //Save all the times
-
-
     QVector<QString> m_iCatName;
     QVector<QVector<QVector<int>>> m_CatData;
 
-    QMap<int, QString> m_ridersDB;
-    int m_iPos = 1;
+    QMap<int, QString> m_ridersDB;      //List all the riders
+    int m_iPos = 1;                     //Save Position
 
-    QMap<QString, QString> m_allCat;
+    QMap<QString, QString> m_allCat;    //All the categories
 
 private:
     void saveData(int, QString);

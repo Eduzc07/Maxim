@@ -59,14 +59,7 @@ Item{
         var number = riderResultModel.get(idx).number
         var chrono = riderResultModel.get(idx).chronoTime
         var diff = riderResultModel.get(idx).diffTime
-//        var data = pos + ","
-//        data += name + ","
-//        data += categoria + ","
-//        data += club + ","
-//        data += home + ","
-//        data += number + ","
-//        data += chrono + ","
-//        data += diff
+
         var data = number + ","
         data += chrono + ","
         data += diff
@@ -360,17 +353,6 @@ Item{
 //            }
             focus: true
             clip:true
-//            add: Transition {
-//                ParallelAnimation {
-//                    NumberAnimation { property: "opacity";from: 0; to: 100; duration: 3000 }
-//                    NumberAnimation { properties: "x,y"; duration: 1000 }
-//                }
-//            }
-
-//            addDisplaced: Transition {
-//                NumberAnimation { properties: "x,y"; duration: 1000 }
-//            }
-
             flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds
             ScrollBar.vertical: ScrollBar {active: true}

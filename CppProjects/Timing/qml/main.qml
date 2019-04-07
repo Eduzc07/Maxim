@@ -14,7 +14,7 @@ Window {
     Component.onCompleted: {
 //        showMaximized()
         showFullScreen()
-        console.log ("Starting--->")
+        console.log ("Timing starting--->")
         console.log ("The date is: " + new Date().toLocaleDateString(Qt.locale("en_EU")))
         initTimer.start()
     }

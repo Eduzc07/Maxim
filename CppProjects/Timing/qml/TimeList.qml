@@ -43,7 +43,6 @@ Item {
 
     function addList(newTime){
         timeModel.append(newTime)
-//        timeModel.insert(0, newTime)
     }
 
     function getStartTime(idx){
@@ -79,10 +78,7 @@ Item {
     }
 
     function stopTime(idx, etime){
-//        var ctime = timeModel.get(idx).time
         timeModel.setProperty(idx, "endTime", etime)
-
-        console.log ("idx: " + idx + " eTime--->" + etime)
     }
 
     Rectangle {
@@ -266,9 +262,7 @@ Item {
             }
             focus: true
             orientation: ListView.Horizontal
-    //            verticalLayoutDirection: ListView.BottomToTop
             clip: true
-
             flickableDirection: Flickable.HorizontalFlick
             boundsBehavior: Flickable.StopAtBounds
             ScrollBar.horizontal: ScrollBar {active: true}

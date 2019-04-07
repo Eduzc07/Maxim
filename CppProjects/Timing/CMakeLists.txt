@@ -14,9 +14,6 @@ file(GLOB CPP_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/include/*.h")
 file(GLOB RC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/qml/*.qrc")
 
-#add_library(QtCore STATIC IMPORTED)
-#set_property(TARGET QtCore PROPERTY IMPORTED_LOCATION  )
-
 add_executable( ${PROJECT_NAME}
                 ${CPP_FILES}
                 ${HEADER_FILES}

@@ -52,6 +52,7 @@ Item {
         title: "Guardar"
         selectExisting: false
         nameFilters: [ "CSV (*.csv)" ]
+//        folder: shortcuts.home
         onAccepted: {
             if (topLeftArea.bOpen){
                 //Clear last results
@@ -70,7 +71,7 @@ Item {
                 mainTimer.nextStart = topLeftArea.startTime
 
                 mainList.clearList()
-                readdata.readFile(fileDialog.fileUrls)//ReadFile
+                readdata.readFile(fileDialog.fileUrl)//ReadFile
                 topLeftArea.enableB2 = true
 
                 //Load Start Time Final
