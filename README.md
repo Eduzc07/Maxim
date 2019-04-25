@@ -58,6 +58,11 @@ git commit -m "Description"
 git push origin {branch_name}
 ```
 
+# Deploy QML Project for windows
+```
+windeployqt --quick --release --no-translations --qmldir qml .
+```
+
 ## Info
 [Create a new branch](https://github.com/Kunena/Kunena-Forum/wiki/Create-a-new-branch-with-git-and-manage-branches)\
 [Git Branching](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)
