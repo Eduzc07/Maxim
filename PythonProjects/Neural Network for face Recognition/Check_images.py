@@ -75,7 +75,7 @@ if __name__ == '__main__':
     nested = cv2.CascadeClassifier(nested_fn)
 
     #############################################################################3
-    n=0;
+    n=0
     samples =  np.empty((0,2500))
     
     #Get list of all the images
@@ -124,7 +124,7 @@ if __name__ == '__main__':
         sample = resized_image.reshape((1,w*h))
         sample = sample/255
         samples = np.append(samples,sample,0)
-        n=n+1;
+        n=n+1
         
         #############################################################################3
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 '''
 Face recognition:
 Program to take fotos in real time and generate data to train.
@@ -67,7 +67,7 @@ def main():
 
     cam = cv2.VideoCapture(0)
 
-    n = 0;
+    n = 0
 
     #Read previous Data
     currentFile = 'data/data_images/Persons/%s/generalsamples.data'%name
@@ -126,7 +126,7 @@ def main():
                 sample = resized_image.reshape((1,2500))
                 sample = sample/255
                 samples = np.append(samples,sample,0)
-                n=n+1;
+                n=n+1
                 isClose = True
                 isPhoto = False
 
