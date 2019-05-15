@@ -5,6 +5,7 @@ Validation of face and person recognition running in Real Time.
 '''
 from __future__ import print_function
 
+import time
 import numpy as np
 import cv2
 import os
@@ -47,18 +48,21 @@ if __name__ == '__main__':
         video_src = 0
 
     args = dict(args)
-    cascade_fn = args.get('--cascade', "data/haarcascades/haarcascade_frontalcatface_extended.xml")
+    cascade_fn = args.get('--cascade', "data/haarcascades/haarcascade_frontalface_default.xml")
     nested_fn  = args.get('--nested-cascade', "data/haarcascades/haarcascade_eye.xml")
 
     cascade = cv2.CascadeClassifier(cascade_fn)
     nested = cv2.CascadeClassifier(nested_fn)
 
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(1)
     
     cv2.namedWindow('facedetect')
     # create trackbars for color change
     
     while True:
+        # Start time
+        start = time.time()
+
         ret, img = cam.read()
         # img = cv2.imread('cara5.jpg')
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -119,6 +123,16 @@ if __name__ == '__main__':
             #############################################################################
             num+=1
        
+        # End time
+        end = time.time()
+ 
+        # Time elapsed
+        seconds = end - start
+     
+        # Calculate frames per second
+        fps  = 1.0 / seconds;
+
+        cv2.putText(vis,"%0.2f fps"%(fps), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (250,255,250), 1)
         cv2.imshow('facedetect', vis)
         
         key = cv2.waitKey(2)

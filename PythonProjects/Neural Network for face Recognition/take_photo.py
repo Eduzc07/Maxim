@@ -111,7 +111,7 @@ def main():
             #Set threshold and maxValue
             thresh=127
             maxValue=255
-            th,dst=cv2.threshold(gray,thresh,maxValue,cv2.THRESH_BINARY);
+            th,dst=cv2.threshold(gray,thresh,maxValue,cv2.THRESH_BINARY)
             #--------------------------------------------------------
             
             resized_image = cv2.resize(dst,(50,50))
