@@ -30,7 +30,6 @@ name = "Edu"
 n_images = 5
 #---------------------------------------------------------------------------
 
-
 def nothing(x):
     pass
 
@@ -46,7 +45,6 @@ def detect(img, cascade):
 def draw_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
-
 
 def main():
     if not os.path.exists('data/data_images/Persons/%s'%(name)):
@@ -65,8 +63,7 @@ def main():
     cascade = cv2.CascadeClassifier(cascade_fn)
     nested = cv2.CascadeClassifier(nested_fn)
 
-    cam = cv2.VideoCapture(0)
-
+    cam = cv2.VideoCapture(1)
     n = 0
 
     #Read previous Data
@@ -76,7 +73,6 @@ def main():
     else:
         samples =  np.empty((0,2500))
     
-
     isClose = False
     isPhoto = True
 
@@ -139,8 +135,7 @@ def main():
     np.savetxt('data/data_images/Persons/%s/generalsamples.data'%name, samples)
     cv2.destroyAllWindows()
 
-
 if __name__ == '__main__':
     import sys, getopt
     print(__doc__)
-    main()   
+    main()

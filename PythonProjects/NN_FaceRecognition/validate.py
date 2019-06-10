@@ -18,6 +18,7 @@ sw = np.loadtxt('data/data_images/w.data',np.float32)
 
 #names=["Edu","Antonio","Jorge","Patty","JP","America","Amoran"]
 names = os.listdir("data/data_images/Persons/")
+#names=["Edu","America","Amoran"]
 print(names)
 
 def detect(img, cascade):
@@ -64,24 +65,26 @@ if __name__ == '__main__':
 	# ret, img = cam.read()
 
 	#############################################################################3
-	samples =  np.empty((0,2500))
+	samples =  np.empty((0, 2500))
 	#---------------------------------------------------------------------------
 	# Uncomment in order to aks in terminal
 	#name = raw_input("Who do you want to see? ")
 	# Fix a name and number of  pictures.
-	name = "Edu"
+	name = "patty"
 	#---------------------------------------------------------------------------
-	  
-	# list = os.listdir("data/data_images/Persons/%s"%name)
-	list = os.listdir("data/data_images/Test")
-	iv=len(list) #image
+
+	fileName = "data/data_images/Test"
+	#fileName = 'data/data_images/Persons/%s'%name
+	#list = os.listdir("data/data_images/Persons/%s"%name)
+	list = os.listdir(fileName)
+	iv = len(list) #image
 	if (iv == 0):
 		print("Empty folder")
 		quit()
 
 	#Get list of all the images
-	# onlyfiles = getFiles('data/data_images/Persons/%s'%name)
-	onlyfiles = getFiles('data/data_images/Test')
+	#onlyfiles = getFiles(fileName)
+	onlyfiles = getFiles(fileName)
 
 	for i in onlyfiles:
 		img = cv2.imread(i)
@@ -137,7 +140,6 @@ if __name__ == '__main__':
 				break
 
 			person = np.argmax(y)
-			
 			imgName = os.path.basename(os.path.normpath(i))
 			print("\'%s\' esta en la foto %s." %(names[person], imgName))
 

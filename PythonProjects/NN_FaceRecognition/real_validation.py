@@ -10,12 +10,13 @@ import numpy as np
 import cv2
 import os
 
-sv = np.loadtxt('data/data_images/v.data',np.float32)
-sw = np.loadtxt('data/data_images/w.data',np.float32)
+sv = np.loadtxt('data/data_images/v.data', np.float32)
+sw = np.loadtxt('data/data_images/w.data', np.float32)
 
-# names=["Edu","Antonio","Jorge","Patty","JP","America","Amoran"]
-names=os.listdir("data/data_images/Persons/")
-
+#names=["Edu","Antonio","Jorge","Patty","JP","America","Amoran"]
+#names=["Edu","America","Amoran"]
+names = os.listdir("data/data_images/Persons/")
+print(names)
 def nothing(x):
     pass
 
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     cascade = cv2.CascadeClassifier(cascade_fn)
     nested = cv2.CascadeClassifier(nested_fn)
 
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(1)
     
     cv2.namedWindow('facedetect')
     # create trackbars for color change
@@ -89,7 +90,6 @@ if __name__ == '__main__':
             smallRGB = cv2.cvtColor(resized_image, cv2.COLOR_GRAY2BGR)
             # cv2.imshow('person%d'%num, smallRGB)
 
-
             #############################################################################3
             #-----------------------------------------------------
             #RNA
@@ -112,13 +112,13 @@ if __name__ == '__main__':
             out = sw.transpose().dot(n)
             #-----------------------------------------------------
             valMaxY = np.max(out)
+
             if (valMaxY > 0.8):
                 person = np.argmax(out)
-
                 val = 20
                 cv2.rectangle(vis, (x1 - val, y1 - 2*val), (x2 + val, y1), (0, 150, 0), -1)
-                cv2.putText(vis,"%s  -> %0.2f"%(names[person], valMaxY), (x1 - val/2, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250,255,250),2)
-
+                #cv2.putText(vis,"%s  -> %0.2f"%(names[person], valMaxY), (x1 - val/2, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250,255,250),2)
+                cv2.putText(vis,"%s"%names[person], (x1 - val/2, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250,255,250),2)
                 #draw_small(vis, smallRGB, x2 + val, y2 + val)                
             #############################################################################
             num+=1
@@ -130,7 +130,7 @@ if __name__ == '__main__':
         seconds = end - start
      
         # Calculate frames per second
-        fps  = 1.0 / seconds;
+        fps  = 1.0 / seconds
 
         cv2.putText(vis,"%0.2f fps"%(fps), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (250,255,250), 1)
         cv2.imshow('facedetect', vis)

@@ -11,20 +11,25 @@ import matplotlib.pyplot as plt
 import os
 
 # names=["Edu","antonio","jorge","patty","jp","america","amoran"]
-names = os.listdir("data/data_images/Persons/") #It it does not work, add manually all the names
+#It it does not work, add manually all the names
+names = os.listdir("data/data_images/Persons/") 
+#names=["Edu","america","amoran"]
 print(names)
 
-ni = 1500 #numero de iteraciones
+ni = 2500 #numero de iteraciones
 ncaras = len(names) #ncaras
 
 def main():
 	samples = np.empty((0,2500))
+	samples_pp = np.empty((0,2500))
 	for i in range(0, ncaras):
+		print(names[i])
 		samples_pp = np.loadtxt('data/data_images/Persons/%s/generalsamples.data'%(names[i]), np.float32)
+		print(samples_pp.shape)
 		if len(samples_pp)<=0:
   			print("[Error!!] \"data/data_images/Persons/%s\": %s was not trained or is empty!!"%(names[i],names[i]))
   			quit()
-		samples = np.append(samples,samples_pp ,0) 
+		samples = np.append(samples, np.asmatrix(samples_pp), 0) 
 
 	#--------------------------------------------
 	# Display all the saved images
@@ -43,21 +48,21 @@ def main():
 	#--------------------------------------------
 
 	yzeros = np.diag(np.ones(ncaras))
-	yb =  np.empty((0,len(names)))
+	yb = np.empty((0,len(names)))
 	nfotos = 0 #nfotos
 
 	for i in range(0,len(names)):
 		title=names[i]		
-		n_person=len(os.listdir("data/data_images/Persons/%s"%names[i]))
-		for j in range(0,n_person-1):
+		n_person = len(os.listdir("data/data_images/Persons/%s"%names[i]))
+		for j in range(0, n_person-1):
 			yb = np.append(yb,np.asmatrix(yzeros[i,:]) ,0)
 			nfotos+=1
 
-	x=np.array(samples)
-	h,w=x.shape
-	bias=np.ones((h,1))
-	x=np.column_stack((x,bias))
-	y=np.zeros(yb.shape) #current output
+	x = np.array(samples)
+	h,w = x.shape
+	bias = np.ones((h,1))
+	x = np.column_stack((x,bias))
+	y = np.zeros(yb.shape) #current output
 
 	#Rows,columns MatLab
 	#Neural Network
@@ -69,22 +74,23 @@ def main():
 	w = 0.001*np.random.random((nm,ns))
 
 	#Training of neural network
-	nx=nfotos #caras x # de fotos
-	eta=0.1/nx #0.1/nx
+	nx = x.shape[0] #nfotos #caras x # de fotos
+	eta = 0.1/nx #0.1/nx
 
 	error =  np.zeros((nx,ns))
-	numIter=ni + 1 ;
+	numIter = ni + 1
 
 	J =  np.zeros((numIter,1))
 	count = np.zeros((numIter,1))
 
 	for iter in range (0, numIter):
-		count[iter]=iter
-		dJdw = 0;
-		dJdv = 0;
-		for k in range (0,nx): # 1 - 30
-	  		inX=np.transpose(np.asmatrix(x[k,:]))
-	  		m=np.transpose(v).dot(inX)
+		count[iter] = iter
+		dJdw = 0
+		dJdv = 0
+
+		for k in range (0, nx): # 1 - 30
+	  		inX = np.transpose(np.asmatrix(x[k,:]))
+	  		m = np.transpose(v).dot(inX)
 
 	  		#Sigmoid 1
 	 		n = 1.0/(1.0+np.exp(-m))
