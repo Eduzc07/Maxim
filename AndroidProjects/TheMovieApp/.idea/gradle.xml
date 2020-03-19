@@ -3,18 +3,16 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <compositeConfiguration>
-          <compositeBuild compositeDefinitionSource="SCRIPT" />
-        </compositeConfiguration>
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$USER_HOME$/Local_G/2018/Workspace/Maxim/TheMovieApp" />
-            <option value="$USER_HOME$/Local_G/2018/Workspace/Maxim/TheMovieApp/app" />
+            <option value="$USER_HOME$/Local_G/2018/Workspace/eduGitHub/Maxim/AndroidProjects/TheMovieApp" />
+            <option value="$USER_HOME$/Local_G/2018/Workspace/eduGitHub/Maxim/AndroidProjects/TheMovieApp/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>
