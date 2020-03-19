@@ -55,7 +55,7 @@ if __name__ == '__main__':
     cascade = cv2.CascadeClassifier(cascade_fn)
     nested = cv2.CascadeClassifier(nested_fn)
 
-    cam = cv2.VideoCapture(1)
+    cam = cv2.VideoCapture(0)
     
     cv2.namedWindow('facedetect')
     # create trackbars for color change
@@ -118,7 +118,7 @@ if __name__ == '__main__':
                 val = 20
                 cv2.rectangle(vis, (x1 - val, y1 - 2*val), (x2 + val, y1), (0, 150, 0), -1)
                 #cv2.putText(vis,"%s  -> %0.2f"%(names[person], valMaxY), (x1 - val/2, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250,255,250),2)
-                cv2.putText(vis,"%s"%names[person], (x1 - val/2, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250,255,250),2)
+                cv2.putText(vis,"%s"%names[person], (x1 - int(val/2), y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (250,255,250),2)
                 #draw_small(vis, smallRGB, x2 + val, y2 + val)                
             #############################################################################
             num+=1

@@ -16,10 +16,11 @@ save - Space bar
 from __future__ import print_function
 
 from datetime import datetime
+import os
 import time
 import numpy as np
 import cv2
-import os
+
 
 #---------------------------------------------------------------------------
 # Uncomment in order to aks in terminal
@@ -115,7 +116,7 @@ def main():
 
             if (key == 32 or isPhoto):
                 imageName = datetime.now().strftime('%Y%m%d_%H:%M:%S.jpg')
-                cv2.imwrite("data/data_images/Persons/%s/%s.jpg" %(name, imageName), img)
+                cv2.imwrite("data/data_images/Persons/%s/%s" %(name, imageName), img)
                 print("%s has been saved!" % imageName)
 
                 resized_image = np.asarray(resized_image, dtype='uint8' )

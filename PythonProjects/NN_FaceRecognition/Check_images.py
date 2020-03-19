@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+
 '''
 [Extra]
 Create data beging for image which already exist.
@@ -11,11 +12,11 @@ Pres any button to go next.
 
 # Python 2/3 compatibility
 from __future__ import print_function
-
+import os
 import numpy as np
 import cv2
-import os
-from matplotlib import pyplot as plt
+
+#from matplotlib import pyplot as plt
 
 #---------------------------------------------------------------------------
 # Uncomment in order to aks in terminal
@@ -70,7 +71,7 @@ if __name__ == '__main__':
 
     #############################################################################3
     n = 0
-    samples = np.empty((0,2500))
+    samples = np.empty((0, 2500))
     
     #Get list of all the images
     onlyfiles = getFiles('data/data_images/Persons/%s'%name)
@@ -100,18 +101,18 @@ if __name__ == '__main__':
             #Set threshold and maxValue
             thresh=127
             maxValue=255
-            th,dst=cv2.threshold(gray,thresh,maxValue,cv2.THRESH_BINARY);
+            th,dst=cv2.threshold(gray,thresh,maxValue,cv2.THRESH_BINARY)
 
             resized_image = cv2.resize(dst, (50, 50)) 
             cv2.imshow(name, resized_image)
 
             #-----------------------------------------------------
-            #RNA
+            # RNA
             #-----------------------------------------------------
             # print ("training complete")
             # np.savetxt('generalsamples.data',samples)
             #############################################################################3
-            resized_image = np.asarray(resized_image, dtype='uint8' )
+            resized_image = np.asarray(resized_image, dtype='uint8')
             h,w = resized_image.shape
             sample = resized_image.reshape((1,w*h))
             sample = sample/255
@@ -120,10 +121,9 @@ if __name__ == '__main__':
 
         #############################################################################3
         cv2.imshow('facedetect', vis)
-        cv2.waitKey(50)
+        cv2.waitKey()
 
     #############################################################################3
     np.savetxt('data/data_images/Persons/%s/generalsamples.data'%name, samples)
     #############################################################################3
-
     cv2.destroyAllWindows()
