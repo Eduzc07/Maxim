@@ -16,10 +16,11 @@ save - Space bar
 from __future__ import print_function
 
 from datetime import datetime
+import os
 import time
 import numpy as np
 import cv2
-import os
+
 
 #---------------------------------------------------------------------------
 # Uncomment in order to aks in terminal
@@ -29,7 +30,6 @@ import os
 name = "Edu"
 n_images = 5
 #---------------------------------------------------------------------------
-
 
 def nothing(x):
     pass
@@ -46,7 +46,6 @@ def detect(img, cascade):
 def draw_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
-
 
 def main():
     if not os.path.exists('data/data_images/Persons/%s'%(name)):
@@ -65,8 +64,7 @@ def main():
     cascade = cv2.CascadeClassifier(cascade_fn)
     nested = cv2.CascadeClassifier(nested_fn)
 
-    cam = cv2.VideoCapture(0)
-
+    cam = cv2.VideoCapture(1)
     n = 0
 
     #Read previous Data
@@ -76,7 +74,6 @@ def main():
     else:
         samples =  np.empty((0,2500))
     
-
     isClose = False
     isPhoto = True
 
@@ -119,7 +116,7 @@ def main():
 
             if (key == 32 or isPhoto):
                 imageName = datetime.now().strftime('%Y%m%d_%H:%M:%S.jpg')
-                cv2.imwrite("data/data_images/Persons/%s/%s.jpg" %(name, imageName), img)
+                cv2.imwrite("data/data_images/Persons/%s/%s" %(name, imageName), img)
                 print("%s has been saved!" % imageName)
 
                 resized_image = np.asarray(resized_image, dtype='uint8' )
@@ -139,8 +136,7 @@ def main():
     np.savetxt('data/data_images/Persons/%s/generalsamples.data'%name, samples)
     cv2.destroyAllWindows()
 
-
 if __name__ == '__main__':
     import sys, getopt
     print(__doc__)
-    main()   
+    main()
