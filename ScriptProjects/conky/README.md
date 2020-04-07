@@ -1,4 +1,4 @@
-# Conky -Widgets
+# Conky - Widgets
 
 ##### Widget for Linux/Ubuntu 18.04.
 
