@@ -10,6 +10,5 @@ This theme is made for Conky-Manager (http://www.teejeetech.in/p/conky-manager.h
 
 ![ScreenShot](preview.png)
 
-
 ## Source
 - [ddittmar/conky_ddweather](https://github.com/ddittmar/conky_ddweather)

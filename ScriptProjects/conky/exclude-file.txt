@@ -4,4 +4,6 @@ copyTo.sh
 exclude-file.txt
 conkyrc/preview.png
 conky_ddweather/preview.png
+conky_ddweather/README.md
 revolutionary_clocks/rev_hd_desk.jpg
+revolutionary_clocks/README.md.jpg

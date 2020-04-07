@@ -105,7 +105,14 @@ ${color DimGray}CPU2:${alignr}${if_match ${cpu cpu2} > 90}${color red}${else}$co
 ${color DimGray}CPU3:${alignr}${if_match ${cpu cpu3} > 90}${color red}${else}$color${endif}${cpu cpu3}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu3 5, 235}
 ${color DimGray}CPU4:${alignr}${if_match ${cpu cpu4} > 90}${color red}${else}$color${endif}${cpu cpu4}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu4 5, 235}
 
-${color DimGray}Swap: ${alignr}$swap/$swapmax - ${color white}$swapperc% ${alignr}${color2}${swapbar 5,120}
+#######################################################
+# Memory  RAM
+#######################################################
+${font Arial:bold:size=10}${color1}RAM MEMORY ${color DarkSlateGray}${hr 2}
+$font${color DimGray}MEM $alignc $mem / $memmax $alignr ${color white}$memperc%
+${color2}$membar
+
+${color DimGray}Swap: ${alignr}$swap / $swapmax - ${color white}$swapperc% ${alignr}${color2}${swapbar 5,120}
 #${color DimGray}Processes: ${alignr}$processes
 #${color grey}Running: ${alignr}$running_processes
 
@@ -121,13 +128,6 @@ Temperature $alignr ${nvidia temp} °C
 #PCIe ${nvidia pcieutil}%
 
 #######################################################
-# Memory  RAM
-#######################################################
-${font Arial:bold:size=10}${color1}RAM MEMORY ${color DarkSlateGray}${hr 2}
-$font${color DimGray}MEM $alignc $mem / $memmax $alignr ${color white}$memperc%
-${color2}$membar
-
-#######################################################
 # HDD
 #######################################################
 ${font Arial:bold:size=10}${color1}HDD ${color DarkSlateGray}${hr 2}
@@ -138,15 +138,15 @@ ${color2}${fs_bar /home}
 # Top Process
 #######################################################
 ${font Arial:bold:size=10}${color1}TOP PROCESSES ${color DarkSlateGray}${hr 2}
-${color white}${font}Name ${alignr}PID                CPU%             MEM % $color
-${color DimGray}$font${top_mem name 1}${alignr}${top pid 1}               ${top cpu 1}            ${top mem 1} %
-$font${top_mem name 2}${alignr}${top pid 2}               ${top cpu 2}            ${top mem 2} %
-$font${top_mem name 3}${alignr}${top pid 3}               ${top cpu 3}            ${top mem 3} %
-$font${top_mem name 4}${alignr}${top pid 4}               ${top cpu 4}            ${top mem 4} %
-#$font${top_mem name 5}${alignr}${top pid 5}               ${top cpu 5}            ${top mem 5} %
-#$font${top_mem name 6}${alignr}${top pid 6}               ${top cpu 6}            ${top mem 6} %
-#$font${top_mem name 7}${alignr}${top pid 7}               ${top cpu 7}            ${top mem 7} %
-#$font${top_mem name 8}${alignr}${top pid 8}               ${top cpu 8}            ${top mem 8} %
+${color white}${font}Name ${alignr}PID               CPU%           MEM%
+${color DimGray}$font${top_mem name 1}${alignr}${top pid 1}          ${top cpu 1}%         ${top mem 1}%
+$font${top_mem name 2}${alignr}${top pid 2}          ${top cpu 2}%         ${top mem 2}%
+$font${top_mem name 3}${alignr}${top pid 3}          ${top cpu 3}%         ${top mem 3}%
+$font${top_mem name 4}${alignr}${top pid 4}          ${top cpu 4}%         ${top mem 4}%
+#$font${top_mem name 5}${alignr}${top pid 5}               ${top cpu 5}          ${top mem 5}%
+#$font${top_mem name 6}${alignr}${top pid 6}               ${top cpu 6}          ${top mem 6}%
+#$font${top_mem name 7}${alignr}${top pid 7}               ${top cpu 7}          ${top mem 7}%
+#$font${top_mem name 8}${alignr}${top pid 8}               ${top cpu 8}          ${top mem 8}%
 
 #######################################################
 # Network
