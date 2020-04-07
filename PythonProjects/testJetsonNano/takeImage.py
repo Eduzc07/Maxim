@@ -7,11 +7,10 @@ import time
 import datetime
 
 # create display window
-#frame_width = 640
-#frame_height = 480
-
-frame_width = 1280
-frame_height = 720
+width = [1920, 1280, 1024, 640, 800, 1280, 320]
+height = [1080, 720, 768, 480, 600, 1024, 240]
+frame_width = width[1]
+frame_height = height[1]
 
 # create camera device
 camera = jetson.utils.gstCamera(frame_width, frame_height, "/dev/video0")
@@ -22,7 +21,7 @@ camera.Open()
 time.sleep(5)
 # Converting datetime object to string
 dateTimeObj = datetime.datetime.now()
-timestampStr = dateTimeObj.strftime("%H%M%S_%d%m%Y")
+timestampStr = dateTimeObj.strftime("%d%m%Y_%H%M%S")
 nameImage = "images/%s.jpg"%(timestampStr)
 image, width, height = camera.CaptureRGBA(zeroCopy=1)
 jetson.utils.cudaDeviceSynchronize()
