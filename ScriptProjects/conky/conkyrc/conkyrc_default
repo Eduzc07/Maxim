@@ -1,0 +1,173 @@
+#--------------------------------------------------------
+# Conky RC
+#--------------------------------------------------------
+
+#######################################################
+# Conky settings
+#######################################################
+background yes
+update_interval 2
+
+use_xft yes
+xftfont 123:size=9
+xftalpha 0.1
+
+double_buffer yes
+no_buffers no
+
+override_utf8_locale yes
+text_buffer_size 256
+
+total_run_times 0
+
+draw_shades no
+draw_outline no
+draw_borders no
+draw_graph_borders no
+default_color gray
+default_shade_color red
+default_outline_color green
+
+uppercase no
+cpu_avg_samples 2
+net_avg_samples 1
+
+use_spacer yes
+
+#######################################################
+# Windows
+#######################################################
+own_window_class Conky
+own_window yes
+own_window_type normal
+#Here set Transparency
+own_window_transparent no
+own_window_argb_visual yes
+own_window_argb_value 200
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+#######################################################
+# Set Position
+#######################################################
+alignment top_right
+gap_x 5
+gap_y 10
+minimum_size 310 500
+maximum_width 310
+
+########################################################
+# Defining colors
+########################################################
+# Green
+color1 06BA07
+# Blue
+color2 1081E0
+
+#######################################################
+# Here starts all the content
+#######################################################
+TEXT
+#######################################################
+# Time
+#######################################################
+#${font Arial:bold:size=10}${color Tan2}TIME ${color DarkSlateGray}${hr 2}
+${alignr}${image ~/.conky/conky_e2i/img/logo_white.png -p 145, 0 -s 160x85}
+${voffset -30}
+${color white}${font :size=30}${time %H:%Mh}
+${voffset -30}${font :bold:size=10}${goto 27}${time %d %b. %Y}
+${font :bold:size=8}${goto 45}${time %A}
+#
+#${voffset -30}
+#${color white}${font :size=30}${alignc}${time %H:%Mh}
+#${voffset -30}${font :bold:size=10}${alignc}${time %d %b. %Y}
+#${font :bold:size=8}${alignc}${time %A}
+#
+#Title
+#${font openlogos:size=20}T ${font Arial:size=20}${color Tan1}GNU${color Ivory}LINUX
+
+#######################################################
+# System
+#######################################################
+${voffset -30}
+${color DimGray}
+${font Arial:bold:size=10}${color1}SYSTEM ${color DarkSlateGray} ${hr 2}
+$font${color DimGray}Device Name $alignr$nodename
+$sysname $kernel $alignr $machine
+${execi 1000 cat /proc/cpuinfo | grep 'model name' | sed -e 's/model name.*: //'| uniq | cut -c 1-26} $alignr${freq_g cpu0}Ghz
+Uptime $alignr${uptime}
+
+#######################################################
+# Processors
+#######################################################
+${font Arial:bold:size=10}${color1}PROCESSORS ${color DarkSlateGray}${hr 2}
+${font}${color DimGray}${color DimGray}CPU1:${alignr}${if_match ${cpu cpu1} > 90}${color red}${else}$color${endif}${cpu cpu1}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu1 5, 235}
+${color DimGray}CPU2:${alignr}${if_match ${cpu cpu2} > 90}${color red}${else}$color${endif}${cpu cpu2}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu2 5, 235}
+${color DimGray}CPU3:${alignr}${if_match ${cpu cpu3} > 90}${color red}${else}$color${endif}${cpu cpu3}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu3 5, 235}
+${color DimGray}CPU4:${alignr}${if_match ${cpu cpu4} > 90}${color red}${else}$color${endif}${cpu cpu4}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu4 5, 235}
+
+${color DimGray}Swap: ${alignr}$swap/$swapmax - ${color white}$swapperc% ${alignr}${color2}${swapbar 5,120}
+#${color DimGray}Processes: ${alignr}$processes
+#${color grey}Running: ${alignr}$running_processes
+
+#######################################################
+# Video
+#######################################################
+${font Arial:bold:size=10}${color1}VIDEO ${color DarkSlateGray}${hr 2}
+$font${color DimGray}${nvidia modelname} ${alignr}${color white}${nvidia gpuutil}% ${color2}${nvidiabar 5,120 gpuutil}
+${color DimGray}GPU Frecuency $alignr ${nvidia gpufreq} Mhz
+GPU Memory ${alignr} ${nvidia membwutil}%
+Temperature $alignr ${nvidia temp} °C
+#VIDEO ${nvidia videoutil}%
+#PCIe ${nvidia pcieutil}%
+
+#######################################################
+# Memory  RAM
+#######################################################
+${font Arial:bold:size=10}${color1}RAM MEMORY ${color DarkSlateGray}${hr 2}
+$font${color DimGray}MEM $alignc $mem / $memmax $alignr ${color white}$memperc%
+${color2}$membar
+
+#######################################################
+# HDD
+#######################################################
+${font Arial:bold:size=10}${color1}HDD ${color DarkSlateGray}${hr 2}
+$font${color DimGray}/home $alignc ${fs_used /home} / ${fs_size /home} $alignr${color white}${fs_free_perc /home}%
+${color2}${fs_bar /home}
+
+#######################################################
+# Top Process
+#######################################################
+${font Arial:bold:size=10}${color1}TOP PROCESSES ${color DarkSlateGray}${hr 2}
+${color white}${font}Name ${alignr}PID                CPU%             MEM % $color
+${color DimGray}$font${top_mem name 1}${alignr}${top pid 1}               ${top cpu 1}            ${top mem 1} %
+$font${top_mem name 2}${alignr}${top pid 2}               ${top cpu 2}            ${top mem 2} %
+$font${top_mem name 3}${alignr}${top pid 3}               ${top cpu 3}            ${top mem 3} %
+$font${top_mem name 4}${alignr}${top pid 4}               ${top cpu 4}            ${top mem 4} %
+#$font${top_mem name 5}${alignr}${top pid 5}               ${top cpu 5}            ${top mem 5} %
+#$font${top_mem name 6}${alignr}${top pid 6}               ${top cpu 6}            ${top mem 6} %
+#$font${top_mem name 7}${alignr}${top pid 7}               ${top cpu 7}            ${top mem 7} %
+#$font${top_mem name 8}${alignr}${top pid 8}               ${top cpu 8}            ${top mem 8} %
+
+#######################################################
+# Network
+#######################################################
+${font Arial:bold:size=10}${color1}NETWORK ${color DarkSlateGray}${hr 2}
+$font${color DimGray}External IP  $alignr ${color white}${execi 1000  wget -q -O- http://ipecho.net/plain; echo}
+$font${color DimGray}Local IP $alignr ${addr wlp3s0}
+Down $alignr ${downspeed wlp3s0} kb/s
+Up $alignr ${upspeed wlp3s0} kb/s
+Downloaded: $alignr  ${totaldown wlp3s0}
+Uploaded: $alignr  ${totalup wlp3s0}
+
+#Weather
+#${font Arial:bold:size=10}${color Tan2}WEATHER ${color DarkSlateGray}${hr 2}
+#${font}${color DimGray}
+
+#${voffset -25}${font Weather:size=45}${execi 1800 conkyForecast –location=BEXX0008 –datatype=WF}
+#${alignc 22}${voffset -60}${font Arial:bold:size=10}${color DimGray}${execi 1800 conkyForecast –location=BEXX0008 –datatype=HT}
+#$font${voffset -55}${alignr}${color DimGray}Wind: ${execi 1800 conkyForecast –location=BEXX0008 –datatype=WS}
+#${alignr}${color DimGray}Humidity: ${execi 1800 conkyForecast –location=BEXX0008 –datatype=HM}
+#${alignr}${color DimGray}Precipitation: ${execi 1800 conkyForecast –location=BEXX0008 –datatype=PC}
+
+#${color DimGray}Sunrise: $alignr${execi 1800 conkyForecast –location=BEXX0008 –datatype=SR}${alignr}
+#Sunset: $alignr${execi 1800 conkyForecast –location=BEXX0008 –datatype=SS}$color

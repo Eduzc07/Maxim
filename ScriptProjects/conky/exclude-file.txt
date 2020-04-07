@@ -1,0 +1,7 @@
+update.sh
+README.md
+copyTo.sh
+exclude-file.txt
+conkyrc/preview.png
+conky_ddweather/preview.png
+revolutionary_clocks/rev_hd_desk.jpg
