@@ -9,3 +9,7 @@ Wind icon made by: <a href="http://www.flaticon.com/authors/madebyoliver" title=
 This theme is made for Conky-Manager (http://www.teejeetech.in/p/conky-manager.html). Just make a new directory in /themes/ and copy this theme into it.
 
 ![ScreenShot](preview.png)
+
+
+## Source
+- [ddittmar/conky_ddweather](https://github.com/ddittmar/conky_ddweather)

@@ -12,8 +12,10 @@ Copy all the files to ``~/.conky``:
 ## Conkyrc + Conky ddweather
 ![](./conkyrc/preview.png)
 
-More information about *ddweather* [here](conky_ddweather/README.md).
+More information about *ddweather* [here](./conky_ddweather).
 <!-- ![](./conky_ddweather/preview.png) -->
 
 ## Conky revolutionary Clocks
 ![](./revolutionary_clocks/rev_hd_desk.jpg)
+
+More information about *clocks* [here](./revolutionary_clocks).
