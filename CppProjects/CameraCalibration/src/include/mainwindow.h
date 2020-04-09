@@ -34,6 +34,7 @@ public slots:
     void loadEmptyImage();
     void openSetting();
     void readSettings();
+    void displayError(double);
 
 private:
     bool m_bStart = false;

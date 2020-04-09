@@ -7,147 +7,49 @@
     <x>0</x>
     <y>0</y>
     <width>527</width>
-    <height>410</height>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Setting</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="9" column="0">
-    <widget class="QCheckBox" name="cb_center">
-     <property name="text">
-      <string>Fix Principal Point at the Center</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QCheckBox" name="cb_fisheye">
-     <property name="text">
-      <string>Use Fish eye Model</string>
-     </property>
-    </widget>
-   </item>
-   <item row="17" column="1">
-    <widget class="QPushButton" name="pushButton">
-     <property name="text">
-      <string>Ok</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
+   <item row="7" column="1">
     <widget class="QSpinBox" name="sB_frames">
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
-    <widget class="QCheckBox" name="cb_k1">
-     <property name="text">
-      <string>Fix_K1</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Calibrate Pattern</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QCheckBox" name="cb_flip">
-     <property name="text">
-      <string>Flip Around Horizontal Axis</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>BoardSize Width (pix)</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Number of Frames to Use</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QDoubleSpinBox" name="ds_ratio">
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="0">
-    <widget class="QCheckBox" name="cb_k3">
-     <property name="text">
-      <string>Fix_K3</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="0">
-    <widget class="QCheckBox" name="cb_k2">
-     <property name="text">
-      <string>Fix_K2</string>
-     </property>
-    </widget>
-   </item>
-   <item row="16" column="1">
-    <widget class="QLineEdit" name="lineEdit">
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="1">
+   <item row="13" column="1">
     <widget class="QCheckBox" name="cb_k5">
      <property name="text">
       <string>Fix_K5</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="sB_Width">
+   <item row="0" column="1">
+    <widget class="QSpinBox" name="sb_camera">
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="16" column="0">
-    <widget class="QLabel" name="label_5">
+   <item row="10" column="1">
+    <widget class="QCheckBox" name="cb_tangential">
      <property name="text">
-      <string>Output File Name</string>
+      <string>Assume Zero Tangential Distortion</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QSpinBox" name="sB_Square">
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="label_2">
+   <item row="9" column="1">
+    <widget class="QCheckBox" name="cb_fisheye">
      <property name="text">
-      <string>BoardSize Height (pix)</string>
+      <string>Use Fish eye Model</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_7">
-     <property name="text">
-      <string>Aspect Ratio</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
+   <item row="5" column="1">
     <widget class="QComboBox" name="comboBox">
      <item>
       <property name="text">
@@ -166,31 +68,17 @@
      </item>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="sB_Height">
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QCheckBox" name="cb_tangential">
-     <property name="text">
-      <string>Assume Zero Tangential Distortion</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Square Size (mm)</string>
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
-    <widget class="QCheckBox" name="cb_k4">
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Fix_K4</string>
+      <string>Number of Frames to Use</string>
      </property>
     </widget>
    </item>
@@ -201,17 +89,146 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QSpinBox" name="sb_camera">
+   <item row="8" column="1">
+    <widget class="QDoubleSpinBox" name="ds_ratio">
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="15" column="1">
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_7">
+     <property name="text">
+      <string>Aspect Ratio</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="1">
     <widget class="QCheckBox" name="cb_Border">
      <property name="text">
       <string>Remove Border</string>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="1">
+    <widget class="QLineEdit" name="lineEdit">
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>BoardSize Height (# corners)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QSpinBox" name="sB_Height">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QSpinBox" name="sB_Width">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="18" column="1">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Ok</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="0">
+    <widget class="QCheckBox" name="cb_k3">
+     <property name="text">
+      <string>Fix_K3</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QCheckBox" name="cb_flip">
+     <property name="text">
+      <string>Flip Around Horizontal Axis</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QSpinBox" name="sB_Square">
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>BoardSize Width (# corners)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QCheckBox" name="cb_k1">
+     <property name="text">
+      <string>Fix_K1</string>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="0">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Output File Name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QCheckBox" name="cb_center">
+     <property name="text">
+      <string>Fix Principal Point at the Center</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Calibrate Pattern</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QCheckBox" name="cb_k2">
+     <property name="text">
+      <string>Fix_K2</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="QCheckBox" name="cb_k4">
+     <property name="text">
+      <string>Fix_K4</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>Size Image</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="cb_SizeImage">
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::InsertAtBottom</enum>
      </property>
     </widget>
    </item>

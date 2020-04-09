@@ -17,8 +17,13 @@ CameraThread::CameraThread()
 {
     m_Setting = new Setting();
 
-    //Read Parameters
-    readCalibParameters();
+    //--- INITIALIZE VIDEOCAPTURE
+    m_cap = new VideoCapture();
+}
+
+CameraThread::~CameraThread()
+{
+    delete m_cap;
 }
 
 void CameraThread::loadSetting(Setting* value)
@@ -29,36 +34,47 @@ void CameraThread::loadSetting(Setting* value)
    readCalibParameters();
 }
 
-void CameraThread::run()
+void CameraThread::openCamera()
 {
-    m_bRun = true;
-
-    if (m_bCalib) {
-        calibration();
-        m_bCalib = false;
-        m_bRun = false;
-        return;
-    }
-
-    Mat frame;
-    //--- INITIALIZE VIDEOCAPTURE
-    VideoCapture cap;
     // open the default camera using default API
     // cap.open(0);
     // OR advance usage: select any API backend
     int deviceID = m_Setting->cameraID;             // 0 = open default camera
     int apiID = cv::CAP_ANY;      // 0 = autodetect default API
     // open selected camera using selected API
-    cap.open(deviceID + apiID);
+    m_cap->open(deviceID + apiID);
     // check if we succeeded
-    if (!cap.isOpened()) {
+    if (!m_cap->isOpened()) {
         qDebug() << "ERROR! Unable to open camera\n";
         return;
     }
+
+    int width = m_qvWidth[m_Setting->sizeImage];
+    int height = m_qvHeight[m_Setting->sizeImage];
+    //Set Size Image
+    m_cap->set(cv::CAP_PROP_FRAME_WIDTH, width);
+    m_cap->set(cv::CAP_PROP_FRAME_HEIGHT, height);
+//    m_cap->set(cv::CAP_PROP_BRIGHTNESS, 30);
+//    m_cap->set(cv::CAP_PROP_CONTRAST, 30);
+//    m_cap->set(cv::CAP_PROP_SATURATION, 30);
+//    m_cap->set(cv::CAP_PROP_EXPOSURE, 30);
+}
+
+void CameraThread::run()
+{
+    m_bRun = true;
+    if (m_bCalib) {
+        calibration();
+        m_bCalib = false;
+        m_bRun = false;
+//        free(m_cap);
+    }
+
+    Mat frame;
     int n = 0;
     while(m_bRun){
         // wait for a new frame from camera and store it into 'frame'
-        cap.read(frame);
+        m_cap->read(frame);
         // check if we succeeded
         if (frame.empty()) {
             qDebug() << "ERROR! blank frame grabbed\n";
@@ -70,6 +86,9 @@ void CameraThread::run()
         if (!m_bUndistort)
             chess = checkChess(frame, out);
 
+        if( m_Setting->flipVertical )
+            flip( out, out, 0 );
+
         bool sleep = false;
         if(chess && m_bSave) {
             QString qs = QString("./images/test_Image_%1.jpg").
@@ -79,7 +98,8 @@ void CameraThread::run()
             n++;
             m_bSave = false;
 
-            bitwise_not(frame, out);
+//            bitwise_not(frame, out);
+            bitwise_not(out, out);
             sleep = true;
 
             if (n >= (m_Setting->nrFrames)){
@@ -95,7 +115,7 @@ void CameraThread::run()
                 out = dst(m_roi);
             } else {
                 remap(frame, out, m_map1, m_map2, INTER_LINEAR, BORDER_CONSTANT, Scalar(100, 100, 100));
-                rectangle(out, m_roi, Scalar(0, 255, 0));
+                rectangle(out, m_roi, Scalar(0, 255, 0), 2);
             }
         }
 
@@ -150,7 +170,6 @@ QImage CameraThread::Mat2QImage(cv::Mat const& src)
 bool CameraThread::checkChess(Mat const& src, cv::Mat& output)
 {
     Mat view = src.clone();
-    Size boardSize = Size(9, 7);
 
     //! [find_pattern]
     vector<Point2f> pointBuf;
@@ -160,10 +179,10 @@ bool CameraThread::checkChess(Mat const& src, cv::Mat& output)
     chessBoardFlags |= CALIB_CB_NORMALIZE_IMAGE;
     chessBoardFlags |= CALIB_CB_FAST_CHECK;
 
-    found = findChessboardCorners( view, boardSize, pointBuf, chessBoardFlags);
+    found = findChessboardCorners( view, m_Setting->boardSize, pointBuf, chessBoardFlags);
 
     //! [pattern_found]
-    if ( found) {
+    if (found) {
         // improve the found corners' coordinate accuracy for chessboard
 
         Mat viewGray;
@@ -172,7 +191,7 @@ bool CameraThread::checkChess(Mat const& src, cv::Mat& output)
                       Size(-1,-1), TermCriteria( TermCriteria::EPS+TermCriteria::COUNT, 30, 0.0001 ));
 
         // Draw the corners.
-        drawChessboardCorners( view, boardSize, Mat(pointBuf), found );
+        drawChessboardCorners( view, m_Setting->boardSize, Mat(pointBuf), found );
         view.copyTo(output);
     }
     //! [pattern_found]
@@ -182,7 +201,7 @@ bool CameraThread::checkChess(Mat const& src, cv::Mat& output)
 
 void CameraThread::calibration()
 {
-    vector<vector<Point2f> > imagePoints;
+    vector<vector<Point2f>> imagePoints;
     Mat cameraMatrix, distCoeffs;
     Size imageSize;
     bool release_object = false;
@@ -236,10 +255,10 @@ void CameraThread::calibration()
         int chessBoardFlags = CALIB_CB_ADAPTIVE_THRESH;
         chessBoardFlags |= CALIB_CB_NORMALIZE_IMAGE;
 
-        if(!m_Setting->useFisheye) {
+//        if(!m_Setting->useFisheye) {
             // fast check erroneously fails with high distortions like fisheye
             chessBoardFlags |= CALIB_CB_FAST_CHECK;
-        }
+//        }
 
         // Find feature points on the input format
         switch( m_Setting->calibrationPattern ) {
@@ -290,11 +309,11 @@ void CameraThread::calibration()
             msg = format( "[%d/%d]", static_cast<int>(imagePoints.size()),
                                     m_Setting->nrFrames);
         }
-        putText( view, msg, textOrigin, 1, 1, mode == CALIBRATED ?  GREEN : RED);
+        putText( view, msg, textOrigin, 2, 1, mode == CALIBRATED ?  GREEN : RED);
 
         // show live and wait for a key with timeout long enough to show images
         m_qImage = Mat2QImage(view);
-        msleep(200);
+        msleep(500);
         emit imageReady();
     }
 
@@ -343,20 +362,20 @@ void CameraThread::calibration()
             remap(view, rview, m_map1, m_map2, INTER_LINEAR);
         } else {
             remap(view, rview, m_map1, m_map2, INTER_LINEAR, BORDER_CONSTANT, Scalar(100, 100, 100));
-            rectangle(rview, m_roi, GREEN);
+            rectangle(rview, m_roi, GREEN, 2);
         }
 
         m_qImage = Mat2QImage(rview);
         msleep(200);
         emit imageReady();
     }
-
     //! [show_results]
 }
 
 void CameraThread::readCalibParameters()
 {
     m_dataCalibration = false;
+
     QFile file(m_Setting->outputFileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
@@ -368,6 +387,7 @@ void CameraThread::readCalibParameters()
     //! [file_read]
     Mat cameraMatrix, distCoeffs;
     int width, height;
+    double avgError;
     const string inputSettingsFile = file.fileName().toUtf8().constData();
     FileStorage fs(inputSettingsFile, FileStorage::READ); // Read the settings
     if (!fs.isOpened()) {
@@ -378,9 +398,12 @@ void CameraThread::readCalibParameters()
     fs["image_height"] >> height;
     fs["camera_matrix"] >> cameraMatrix;
     fs["distortion_coefficients"] >> distCoeffs;
+    fs["avg_reprojection_error"] >> avgError;
     fs.release();                                         // close Settings file
     //! [file_read]
 
+    //Update Error
+    emit updateError(avgError);
     Size imageSize = Size(width, height);
 
     if (m_Setting->useFisheye) {
@@ -495,7 +518,7 @@ bool CameraThread::runCalibration(Size& imageSize,
         cout << newObjPoints.back() << endl;
     }
 
-    cout << "Re-projection error reported by calibrateCamera: "<< rms << endl;
+    qDebug() << "Re-projection error reported by calibrateCamera:"<< rms;
 
     bool ok = checkRange(cameraMatrix) && checkRange(distCoeffs);
 
@@ -583,8 +606,11 @@ bool CameraThread::runCalibrationAndSave(Size imageSize, Mat& cameraMatrix, Mat&
                              newObjPoints,
                              grid_width,
                              release_object);
-    cout << (ok ? "Calibration succeeded" : "Calibration failed")
-         << ". avg re projection error = " << totalAvgErr << endl;
+
+    qDebug() << (ok ? "Calibration succeeded." : "Calibration failed.")
+         << " avg re projection error:" << totalAvgErr;
+
+    emit updateError(totalAvgErr);
 
     if (ok)
         saveCameraParams(imageSize, cameraMatrix, distCoeffs, rvecs, tvecs,

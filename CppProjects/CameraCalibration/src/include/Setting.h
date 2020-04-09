@@ -37,6 +37,7 @@ public:
 
 public:
     int cameraID;
+    int sizeImage;
     Size boardSize;              // The size of the board -> Number of items by width and height
     Pattern calibrationPattern;  // One of the Chessboard, circles, or asymmetric circle pattern
     int squareSize;              // The size of a square in your defined unit (point, millimeter,etc).
@@ -64,6 +65,7 @@ public:
 
 private slots:
     void readValues();
+    void changeName(int);
 
 private:
     void loadDefault();
@@ -72,6 +74,7 @@ private:
 private:
     Ui::Setting *ui;
     QString patternToUse;
+
 };
 
 #endif // SETTING_H

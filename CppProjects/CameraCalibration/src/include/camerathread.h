@@ -8,12 +8,14 @@
 
 #include <QThread>
 #include <QImage>
+#include <QVector>
 
 class CameraThread : public QThread
 {
     Q_OBJECT
 public:
     CameraThread();
+    ~CameraThread();
     enum { DETECTION = 0, CAPTURING = 1, CALIBRATED = 2 };
 
     void stop(){m_bRun = false;}
@@ -23,10 +25,12 @@ public:
     void startCalibration(){ m_bCalib = true;}
     void loadSetting(Setting* value);
     bool isCalibrate(){ return m_dataCalibration;}
+    void openCamera();
 
 signals:
     void imageReady();
     void endLoop();
+    void updateError(double);
 
 public slots:
     void setUndistort(bool value){ m_bUndistort = value;}
@@ -91,6 +95,9 @@ private:
     Rect m_roi;         //Rectangle of the undistorted image
     bool m_bUndistort = false;
     bool m_dataCalibration = false;
+    QVector<int> m_qvWidth = {1920, 1280, 1024, 640, 800, 1280, 320};
+    QVector<int> m_qvHeight = {1080, 720, 768, 480, 600, 1024, 240};
+    VideoCapture *m_cap;
 };
 
 #endif // CAMERATHREAD_H
