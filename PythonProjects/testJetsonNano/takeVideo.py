@@ -7,6 +7,7 @@ import math
 import numpy as np
 import jetson.utils
 import argparse
+from cameraCalib import remapImage
 
 # parse the command line
 parser = argparse.ArgumentParser()
@@ -40,6 +41,7 @@ start = time.time()
 max_frames = opt.frames
 frames = 0
 
+print("Grabbing Images ...")
 try:
     while(frames < max_frames):
         frames += 1
@@ -62,12 +64,10 @@ camera.Close()
 # Time elapsed
 seconds = end - start
 print("===================================================")
-print "Time taken : {:.2f} seconds".format(seconds)
+print "Time taken: {:.2f} seconds".format(seconds)
 # Calculate frames per second
 fps  = round(len(images_array) / seconds);
-print "Estimated frames per second : {:.0f}".format(fps);
-
-
+print "Estimated frames per second: {:.0f}".format(fps);
 
 dT = datetime.datetime.now()
 timestampName = dT.strftime("%d%m%Y_%H%M%S")
@@ -81,10 +81,12 @@ folderDate = dT.strftime("%d%m%Y")
                       #fps,
                       #(frame_width, frame_height))
 
+frame_width_video = 1700
+frame_height_video = 720
 out = cv2.VideoWriter('/home/edu/Workspace/pythonExamples/videos/%s/%s_video_%d.avi'%(folderDate, timestampName, fps),
                       cv2.VideoWriter_fourcc('M','J','P','G'),
                       fps,
-                      (frame_width, frame_height))
+                      (frame_width_video, frame_height_video))
 
 print(". . . Saving Video . . .")
 for iImg in images_array:
@@ -92,7 +94,8 @@ for iImg in images_array:
     # img_data = cv2.cvtColor(xImg, cv2.COLOR_RGBA2RGB).astype(np.uint8)
     # img_data = cv2.cvtColor(img_data, cv2.COLOR_RGB2BGR)
     img_data = cv2.cvtColor(iImg, cv2.COLOR_RGB2BGR)
-    out.write(img_data)
+    finalImage = remapImage(img_data)
+    out.write(finalImage)
 
 print("\n . . . Closing . . .")
 print('Saved video in \n /home/edu/Workspace/pythonExamples/videos/%s/%s_video_%d.avi'%(folderDate, timestampName, fps))

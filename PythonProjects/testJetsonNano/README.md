@@ -24,12 +24,12 @@ echo "shotCamera" | at 05:00 AM
 
 ## copy videos
 ```
-rsync -avz edu@192.168.1.14:/home/edu/Workspace/pythonExamples/videos/07042020 ~/jetson_nano_videos/
+rsync -avz edu@192.168.1.14:/home/edu/Workspace/pythonExamples/videos/09042020 ~/jetson_nano_videos/
 ```
 
 ## copy images
 ```
-rsync -avz edu@192.168.1.14:/home/edu/Workspace/pythonExamples/images/07042020 ~/jetson_nano_images/
+rsync -avz edu@192.168.1.14:/home/edu/Workspace/pythonExamples/images/09042020 ~/jetson_nano_images/
 ```
 
 ```
@@ -37,7 +37,7 @@ rsync -avz --exclude README.md * edu@192.168.1.14:~/Workspace/pythonExamples
 ```
 
 ```
-./timeLapsed.py --hours 0.05 --interval 2
+./timeLapsed.py --hours 1 --interval 12 --fps 15 & disown
 ```
 
 | Frames in 1 minute  | Frames in 1 Hour | FPS | Interval (seg) | Finally  |

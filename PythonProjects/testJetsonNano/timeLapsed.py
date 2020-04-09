@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import jetson.utils
 import argparse
+from cameraCalib import remapImage
 
 # parse the command line
 parser = argparse.ArgumentParser()
@@ -34,12 +35,14 @@ folderDate = dT.strftime("%d%m%Y")
 
 #cv2.VideoWriter_fourcc('M','J','P','G'),
 
+frame_width_video = 1700
+frame_height_video = 720
 fps = opt.fps
 # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
 out = cv2.VideoWriter('/home/edu/Workspace/pythonExamples/videos/%s/%s_tlapsed.mp4'%(folderDate, timestampName),
                       cv2.VideoWriter_fourcc(*'mp4v'),
                       fps,
-                      (frame_width, frame_height))
+                      (frame_width_video, frame_height_video))
 
 # open the camera for streaming
 camera.Open()
@@ -70,13 +73,12 @@ try:
             arr = jetson.utils.cudaToNumpy(image, width, height, 4)
             img_data = cv2.cvtColor(arr, cv2.COLOR_RGBA2RGB).astype(np.uint8)
             img_data = cv2.cvtColor(img_data, cv2.COLOR_RGB2BGR)
-            out.write(img_data)
+            finalImage = remapImage(img_data)
+            print(finalImage.shape[:2])
+            out.write(finalImage)
             #images_array.append(img_data)
 except:
-    print("\n ---- Closing ---")
-    print('Saved video in /home/edu/Workspace/pythonExamples/videos/%s/%s_tlapsed.mp4'%(folderDate, timestampName))
-    camera.Close()
-    out.release()
+    print("\n ---- Exception ---")
 
 print("\n ---- Closing ---")
 print('Saved video in /home/edu/Workspace/pythonExamples/videos/%s/%s_tlapsed.mp4'%(folderDate, timestampName))
