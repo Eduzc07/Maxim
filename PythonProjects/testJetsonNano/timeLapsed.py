@@ -10,8 +10,9 @@ import argparse
 # parse the command line
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--fps", type=int, default=30, help="desired Frames per Second")
-parser.add_argument("--hours", type=float, default=1.0, help="hour to save")
+parser.add_argument("--fps", type=int, default=30, help="Desired Frames per Second")
+parser.add_argument("--hours", type=float, default=1.0, help="Hours to save")
+parser.add_argument("--interval", type=int, default=12, help="Time between frames")
 
 opt = parser.parse_args()
 print(opt)
@@ -48,8 +49,8 @@ camera.Open()
 
 time.sleep(1)
 
-max_frames = round(300 * opt.hours)
-num_frames = 120 #100 -> 10 seg // 120 -> 5 Frames per Minutes
+max_frames = round(60*(60/opt.interval) * opt.hours)
+num_frames = 10 * opt.interval #100 -> 10 seg // 120 -> 5 Frames per Minutes
 frames = 0
 count = 0
 
