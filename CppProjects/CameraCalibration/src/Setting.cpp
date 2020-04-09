@@ -9,12 +9,23 @@ Setting::Setting(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->pushButton, SIGNAL(pressed()), this, SLOT(readValues()));
-    loadDefault();
+    connect(ui->cb_SizeImage, SIGNAL(currentIndexChanged(int)), this, SLOT(changeName(int)));
 
     //Save all
     writePoints = true;
     writeExtrinsics = true;
     writeGrid = true;
+
+    //Add Items
+    ui->cb_SizeImage->addItem("1920x1080");
+    ui->cb_SizeImage->addItem("1280x720");
+    ui->cb_SizeImage->addItem("1024x768");
+    ui->cb_SizeImage->addItem("640x480");
+    ui->cb_SizeImage->addItem("800x600");
+    ui->cb_SizeImage->addItem("1280x1024");
+    ui->cb_SizeImage->addItem("320x240");
+
+    loadDefault();
 }
 
 Setting::~Setting()
@@ -47,11 +58,10 @@ void Setting::write(FileStorage &fs) const
        << "}";
 }
 
-
-
 void Setting::readValues()
 {
     cameraID = ui->sb_camera->value();
+    sizeImage = ui->cb_SizeImage->currentIndex();
 
     int width = ui->sB_Width->value();
     int height = ui->sB_Height->value();
@@ -84,17 +94,27 @@ void Setting::readValues()
     fixK3 = ui->cb_k3->isChecked();
     fixK4 = ui->cb_k4->isChecked();
     fixK5 = ui->cb_k5->isChecked();
-    outputFileName = "images/" + ui->lineEdit->text();
+    outputFileName = "./images/" + ui->lineEdit->text();
     removeBorder = ui->cb_Border->isChecked();
     validate();
 }
 
+void Setting::changeName(int idx)
+{
+    //Update fileName
+    outputFileName = " ";
+    outputFileName = "out_camera_data_" + ui->cb_SizeImage->itemText(idx) +".xml";
+    //The name of the output log file.
+    ui->lineEdit->setText(outputFileName);
+    outputFileName = "./images/" + ui->lineEdit->text();
+}
+
 void Setting::loadDefault()
 {
-    boardSize = Size(9, 7);
+    boardSize = Size(7, 6);
     calibrationPattern = CHESSBOARD;
-    squareSize = 20;
-    nrFrames = 20;
+    squareSize = 30;
+    nrFrames = 10;
     aspectRatio = 1.0;
     calibZeroTangentDist = true;
     calibFixPrincipalPoint = true;
@@ -102,11 +122,11 @@ void Setting::loadDefault()
     useFisheye = false;
     fixK1 = false;
     fixK2 = false;
-    fixK3 = false;
+    fixK3 = true;
     fixK4 = true;
     fixK5 = true;
     removeBorder = false;
-    outputFileName = "out_camera_data.xml";
+    outputFileName = "out_camera_data_" + ui->cb_SizeImage->itemText(3) +".xml";
 
     // Find feature points on the input format
     switch(calibrationPattern){
@@ -129,6 +149,8 @@ void Setting::loadDefault()
     }
 
     cameraID = 0;
+    sizeImage = 1; //1: 1280x720, 3: 640x480
+    ui->cb_SizeImage->setCurrentIndex(sizeImage);
     ui->sB_Width->setValue(cameraID);
 
     //Number of inner corners per a item row and column. (square, circle)
@@ -165,8 +187,8 @@ void Setting::loadDefault()
     ui->cb_Border->setChecked(removeBorder);
 
     //The name of the output log file.
-    ui->lineEdit->setText(outputFileName);
-    outputFileName = "images/" + ui->lineEdit->text();
+//    ui->lineEdit->setText(outputFileName);
+//    outputFileName = "images/" + ui->lineEdit->text();
 }
 
 void Setting::validate()

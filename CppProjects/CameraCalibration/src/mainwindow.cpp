@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->settingButton, SIGNAL(pressed()), this, SLOT(openSetting()));
     connect(ui->cb_undistort, SIGNAL(toggled(bool)), &m_CameraThread, SLOT(setUndistort(bool)));
     connect(&m_CameraThread, SIGNAL(imageReady()), this, SLOT(displayImage()));
+    connect(&m_CameraThread, SIGNAL(updateError(double)), this, SLOT(displayError(double)));
     connect(&m_Setting, SIGNAL(accepted()), this, SLOT(readSettings()));
 
     m_timer = new QTimer(this);
@@ -30,8 +31,14 @@ MainWindow::MainWindow(QWidget *parent) :
     Pal.setColor(QPalette::Background, Qt::black);
     ui->imageLabel->setAutoFillBackground(true);
     ui->imageLabel->setPalette(Pal);
+    ui->saveButton->setEnabled(false);
 
     loadEmptyImage();
+
+    //Read Parameters
+    readSettings();
+//    readCalibParameters();
+
     ui->cb_undistort->setEnabled(m_CameraThread.isCalibrate());
 
     //Create folder
@@ -73,12 +80,14 @@ void MainWindow::drawTextImage()
 
 void MainWindow::startCamera()
 {
+    m_CameraThread.openCamera();
     m_bStart = true;
-    qDebug()<< " start";
+    qDebug() << " start";
     m_CameraThread.start();
 
     ui->calibrateButton->setEnabled(false);
     ui->settingButton->setEnabled(false);
+    ui->saveButton->setEnabled(true);
     ui->cb_undistort->setEnabled(m_CameraThread.isCalibrate());
 }
 
@@ -91,6 +100,7 @@ void MainWindow::stopCamera()
 
     ui->calibrateButton->setEnabled(true);
     ui->settingButton->setEnabled(true);
+    ui->saveButton->setEnabled(false);
 
     //Stop Saving
     m_iCounter = 0;
@@ -132,7 +142,20 @@ void MainWindow::displayImage()
 
     drawTextImage();
 
-    ui->imageLabel->setPixmap(m_pixmap);
+    int w = ui->imageLabel->width();
+    int h = ui->imageLabel->height();
+
+    ui->imageLabel->setPixmap(m_pixmap.scaled(w, h,Qt::KeepAspectRatio));
+//    ui->imageLabel->setPixmap(m_pixmap);
+}
+
+void MainWindow::displayError(double value)
+{
+    ui->label_error->setText(QString::number(value, 'f', 4));
+    if (value <= 1.0)
+        ui->label_error->setStyleSheet("font-weight: bold; color: green");
+    else
+        ui->label_error->setStyleSheet("font-weight: bold; color: red");
 }
 
 void MainWindow::loadEmptyImage()
@@ -168,4 +191,3 @@ void MainWindow::update()
         m_CameraThread.save();
     }
 }
-
