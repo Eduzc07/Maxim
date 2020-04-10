@@ -54,10 +54,10 @@ void CameraThread::openCamera()
     //Set Size Image
     m_cap->set(cv::CAP_PROP_FRAME_WIDTH, width);
     m_cap->set(cv::CAP_PROP_FRAME_HEIGHT, height);
-//    m_cap->set(cv::CAP_PROP_BRIGHTNESS, 30);
-//    m_cap->set(cv::CAP_PROP_CONTRAST, 30);
-//    m_cap->set(cv::CAP_PROP_SATURATION, 30);
-//    m_cap->set(cv::CAP_PROP_EXPOSURE, 30);
+    m_cap->set(cv::CAP_PROP_BRIGHTNESS, 0);
+    m_cap->set(cv::CAP_PROP_CONTRAST, 200);
+    m_cap->set(cv::CAP_PROP_SATURATION, 200);
+    m_cap->set(cv::CAP_PROP_EXPOSURE, 0);
 }
 
 void CameraThread::run()
