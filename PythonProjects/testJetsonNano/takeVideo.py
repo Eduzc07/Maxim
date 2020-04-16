@@ -2,12 +2,21 @@
 import time
 import datetime
 
+import os
 import cv2
 import math
 import numpy as np
 import jetson.utils
 import argparse
 from cameraCalib import remapImage
+
+dateTimeObj = datetime.datetime.now()
+folderDate = dateTimeObj.strftime("%d%m%Y")
+
+# Create day Directory
+directoryDay = './videos/' + folderDate
+if not os.path.exists(directoryDay):
+   os.makedirs(directoryDay)
 
 # parse the command line
 parser = argparse.ArgumentParser()
@@ -71,7 +80,6 @@ print "Estimated frames per second: {:.0f}".format(fps);
 
 dT = datetime.datetime.now()
 timestampName = dT.strftime("%d%m%Y_%H%M%S")
-folderDate = dT.strftime("%d%m%Y")
 #---------------------------------------
 # Save Video
 #---------------------------------------

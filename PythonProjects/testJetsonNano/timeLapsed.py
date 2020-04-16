@@ -2,6 +2,7 @@
 import time
 import datetime
 
+import os
 import cv2
 import numpy as np
 import jetson.utils
@@ -18,6 +19,14 @@ parser.add_argument("--interval", type=int, default=12, help="Time between frame
 opt = parser.parse_args()
 print(opt)
 
+dateTimeObj = datetime.datetime.now()
+folderDate = dateTimeObj.strftime("%d%m%Y")
+
+# Create day Directory
+directoryDay = '/home/edu/Workspace/pythonExamples/videos/' + folderDate
+if not os.path.exists(directoryDay):
+   os.makedirs(directoryDay)
+
 # create display window
 #frame_width = 640
 #frame_height = 480
@@ -31,7 +40,6 @@ camera = jetson.utils.gstCamera(frame_width, frame_height, "/dev/video0")
 
 dT = datetime.datetime.now()
 timestampName = dT.strftime("%d%m%Y_%H%M%S")
-folderDate = dT.strftime("%d%m%Y")
 
 #cv2.VideoWriter_fourcc('M','J','P','G'),
 

@@ -1,11 +1,20 @@
 #!/usr/bin/python
 import jetson.utils
-import numpy as np
+import os
 import cv2
 import time
+import numpy as np
 #import math
 import datetime
 from cameraCalib import remapImage
+
+dateTimeObj = datetime.datetime.now()
+folderDate = dateTimeObj.strftime("%d%m%Y")
+
+# Create day Directory
+directoryDay = './images/' + folderDate
+if not os.path.exists(directoryDay):
+   os.makedirs(directoryDay)
 
 # create display window
 width = [1920, 1280, 1024, 640, 800, 1280, 320]
@@ -18,12 +27,15 @@ camera = jetson.utils.gstCamera(frame_width, frame_height, "/dev/video0")
 
 # open the camera for streaming
 camera.Open()
+n = 0
+while(n < 50):
+    image, width, height = camera.CaptureRGBA(zeroCopy=1)
+    n+=1
 
 time.sleep(5)
 # Converting datetime object to string
 dateTimeObj = datetime.datetime.now()
 timestampStr = dateTimeObj.strftime("%d%m%Y_%H%M%S")
-folderDate = dateTimeObj.strftime("%d%m%Y")
 nameImage = "images/%s/%s.jpg"%(folderDate, timestampStr)
 image, width, height = camera.CaptureRGBA(zeroCopy=1)
 jetson.utils.cudaDeviceSynchronize()
