@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <rosparam command="load" file="$(find copter)/parameters/params.yaml" />
+  <!-- <param name="mass" value="1,5"/> -->
+  <node pkg="model" type="model_node" name="model_node" output="screen" />
+  <node pkg="control" type="control_node" name="control_node" />
+  <node pkg="quad_viz_pub" type="quad_viz_pub_node" name="quad_viz_pub_node" />
+  <node pkg="tf" type="static_transform_publisher" name="world_frame" 
+    args="0.0 0.0 0.0 0 0 0 1 map world_frame 100" />
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find quad_viz_pub)/conf.rviz" /> 
+
+  
+</launch>

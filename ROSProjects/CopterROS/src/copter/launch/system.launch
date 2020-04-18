@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+  <rosparam command="load" file="$(find copter)/parameters/params.yaml" />
+  <!-- <param name="mass" value="1,5"/> -->
+  <node pkg="batmon" type="batmon_node.py" name="batmon"/>
+  <node pkg="state_estimation" type="ekf_node" name="ekf_node" output="screen" />
+  <!--<node pkg="mpu6050" type="mpu6050_node" name="mpu6050_node" output="screen"/>-->
+  <!--<node pkg="control" type="control_node" name="control_node" /> -->
+  <node pkg="quad_viz_pub" type="quad_viz_pub_node" name="quad_viz_pub_node" />
+  <node pkg="force_torque2pwm" type="force_torque2pwm_node" name="force_torque2pwm_node" />  
+  <node pkg="xmcprotocol" type="serialTransmit" name="serialTransmit" />
+  <node pkg="xmcprotocol" type="serialReceive" name="serialReceive" />
+</launch>

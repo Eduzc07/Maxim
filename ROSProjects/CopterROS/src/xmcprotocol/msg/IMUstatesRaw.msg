@@ -1,0 +1,9 @@
+float32 accx
+float32 accy
+float32 accz
+float32 gyrx
+float32 gyry
+float32 gyrz
+float32 magx
+float32 magy
+float32 magz

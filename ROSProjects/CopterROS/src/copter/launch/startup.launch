@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+<!--  <include file="$(find hector_pose_estimation)/launch/hector_pose_estimation.launch" />-->
+  <node pkg="batmon" type="batmon_node.py" name="batmon"/><!--output="screen" if INFO output is required -->
+  <node pkg="mpu6050" type="mpu6050_node" name="mpu"/>
+  <!-- XMC Communication -->
+<!-- <node pkg="xmcprotocol" type="serialTransmit" name="serialTransmit" output="screen"/>
+  <node pkg="xmcprotocol" type="exampleList" name="exampleList" output="screen"/>
+  <node pkg="xmcprotocol" type="serialReceive" name="serialReceive"/> -->
+</launch>
+=======
+  <node pkg="xmcprotocol" type="serialTransmit" name="serialTransmit" output="screen"/>
+  <node pkg="xmcprotocol" type="exampleList" name="exampleList" output="screen"/>
+  <node pkg="xmcprotocol" type="serialReceive" name="serialReceive"/>
+</launch>
