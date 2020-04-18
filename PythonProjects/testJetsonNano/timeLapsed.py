@@ -75,21 +75,21 @@ try:
             count += 1
             # Converting datetime object to string
             dateTimeObj = datetime.datetime.now()
-            timestampStr = dateTimeObj.strftime("%H:%M:%S_%d/%m/%Y")
+            timestampStr = dateTimeObj.strftime("%H:%M:%S --> %d/%m/%Y")
             print "Frame saved: %s/%d - %s"%(count, max_frames, timestampStr)
             jetson.utils.cudaDeviceSynchronize()
             arr = jetson.utils.cudaToNumpy(image, width, height, 4)
             img_data = cv2.cvtColor(arr, cv2.COLOR_RGBA2RGB).astype(np.uint8)
             img_data = cv2.cvtColor(img_data, cv2.COLOR_RGB2BGR)
             finalImage = remapImage(img_data)
-            print(finalImage.shape[:2])
             out.write(finalImage)
             #images_array.append(img_data)
-except:
+except AssertionError as error:
+    print(error)
     print("\n ---- Exception ---")
 
 print("\n ---- Closing ---")
-print('Saved video in /home/edu/Workspace/pythonExamples/videos/%s/%s_tlapsed.mp4'%(folderDate, timestampName))
+print('Video has been saved in /home/edu/Workspace/pythonExamples/videos/%s/%s_tlapsed.mp4'%(folderDate, timestampName))
 # close the camera
 camera.Close()
 out.release()

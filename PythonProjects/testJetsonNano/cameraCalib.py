@@ -8,7 +8,9 @@ import cv2
 
 def remapImage(src):
     #Load Parameters
-    fs = cv2.FileStorage("./parameters/out_camera_data_1280x720.xml", cv2.FILE_STORAGE_READ)
+    fs = cv2.FileStorage("/home/edu/Workspace/pythonExamples/parameters/out_camera_data_1280x720.xml", cv2.FILE_STORAGE_READ)
+    #fs = cv2.FileStorage("./parameters/out_camera_data_1280x720.xml", cv2.FILE_STORAGE_READ)
+
     mtx = fs.getNode("camera_matrix")
     dist = fs.getNode("distortion_coefficients")
 
