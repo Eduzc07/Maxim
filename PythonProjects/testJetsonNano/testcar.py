@@ -84,9 +84,8 @@ def main():
     [directoryDay, folderDate] = dates
 
     # capture frames from a video
-    #cap = cv2.VideoCapture('./videos/13042020/13042020_075929_video_10.avi')
-    #cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/13042020/13042020_075929_video_10.avi')
-    cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/13042020/13042020_195028_video_10.avi')
+    cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/13042020/13042020_075929_video_10.avi')
+    #cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/13042020/13042020_195028_video_10.avi')
 
     ret, frame = cap.read()
     height, width = frame.shape[:2]

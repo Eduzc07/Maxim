@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/usr/bin/python3.7",
+    "python.pythonPath": "/home/edu/envs/python3/bin/python",
     "python.linting.pylintArgs": [
         "--extension-pkg-whitelist=cv2"
     ]
