@@ -21,7 +21,7 @@ int main(int, char** argv)
 {
 //! [pre-process]
     // Load image
-    Mat refPen = imread("../cmake/images/pen1.jpg");
+    Mat refPen = imread("./images/pen1.jpg");
 
     // Check if image is loaded successfully
     if(!refPen.data || refPen.empty()) {
@@ -29,7 +29,7 @@ int main(int, char** argv)
         return 0;
     }
 
-    Mat testPen = imread("../cmake/images/pen2.jpg");
+    Mat testPen = imread("./images/pen2.jpg");
     //Mat testPen = imread("images/1550270138870.jpg");
     //Mat testPen = imread("images/1550270132516.jpg");
     //Mat testPen = imread("images/1550270128376.jpg");

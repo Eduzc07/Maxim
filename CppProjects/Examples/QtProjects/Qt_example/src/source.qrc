@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/rec">
+        <file>img/tu.png</file>
+        <file>img/TU_Ilmenau.png</file>
+        <file>img/save.png</file>
+        <file>img/open.png</file>
+        <file>img/open.ico</file>
+        <file>img/Logo_TU_Ilmenau.png</file>
+        <file>img/help.png</file>
+    </qresource>
+</RCC>

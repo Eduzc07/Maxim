@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+project(pcd_write)
+
+set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+#find_package(PCL 1.2 REQUIRED)
+find_package(PCL REQUIRED)
+
+if (${PCL_FOUND})
+   message(WARNING "PCL has been found.")
+   include_directories(${PCL_INCLUDE_DIRS})
+   link_directories(${PCL_LIBRARY_DIRS})
+   add_definitions(${PCL_DEFINITIONS})
+   add_executable (${PROJECT_NAME} main.cpp)
+   target_link_libraries (${PROJECT_NAME} ${PCL_LIBRARIES})
+else()
+   message(WARNING "PCL has not been found.")
+endif()
