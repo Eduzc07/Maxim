@@ -2,5 +2,13 @@
     "python.pythonPath": "/home/edu/envs/python3/bin/python",
     "python.linting.pylintArgs": [
         "--extension-pkg-whitelist=cv2"
-    ]
+    ],
+    // The number of spaces a tab is equal to.
+    "editor.tabSize": 4,
+
+    // Insert spaces when pressing Tab.
+    "editor.insertSpaces": true,
+
+    // When opening a file, `editor.tabSize` and `editor.insertSpaces` will be detected based on the file contents.
+    "editor.detectIndentation": true
 }
