@@ -5,7 +5,7 @@ import numpy as np
 import time
 import datetime
 
-print("OpenCv version:" + cv2.__version__)
+print("OpenCV version:" + cv2.__version__)
 
 def CreateFolder():
     #----------------------------
@@ -84,8 +84,21 @@ def main():
     [directoryDay, folderDate] = dates
 
     # capture frames from a video
-    cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/13042020/13042020_075929_video_10.avi')
+    #cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/Abril_2020/13042020/13042020_075929_video_10.avi')
+    #cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/Abril_2020/17042020/17042020_111214_video_10.avi')
+    cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/Abril_2020/17042020/17042020_123926_video_10.avi')
     #cap = cv2.VideoCapture('/home/edu/jetson_nano_videos/13042020/13042020_195028_video_10.avi')
+    
+    #Set Window Size
+    cv2.namedWindow('Car Detection', cv2.WINDOW_NORMAL)
+    cv2.resizeWindow('Car Detection', 1200,500)    
+    
+    #Create Watermark
+    watermark = cv2.imread('images/logo_w.png')
+    watermark = cv2.resize(watermark, None, fx=0.25, fy=0.25, interpolation = cv2.INTER_LINEAR)
+    overlay = np.zeros((720, 1700, 3), dtype="uint8")
+    (wH, wW) = watermark.shape[:2]
+    overlay[10:wH + 10, 10:wW + 10] = watermark
 
     ret, frame = cap.read()
     height, width = frame.shape[:2]
@@ -95,7 +108,9 @@ def main():
     subs_image[:] = (0, 10, 10)
 
     # Initialize tracker with first frame and bounding box
-    pxT = 840
+    pxT1 = 840
+    pxT2 = 300
+    pxT3 = 1400
     pyT = 250
 
     # Kernel
@@ -105,7 +120,7 @@ def main():
     arr_sp = [(0,0) ,(0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0)]
     arr_ep = [(50, 400) ,(50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400)]
     arr_color = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0)]
-
+    
     #----------------------------------------------------
     # Loop
     #----------------------------------------------------
@@ -134,17 +149,18 @@ def main():
 
             for idx, cnt in enumerate(arrayCnt):
                 x,y,w,h = cv2.boundingRect(cnt)
-                cv2.rectangle(drawframe, (x,y), (x+w,y+h), arr_color[idx], 2)
+                if (x != 0 or y != 0):
+                    cv2.rectangle(drawframe, (x,y), (x+w, y+h), arr_color[idx], 2)
 
                 M = cv2.moments(cnt)
                 cX = int(M["m10"]/M["m00"])
                 cY = int(M["m01"]/M["m00"])
 
                 if(cY > pyT):
-                    if (cX > pxT and cX < pxT+10):
+                    if (cX > pxT1 and cX < pxT1+10) or (cX > pxT2 and cX < pxT2+10) or (cX > pxT3 and cX < pxT3+10):
                         newframe = frame.copy()
                         SaveImages(newframe, cnt, file)
-
+                       
                         cv2.circle(track_image, (cX, cY), 7, (0,  255, 0), -1)
                         cv2.putText(track_image, "%d"%(idx+1), (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.75,  (0,  255, 0), 2)
                     else:
@@ -158,17 +174,22 @@ def main():
             #---------------------------------------
             # Calculate Frames per second (FPS)
             fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
-
+            
             # Display frames in a window
-            dst = cv2.addWeighted(drawframe, 0.6, track_image, 0.4, 0)
+            dst = cv2.addWeighted(drawframe, 0.7, track_image, 0.4, 0)
             cv2.rectangle(dst, (840,250), (880, 620), (200 , 0, 200), 2)
-            cv2.putText(dst, "FPS: %d"%fps, (400, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50), 2)
+            cv2.rectangle(dst, (300,250), (340, 620), (100 , 0, 200), 2)
+            cv2.rectangle(dst, (1400,250), (1440, 620), (20 , 0, 250), 2)
+            
+            cv2.putText(dst, "FPS: %d"%fps, (70,210), cv2.FONT_HERSHEY_DUPLEX, 1, (255,255,255), 1)
+            #Add Watermark
+            dst = cv2.addWeighted(dst, 1.0, overlay, 0.3,  0)
             cv2.imshow('Car Detection', dst)
 
             track_image = cv2.subtract(track_image, subs_image)
 
             # Wait for Esc key to stop
-            if cv2.waitKey(33) == 27:
+            if cv2.waitKey(50) == 27:
                 break
 
     except cv2.error as e:

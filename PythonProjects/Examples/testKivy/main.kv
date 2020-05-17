@@ -1,0 +1,264 @@
+#:kivy 1.10.0
+<MainLayout>: 
+    size: root.size
+    # creating canvas 
+    canvas:
+        # size and position of Canvas 
+        Rectangle:
+            pos: self.pos 
+            size: self.size
+            source: 'background.png'
+
+    # AnchorLayout:
+    #     anchor_x: 'center'
+    #     anchor_y: 'top'
+
+    #     Image:
+    #         source: 'ic_logo.png'
+    #         size_hint: None, None
+    #         # size: 300, 300
+    #         size: self.texture_size[0], self.texture_size[1]
+    #         allow_stretch: False
+    #         keep_ratio: True
+
+    # Adding image from the system 
+    Image:
+        source: 'logo_final.png'
+        # Giving the size of image 
+        texture: self.texture
+        size: self.texture_size
+        # allow sterching of image  
+        #allow_stretch: True
+        # pos_hint: {'right':1, 'top':1}
+        size_hint: None, None
+        pos: 20, 500
+        size: 200, 150
+        allow_stretch: False
+        keep_ratio: True
+
+    Image:
+        source: 'base.png'
+        # Giving the size of image 
+        texture: self.texture
+        size: self.texture_size
+        # allow sterching of image  
+        #allow_stretch: True
+        # pos_hint: {'right':1, 'top':1}
+        size_hint: None, None
+        pos_hint: {'center_x': 0.5, 'center_y': 0.0}
+        # size: 200, 150
+        allow_stretch: False
+        keep_ratio: True
+
+    BoxLayout:
+        orientation: 'vertical'
+        # padding: [padding_left, padding_top, padding_right, padding_bottom]
+        padding: [40, 50, 40, 0]
+        canvas:
+            Color: 
+                rgba: 37 / 255., 39 / 255., 30 / 255., 0.5
+            Rectangle: 
+                pos: self.pos 
+                size: self.size 
+        
+        Image:
+            source: 'ic_logo.png'
+            size_hint: 0.15, 0.15
+            # size: 300, 300
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            allow_stretch: True
+            keep_ratio: True 
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            cols: 2
+            padding: [60, 0, 60, 0]
+
+            Image:
+                id: imageSource
+                source: 'get.png'
+                texture: self.texture
+                # size: self.texture_size
+                
+                size_hint_x: 0.8
+                size_hint_y: None  # Tells the layout to ignore the size_hint in y dir
+                height: dp(220)  # The fixed height you want
+                pos: self.pos
+                pos_hint: {'center_x': 5, 'center_y': 0.5}
+                allow_stretch: True
+                keep_ratio: True
+                canvas.before:
+                    PushMatrix
+                    Rotate:
+                        angle: root.angle
+                        origin: self.pos[0] + self.size[0]*0.5 - self.norm_image_size[0]*0.33739, self.pos[1] + self.size[1]*0.5 - self.norm_image_size[1]*0.20427 
+                        # 395, 205
+                        axis: 0, 0, 1
+                canvas.after:
+                    PopMatrix
+
+            BoxLayout:
+                orientation: 'vertical'
+                cols: 3
+                size_hint_x: 0.2
+
+                Label:
+                    text: 'Inclinación:'
+                    font_size: "25sp"
+                    # size: (200, 40)
+                    # size_hint: (None, None)
+                    # size_hint_x: 0.8
+
+                Slider:
+                    id: slider
+                    orientation: 'vertical'
+                    min: -90
+                    max: 90
+                    # width: 300
+                    # height: 300
+                    size: (60, 180)
+                    size_hint: (None, None)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    # size_hint_y: 2
+                    on_value: 
+                        l_deg.text = str(int(self.value)) + "°"
+                        root.setAngle(self.value, imageSource)
+                
+                BoxLayout:
+                    orientation: 'horizontal'
+                    cols: 2
+                    size: (220, 40)
+                    size_hint: (None, None)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    Label:
+                        text: 'Valor Actual:'
+                        font_size: "25sp"
+                        size_hint_x: 0.7
+
+                    Label:
+                        id: l_deg 
+                        font_size: "25sp"
+                        text: "0°"
+                        size_hint_x: 0.3
+                
+                BoxLayout:
+                    orientation: 'horizontal'
+                    cols: 2
+                    size: (220, 40)
+                    size_hint: (None, None)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    Label:
+                        text: 'Valor Promedio: '
+                        font_size: "25sp"
+                        size_hint_x: 0.7
+
+                    Label:
+                        id: l_avg
+                        font_size: "25sp"
+                        text: "0°"
+                        size_hint_x: 0.3
+
+        # Layour to display Gets
+        BoxLayout:
+            orientation: 'horizontal'
+            cols: 9
+            minimum_width: 926
+            padding: -40
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+            
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 1, 0, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9
+
+            Image:
+                source: 'get_up.png'
+                texture: self.texture
+                size: self.texture_size
+                # pos: self.x, self.y
+                # pos: self.pos
+                # pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                allow_stretch: False
+                keep_ratio: True
+                color: 0, 1, 0, 0.9

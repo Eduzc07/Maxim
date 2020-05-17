@@ -21,7 +21,6 @@ import time
 import numpy as np
 import cv2
 
-
 #---------------------------------------------------------------------------
 # Uncomment in order to aks in terminal
 #name = raw_input("What's your name? ")
