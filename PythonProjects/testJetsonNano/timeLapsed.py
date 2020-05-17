@@ -44,6 +44,7 @@ timestampName = dT.strftime("%d%m%Y_%H%M%S")
 #cv2.VideoWriter_fourcc('M','J','P','G'),
 
 frame_width_video = 1700
+#frame_width_video = 720
 frame_height_video = 720
 fps = opt.fps
 # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
@@ -81,7 +82,7 @@ try:
             arr = jetson.utils.cudaToNumpy(image, width, height, 4)
             img_data = cv2.cvtColor(arr, cv2.COLOR_RGBA2RGB).astype(np.uint8)
             img_data = cv2.cvtColor(img_data, cv2.COLOR_RGB2BGR)
-            finalImage = remapImage(img_data)
+            finalImage = remapImage(img_data, width = frame_width_video)
             out.write(finalImage)
             #images_array.append(img_data)
 except AssertionError as error:

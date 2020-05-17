@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 import numpy as np
 import cv2 as cv
+
+print("OpenCV version:" + cv.__version__)
+
 cap = cv.VideoCapture(0)
 
 if not cap.isOpened():
@@ -18,8 +21,12 @@ while True:
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     # Display the resulting frame
     cv.imshow('frame', gray)
-    if cv.waitKey(1) == ord('q'):
+   
+    key = cv.waitKey(1)
+    c = chr(key & 255)
+    if c in ['q', 'Q', chr(27)]:
         break
+    
 # When everything done, release the capture
 cap.release()
 cv.destroyAllWindows()

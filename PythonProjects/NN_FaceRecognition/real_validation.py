@@ -10,6 +10,8 @@ import numpy as np
 import cv2
 import os
 
+print("OpenCV version:" + cv2.__version__)
+
 sv = np.loadtxt('data/data_images/v.data', np.float32)
 sw = np.loadtxt('data/data_images/w.data', np.float32)
 
@@ -55,7 +57,10 @@ if __name__ == '__main__':
     cascade = cv2.CascadeClassifier(cascade_fn)
     nested = cv2.CascadeClassifier(nested_fn)
 
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(0, cv2.CAP_V4L)
+    
+    #ret = cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    #ret = cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     
     cv2.namedWindow('facedetect')
     # create trackbars for color change
@@ -132,7 +137,7 @@ if __name__ == '__main__':
         # Calculate frames per second
         fps  = 1.0 / seconds
 
-        cv2.putText(vis,"%0.2f fps"%(fps), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (250,255,250), 1)
+        cv2.putText(vis,"%0.0f fps"%(fps), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (250,255,250), 1)
         cv2.imshow('facedetect', vis)
         
         key = cv2.waitKey(2)

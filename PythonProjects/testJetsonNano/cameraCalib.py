@@ -6,7 +6,7 @@ using Camera Matrix and Distortion distortion coefficients
 '''
 import cv2
 
-def remapImage(src):
+def remapImage(src, width = 1700):
     #Load Parameters
     fs = cv2.FileStorage("/home/edu/Workspace/pythonExamples/parameters/out_camera_data_1280x720.xml", cv2.FILE_STORAGE_READ)
     #fs = cv2.FileStorage("./parameters/out_camera_data_1280x720.xml", cv2.FILE_STORAGE_READ)
@@ -32,9 +32,13 @@ def remapImage(src):
 
     #Resize Image to get around 1768x720
     ndst = cv2.resize(dst, None, fx=1.409, fy=1.409, interpolation = cv2.INTER_LINEAR)
-
+    hr, wr = ndst.shape[:2]
+    offset = (wr - width) / 2
     #Cut only to keep 1700x720
-    newRoi = [34, 0, 1700, 720]
+    #newRoi = [34, 0, 1700, 720]
+    #newRoi = [524, 0, 720, 720]
+    newRoi = [offset, 0, width, 720]
+
     x, y, w, h = newRoi
     finalImage = ndst[y:y+h, x:x+w]
     return finalImage

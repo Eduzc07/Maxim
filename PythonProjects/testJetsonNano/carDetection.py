@@ -46,7 +46,7 @@ def CreatePositionNotes(dates):
 
     return file
 
-def SaveImages(newframe, cnt, file, fps):
+def SaveImages(newframe, cnt, file, fps, nMobiles):
     dateTimeObj = datetime.datetime.now()
     folderDate = dateTimeObj.strftime("%d%m%Y")
     timestampStr = dateTimeObj.strftime("%d%m%Y_%H%M%S")
@@ -62,7 +62,7 @@ def SaveImages(newframe, cnt, file, fps):
     file.writelines(line)
 
     timesImage = dateTimeObj.strftime("%d%m%Y %H:%M:%S")
-    print("Mobile Detected  -->  %s  --> FPS: %d"%(timesImage, fps))
+    print("%d) Mobile Detected  -->  %s  --> FPS: %d"%(nMobiles, timesImage, fps))
 
 def imageProcessing(frame, last_image, kernel):
     # convert to gray scale of each frames
@@ -109,7 +109,7 @@ def main():
     subs_image[:] = (0, 10, 10)
 
     # Initialize tracker with first frame and bounding box
-    pxT = 840
+    pxT = 640
     pyT = 250
     fps = 0
 
@@ -120,6 +120,8 @@ def main():
     arr_sp = [(0,0) ,(0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0)]
     arr_ep = [(50, 400) ,(50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400)]
     arr_color = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0)]
+
+    nMobiles = 0
 
     print("Starting Loop ...")
     #----------------------------------------------------
@@ -166,7 +168,8 @@ def main():
                 if (cY > pyT):
                     if (cX > pxT and cX < pxT+25):
                         newframe = image.copy()
-                        SaveImages(newframe, cnt, file, fps)
+                        nMobiles += 1
+                        SaveImages(newframe, cnt, file, fps, nMobiles)
 
                     #     cv2.circle(track_image, (cX, cY), 7, (0,  255, 0), -1)
                     #     cv2.putText(track_image, "%d"%(idx+1), (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.75,  (0,  255, 0), 2)
