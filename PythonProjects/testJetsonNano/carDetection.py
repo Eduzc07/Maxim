@@ -46,7 +46,33 @@ def CreatePositionNotes(dates):
 
     return file
 
-def SaveImages(newframe, cnt, file, fps, nMobiles):
+def CreateLogFile(dates):
+    #----------------------------------------------------
+    # Write Log in File
+    #----------------------------------------------------
+    #txtFile = "%s/bbox_%s.txt"%(directoryDay, folderDate)
+    txtLog = "%s/log_%s.txt"%(dates[0], dates[1])
+    if not os.path.isfile(txtLog):
+        logFile = open(txtLog, "w")
+        L = ["######## Start ######## \n"]
+        logFile.writelines(L)
+    else:
+        logFile = open(txtLog, "a")
+
+    return logFile
+
+def CreateVideo(dates):
+    frame_width_video = 1700
+    frame_height_video = 720
+    fps = 9
+    # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
+    out = cv2.VideoWriter('%s/video_%s.mp4'%(dates[0], dates[1]),
+                          cv2.VideoWriter_fourcc(*'mp4v'),
+                          fps,
+                          (frame_width_video, frame_height_video))
+    return out
+
+def SaveImages(newframe, cnt, file, log, fps, nMobiles):
     dateTimeObj = datetime.datetime.now()
     folderDate = dateTimeObj.strftime("%d%m%Y")
     timestampStr = dateTimeObj.strftime("%d%m%Y_%H%M%S")
@@ -62,7 +88,10 @@ def SaveImages(newframe, cnt, file, fps, nMobiles):
     file.writelines(line)
 
     timesImage = dateTimeObj.strftime("%d%m%Y %H:%M:%S")
-    print("%d) Mobile Detected  -->  %s  --> FPS: %d"%(nMobiles, timesImage, fps))
+    line = "[%s] %d) Mobile Detected --> FPS: %d"%(timesImage, nMobiles, fps)
+    print(line)
+    line = "[%s] %d) Mobile Detected --> FPS: %d\n"%(timesImage, nMobiles, fps)
+    log.writelines(line)
 
 def imageProcessing(frame, last_image, kernel):
     # convert to gray scale of each frames
@@ -75,8 +104,13 @@ def imageProcessing(frame, last_image, kernel):
     return [contours, blur]
 
 def main():
+    #---------------------------------------
+    # Create files to write
+    #---------------------------------------
     dates = CreateFolder()
     file = CreatePositionNotes(dates)
+    log = CreateLogFile(dates)
+    video = CreateVideo(dates)
 
     #---------------------------------------
     # Image Size
@@ -157,6 +191,7 @@ def main():
             for cnt in contours:
                 if (cv2.contourArea(cnt) > 4000):
                     arrayCnt.append(cnt)
+                    video.write(image)
 
             for idx, cnt in enumerate(arrayCnt):
                 #x, y, w, h = cv2.boundingRect(cnt)
@@ -166,10 +201,10 @@ def main():
                 cY = int(M["m01"]/M["m00"])
 
                 if (cY > pyT):
-                    if (cX > pxT and cX < pxT+25):
+                    if (cX > pxT and cX < pxT+30):
                         newframe = image.copy()
                         nMobiles += 1
-                        SaveImages(newframe, cnt, file, fps, nMobiles)
+                        SaveImages(newframe, cnt, file, log, fps, nMobiles)
 
                     #     cv2.circle(track_image, (cX, cY), 7, (0,  255, 0), -1)
                     #     cv2.putText(track_image, "%d"%(idx+1), (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.75,  (0,  255, 0), 2)
@@ -203,6 +238,7 @@ def main():
         print(e)
         print("\n ---- Error, Closing ---")
 
+    video.release()
     file.close() #to change file access modes
     # close the camera
     camera.Close()
