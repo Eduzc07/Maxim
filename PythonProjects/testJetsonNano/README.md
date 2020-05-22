@@ -40,6 +40,11 @@ rsync -avz --exclude README.md --exclude images * edu@192.168.1.14:~/Workspace/p
 ./timeLapsed.py --hours 1 --interval 12 --fps 15 & disown
 ```
 
+Cocina
+```
+./timeLapsed.py --hours 1 --interval 4 --fps 15 & disown
+```
+
 | Frames in 1 minute  | Frames in 1 Hour | FPS | Interval (seg) | Finally  |
 | :-:|:-: |:-------------:| :-----:|:-----:|
 | 5 (each 12 sec)  | 300          | 30   | 12 |10 seg -> 1h |
