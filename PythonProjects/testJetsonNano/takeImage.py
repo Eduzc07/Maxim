@@ -7,6 +7,8 @@ import numpy as np
 #import math
 import datetime
 from cameraCalib import remapImage
+import logging
+import sys
 
 dateTimeObj = datetime.datetime.now()
 folderDate = dateTimeObj.strftime("%d%m%Y")
@@ -15,6 +17,17 @@ folderDate = dateTimeObj.strftime("%d%m%Y")
 directoryDay = './images/' + folderDate
 if not os.path.exists(directoryDay):
    os.makedirs(directoryDay)
+
+# Create A logger
+logging.basicConfig(filename='./images/%s/images_%s.log'%(folderDate, folderDate),
+                    level=logging.DEBUG,
+                    stream=sys.stdout,
+                    filemode='a',
+                    format='[%(asctime)s.%(msecs)03d][%(levelname)s]: %(message)s',
+                    datefmt='%d/%m/%Y %H:%M:%S')
+
+logger = logging.getLogger('Take Image')
+logger.info('takeImage.py has been started.')
 
 # create display window
 width = [1920, 1280, 1024, 640, 800, 1280, 320]
@@ -52,3 +65,5 @@ finalImage = remapImage(img_data)
 
 #nameImage = "images/%s/%s_rm.jpg"%(folderDate, timestampStr)
 cv2.imwrite(nameImage, finalImage)
+
+logger.info('Image \'%s.jpg\' has been saved.'%timestampStr)

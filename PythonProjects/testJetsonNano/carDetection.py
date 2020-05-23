@@ -6,6 +6,8 @@ import time
 import datetime
 import jetson.utils
 from cameraCalib import remapImage
+import logging
+import sys
 
 def CreateFolder():
     #----------------------------
@@ -50,21 +52,22 @@ def CreateLogFile(dates):
     #----------------------------------------------------
     # Write Log in File
     #----------------------------------------------------
-    #txtFile = "%s/bbox_%s.txt"%(directoryDay, folderDate)
-    txtLog = "%s/log_%s.txt"%(dates[0], dates[1])
-    if not os.path.isfile(txtLog):
-        logFile = open(txtLog, "w")
-        L = ["######## Start ######## \n"]
-        logFile.writelines(L)
-    else:
-        logFile = open(txtLog, "a")
+    # Create A logger
+    logging.basicConfig(filename='%s/car_%s.log'%(dates[0], dates[1]),
+                        level=logging.DEBUG,
+                        stream=sys.stdout,
+                        filemode='a',
+                        format='[%(asctime)s.%(msecs)03d][%(levelname)s]: %(message)s',
+                        datefmt='%d/%m/%Y %H:%M:%S')
 
-    return logFile
+    logger = logging.getLogger('Car Detection')
+    logger.info('###### Start ######')
+    return logger
 
 def CreateVideo(dates):
     frame_width_video = 1700
     frame_height_video = 720
-    fps = 9
+    fps = 8
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
     out = cv2.VideoWriter('%s/video_%s.mp4'%(dates[0], dates[1]),
                           cv2.VideoWriter_fourcc(*'mp4v'),
@@ -87,11 +90,11 @@ def SaveImages(newframe, cnt, file, log, fps, nMobiles):
     line = ["%s.jpg,%d,%d,%d,%d\n"%(timestampStr,x, y, w, h)]
     file.writelines(line)
 
-    timesImage = dateTimeObj.strftime("%d%m%Y %H:%M:%S")
-    line = "[%s] %d) Mobile Detected --> FPS: %d"%(timesImage, nMobiles, fps)
-    print(line)
-    line = "[%s] %d) Mobile Detected --> FPS: %d\n"%(timesImage, nMobiles, fps)
-    log.writelines(line)
+    #timesImage = dateTimeObj.strftime("%d%m%Y %H:%M:%S")
+    #line = "[%s] %d) Mobile Detected --> FPS: %d"%(timesImage, nMobiles, fps)
+    #print(line)
+    line = "(%d) Mobile Detected --> FPS: %d"%(nMobiles, fps)
+    log.info(line)
 
 def imageProcessing(frame, last_image, kernel):
     # convert to gray scale of each frames
@@ -110,7 +113,7 @@ def main():
     dates = CreateFolder()
     file = CreatePositionNotes(dates)
     log = CreateLogFile(dates)
-    video = CreateVideo(dates)
+    #video = CreateVideo(dates)
 
     #---------------------------------------
     # Image Size
@@ -143,7 +146,7 @@ def main():
     subs_image[:] = (0, 10, 10)
 
     # Initialize tracker with first frame and bounding box
-    pxT = 640
+    pxT = 940
     pyT = 250
     fps = 0
 
@@ -157,7 +160,7 @@ def main():
 
     nMobiles = 0
 
-    print("Starting Loop ...")
+    print("Running Loop ...")
     #----------------------------------------------------
     # Loop
     #----------------------------------------------------
@@ -189,9 +192,14 @@ def main():
 
             arrayCnt = []
             for cnt in contours:
+                # if (cv2.contourArea(cnt) < 4000):
+                #     continue
+
+                #video.write(image)
+
                 if (cv2.contourArea(cnt) > 4000):
                     arrayCnt.append(cnt)
-                    video.write(image)
+                #     video.write(image)
 
             for idx, cnt in enumerate(arrayCnt):
                 #x, y, w, h = cv2.boundingRect(cnt)
