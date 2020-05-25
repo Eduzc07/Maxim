@@ -24,11 +24,13 @@ def poweroff():
 def done():
 #   app.logger.info('Powering off')
 #   os.system("echo --- Retirar Fabi HDD ---")
-   os.system("sudo umount /media/odroid/Fabi_HDD")
+   #os.system("sudo umount /media/odroid/Fabi_HDD")
+   os.system("sudo umount /home/fabi/hdd")
 #   os.system("echo --- Shutdown now ---")
 #   time.sleep(2)
-   os.system("sudo shutdown -hP -t 5")
-#   os.system("sudo shutdown -hP now")
+#   os.system("sudo shutdown -hP -t 5")
+   os.system("sudo shutdown -hP now")
+
    return render_template('done.html', title="Done")
 
 if __name__ == "__main__":

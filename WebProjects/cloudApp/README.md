@@ -24,10 +24,10 @@ Create the Flask app ``odroidApp.py``
 
 #### Step 2
 
-We have to write the following service configuration in edit ` /etc/init/flask.conf``
+We have to write the following service configuration in edit ` /etc/init/cloudapp.conf``
 
 ```
-description "flask"
+description "cloudapp"
 start on stopped rc RUNLEVEL=[2345]
 respawn
 exec /home/odroid/Workspace/cloudApp/odroidApp.py
@@ -35,11 +35,11 @@ exec /home/odroid/Workspace/cloudApp/odroidApp.py
 
 #### Step 3
 Run
-``sudo service flask start``
+``sudo service cloudapp start``
 
-If you receive any error, you may have to create an additional file ``/lib/systemd/system/flask.service``
+If you receive any error, you may have to create an additional file ``/lib/systemd/system/cloudapp.service``
 
-``sudo vim /lib/systemd/system/flask.service``
+``sudo vim /lib/systemd/system/cloudapp.service``
 
 Note: **User=odroid** is the username
 
@@ -67,8 +67,11 @@ chmod +x odroidApp.py
 #### Step 5
 Run the service and check the status
 ```
-sudo service flask start
-sudo service flask status
+sudo service cloudapp start
+sudo service cloudapp stop
+sudo service cloudapp status
+sudo systemctl enable cloudapp.service
+sudo systemctl disable cloudapp.service
 ```
 
 ### Sources
