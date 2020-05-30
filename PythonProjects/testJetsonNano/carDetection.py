@@ -65,9 +65,12 @@ def CreateLogFile(dates):
     return logger
 
 def CreateVideo(dates):
+        #----------------------------------------------------
+        # Write images into a video
+        #----------------------------------------------------
     frame_width_video = 1700
     frame_height_video = 720
-    fps = 8
+    fps = 6
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
     out = cv2.VideoWriter('%s/video_%s.mp4'%(dates[0], dates[1]),
                           cv2.VideoWriter_fourcc(*'mp4v'),
@@ -146,7 +149,7 @@ def main():
     subs_image[:] = (0, 10, 10)
 
     # Initialize tracker with first frame and bounding box
-    pxT = 940
+    pxT = 1040
     pyT = 250
     fps = 0
 
@@ -154,11 +157,14 @@ def main():
     kernel = np.ones((9, 21), np.uint8)
 
     # Save 9 Points
-    arr_sp = [(0,0) ,(0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0)]
-    arr_ep = [(50, 400) ,(50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400)]
-    arr_color = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0)]
+    #arr_sp = [(0,0) ,(0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0), (0,0)]
+    #arr_ep = [(50, 400) ,(50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400), (50, 400)]
+    #arr_color = [(0, 255, 0), (0, 0, 255), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 0, 0)]
 
     nMobiles = 0
+    #Create array for Images for save a Video
+    #images_array = []
+    imgcnt = 0
 
     print("Running Loop ...")
     #----------------------------------------------------
@@ -194,12 +200,16 @@ def main():
             for cnt in contours:
                 # if (cv2.contourArea(cnt) < 4000):
                 #     continue
-
-                #video.write(image)
+                #
+                # if (imgcnt <= 1800):
+                #     video.write(image)
+                #     imgcnt += 1
+                # else:
+                #     print('Video finished!')
 
                 if (cv2.contourArea(cnt) > 4000):
                     arrayCnt.append(cnt)
-                #     video.write(image)
+                    #video.write(image)
 
             for idx, cnt in enumerate(arrayCnt):
                 #x, y, w, h = cv2.boundingRect(cnt)
@@ -243,15 +253,16 @@ def main():
                 break
 
     except cv2.error as e:
-        print(e)
-        print("\n ---- Error, Closing ---")
+        logger.error(e)
+        logger.error("---- Error, Closing ---")
 
-    video.release()
     file.close() #to change file access modes
     # close the camera
     camera.Close()
     # De-allocate any associated memory usage
     cv2.destroyAllWindows()
+
+    #video.release()
 
 if __name__ == "__main__":
     # execute only if run as a script
