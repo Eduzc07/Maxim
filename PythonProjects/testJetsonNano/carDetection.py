@@ -65,9 +65,9 @@ def CreateLogFile(dates):
     return logger
 
 def CreateVideo(dates):
-        #----------------------------------------------------
-        # Write images into a video
-        #----------------------------------------------------
+    #----------------------------------------------------
+    # Write images into a video
+    #----------------------------------------------------
     frame_width_video = 1700
     frame_height_video = 720
     fps = 6
@@ -79,19 +79,22 @@ def CreateVideo(dates):
     return out
 
 def SaveImages(newframe, cnt, file, log, fps, nMobiles):
-    dateTimeObj = datetime.datetime.now()
-    folderDate = dateTimeObj.strftime("%d%m%Y")
-    timestampStr = dateTimeObj.strftime("%d%m%Y_%H%M%S")
-    nameImage = "./images/car/%s/%s.jpg"%(folderDate, timestampStr)
-    cv2.imwrite(nameImage, newframe)
+    #Save Images
+    if (False):
+        dateTimeObj = datetime.datetime.now()
+        folderDate = dateTimeObj.strftime("%d%m%Y")
+        timestampStr = dateTimeObj.strftime("%d%m%Y_%H%M%S")
 
-    x, y, w, h = cv2.boundingRect(cnt)
-    cv2.rectangle(newframe, (x,y), (x+w,y+h),(0, 250, 0), 2)
-    nameImage = "./images/car/%s/bbox/%s.jpg"%(folderDate, timestampStr)
-    cv2.imwrite(nameImage, newframe)
+        nameImage = "./images/car/%s/%s.jpg"%(folderDate, timestampStr)
+        cv2.imwrite(nameImage, newframe)
 
-    line = ["%s.jpg,%d,%d,%d,%d\n"%(timestampStr,x, y, w, h)]
-    file.writelines(line)
+        x, y, w, h = cv2.boundingRect(cnt)
+        cv2.rectangle(newframe, (x,y), (x+w,y+h),(0, 250, 0), 2)
+        nameImage = "./images/car/%s/bbox/%s.jpg"%(folderDate, timestampStr)
+        cv2.imwrite(nameImage, newframe)
+
+        line = ["%s.jpg,%d,%d,%d,%d\n"%(timestampStr,x, y, w, h)]
+        file.writelines(line)
 
     #timesImage = dateTimeObj.strftime("%d%m%Y %H:%M:%S")
     #line = "[%s] %d) Mobile Detected --> FPS: %d"%(timesImage, nMobiles, fps)
