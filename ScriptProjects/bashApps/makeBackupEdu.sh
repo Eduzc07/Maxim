@@ -260,7 +260,7 @@ fi
 #------------------------------------------------------------
 #Sending Files
 #------------------------------------------------------------
-if [ "$booliFiles" = true ]; then
+if [ "$boolFiles" = true ]; then
    for i in {16..21} {21..16}; do for j in {1..4}; do echo -en "\e[38;5;${i}m#\e[0m" ; done;  done ; echo
    echo -e "\e[37m\t\tSending /$2"
    for i in {16..21} {21..16}; do for j in {1..4}; do echo -en "\e[38;5;${i}m#\e[0m" ; done;  done ; echo
