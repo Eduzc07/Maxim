@@ -7,7 +7,7 @@ cp -r themes/ ~/.config/tmux/
 
 Move config-file to home:
 ```
-mv tmux.config ~/.tmux.config
+cp tmux.conf ~/.tmux.conf
 ```
 
 tmux key: Backtick ( ` ) | Ctrl-B 
