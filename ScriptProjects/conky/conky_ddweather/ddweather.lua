@@ -34,11 +34,11 @@ CITY_UPDATE_INTERVAL = 1800 * 4
 
 -------------------------------------------------------------------------------
 --                                                  position of the buttom line
-FORECAST_BUTTOM_LINE = 345
+FORECAST_BUTTOM_LINE = 327
 
 -------------------------------------------------------------------------------
 --                                                     position of the top line
-FORECAST_TOP_LINE = 245
+FORECAST_TOP_LINE = 225
 
 -------------------------------------------------------------------------------
 --                                                                  print_table
@@ -300,10 +300,10 @@ end -- conky_clouds
 --                                                           conky_weather_icon
 -- returns the weather icon conky format string
 --
-function conky_weather_icon()
+function conky_weather_icon(px, py)
     local value = get_current_weather_value('weather', 1, 'icon')
     value = value and value or "na"
-    return string.format("${image ./img/%s.png -p 65,60 -s 128x128}", value)
+    return string.format("${image ./img/%s.png -p %s,%s -s 128x128}", value, px, py)
 end -- conky_weather_icon
 
 
@@ -539,11 +539,11 @@ function draw_temp_grid(cr)
     cairo_set_source_rgba(cr, rgb_to_r_g_b(0xAAAAAA, 1))
 
     -- top line
-    cairo_move_to(cr, 105, FORECAST_TOP_LINE)
-    cairo_line_to(cr, 490, FORECAST_TOP_LINE)
+    cairo_move_to(cr, 55, FORECAST_TOP_LINE)
+    cairo_line_to(cr, 440, FORECAST_TOP_LINE)
     -- bottom line
-    cairo_move_to(cr, 105, FORECAST_BUTTOM_LINE)
-    cairo_line_to(cr, 490, FORECAST_BUTTOM_LINE)
+    cairo_move_to(cr, 55, FORECAST_BUTTOM_LINE)
+    cairo_line_to(cr, 440, FORECAST_BUTTOM_LINE)
 
     cairo_stroke(cr)
 
@@ -555,8 +555,8 @@ function draw_temp_grid(cr)
     cairo_set_dash(cr, {5, 3}, 1, 1)
     cairo_set_source_rgba(cr, rgb_to_r_g_b(0xAAAAAA, 0.5))
     for i = 1, num_lines do
-        cairo_move_to(cr, 105, FORECAST_BUTTOM_LINE - i * px_diff)
-        cairo_line_to(cr, 490, FORECAST_BUTTOM_LINE - i * px_diff)
+        cairo_move_to(cr, 55, FORECAST_BUTTOM_LINE - i * px_diff)
+        cairo_line_to(cr, 440, FORECAST_BUTTOM_LINE - i * px_diff)
     end
 
     cairo_stroke(cr)
@@ -594,7 +594,7 @@ function draw_temp_graph(cr)
     cairo_set_source_rgba(cr, rgb_to_r_g_b(0x07ba06, 1))
 
     local prev_p = {}
-    local point = { x = 122, y = FORECAST_BUTTOM_LINE }
+    local point = { x = 72, y = FORECAST_BUTTOM_LINE }
     for _, temp in ipairs(forecast_temp_values()) do
         point.y = calc_y(temp)
         draw_cairo_dot(cr, point.x, point.y, 3)
@@ -626,7 +626,7 @@ function draw_wind_graph(cr)
     cairo_set_source_rgba(cr, rgb_to_r_g_b(0x1081e0, 1))
 
     local prev_p = {}
-    local point = { x = 122, y = FORECAST_BUTTOM_LINE }
+    local point = { x = 72, y = FORECAST_BUTTOM_LINE }
     for _, wind in ipairs(forecast_wind_values()) do
         point.y = calc_y(wind)
         draw_cairo_dot(cr, point.x, point.y, 3)

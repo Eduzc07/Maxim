@@ -131,7 +131,7 @@ Temperature $alignr ${nvidia temp} °C
 # HDD
 #######################################################
 ${font Arial:bold:size=10}${color1}HDD ${color DarkSlateGray}${hr 2}
-$font${color DimGray}/home $alignc ${fs_used /home} / ${fs_size /home} $alignr${color white}${fs_free_perc /home}%
+$font${color DimGray}/home $alignc ${fs_used /home} / ${fs_size /home} $alignr${color white}${fs_used_perc /home}%
 ${color2}${fs_bar /home}
 
 #######################################################
