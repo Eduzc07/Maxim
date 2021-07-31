@@ -10,6 +10,11 @@ Move config-file to home:
 cp tmux.conf ~/.tmux.conf
 ```
 
+Install Powerline to Display StatusBar:
+```
+sudo apt install fonts-powerline powerline
+```
+
 tmux key: Backtick ( ` ) | Ctrl-B 
 tmux command: key + : 
 
