@@ -71,6 +71,8 @@ TEXT
 # Time
 #######################################################
 #${font Arial:bold:size=10}${color Tan2}TIME ${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=12}${color1}E2i ${color DarkSlateGray}${hr 2}${font}
+
 ${alignr}${image ~/.conky/conky_e2i/img/logo_white.png -p 145, 0 -s 160x85}
 ${voffset -30}
 ${color white}${font :size=30}${time %H:%Mh}
