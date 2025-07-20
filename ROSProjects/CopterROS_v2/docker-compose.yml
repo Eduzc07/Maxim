@@ -1,0 +1,32 @@
+services:
+  ros2:
+    build:
+      context: .                    # Ruta al Dockerfile
+      dockerfile: Dockerfile
+      args:
+        ROS_DISTRO: jazzy           # Cambia a "humble", "iron", etc. si lo deseas
+    container_name: ros2_jazzy
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+        #      - NVIDIA_VISIBLE_DEVICES=all         # Para acceder a GPU
+        #- NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw    # GUI
+      - ./ros2_ws:/root/ros2_ws             # Tu workspace ROS 2 local
+      - /dev:/dev             # acceso opcional si usarás sensores como cámaras
+    devices:
+      - /dev/dri              # soporte para MESA u OpenGL
+        #devices:
+      #      - /dev/ttyUSB0:/dev/ttyUSB0           # Puerto serial
+        #      - /dev/ttyUSB1:/dev/ttyUSB1           # Otro puerto (opcional)
+        #deploy:
+        #resources:
+        #reservations:
+        #  devices:
+        #    - capabilities: [gpu]           # GPU support (con runtime nvidia)
+              #runtime: nvidia                         # Necesita NVIDIA Container Toolkit
+    network_mode: host
+    stdin_open: true
+    tty: true

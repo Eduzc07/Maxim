@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>model</name>
+  <version>0.0.1</version>
+  <description>El paquete model simula el comportamiento del dron.</description>
+
+  <maintainer email="rosu@todo.todo">rosu</maintainer>
+  <license>MIT</license>
+
+  <!-- Herramienta de compilación -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Dependencias en tiempo de compilación y ejecución -->
+  <depend>rclcpp</depend>
+  <depend>copter</depend>
+
+  <!-- Exportación para ament -->
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

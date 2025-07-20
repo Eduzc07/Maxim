@@ -1,0 +1,75 @@
+model_node:
+  ros__parameters:
+    ###################### CONSTANTS ###########################
+    mass: 1.25
+    gravity: 9.806
+    l_arm: 0.1275
+    K_m: 0.05
+
+    imu_rotation_yaw: 0.7854
+    imu_rotation_pitch: 0.0
+    imu_rotation_roll: 3.1415
+
+    camera_roll_copter: 0.0
+    camera_pitch_copter: 0.0
+    camera_yaw_copter: -0.7854
+
+    ######################## MODEL #############################
+    state_init: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    Jxx: 0.001120760
+    Jyy: 0.001084620
+    Jzz: 0.002083813
+
+    ###################### CONTROLLER ##########################
+    x_C_des: [1, 0, 0]
+    K_P: [1, 1, 1]
+    K_V: [1, 1, 1]
+
+    ###################### INITIAL_POSITION ####################
+    initial_altitude: 1.0
+    copter_x_init: 0.0
+    copter_y_init: 0.0
+    copter_yaw_init: 0.0
+
+    ###################### POSITION_TRACKER ####################
+    video_file_path: "/home/TU-ilmenau/Robotik/04.avi"
+    cam_number: 0
+    cam_x_resolution: 320
+    cam_y_resolution: 240
+    cam_fps: 100
+    use_inverse_image_filter: 1
+    BWtreshold: 181
+    inv_BWtreshold: 60
+    camera_constant: 282.0
+    tolerated_deviationH: 1.8
+    tolerated_deviationW: 1.8
+    rects_of_interest_radius: 2.0
+    image_send_rate: 5.0
+
+    path_to_home: "/home/rosu/"
+    path_to_trackdata: "copteROS/src/copter/parameters/Trackdata.csv"
+
+    ################ EXTENDED KALMAN FILTER ###################
+    var_pos: [10, 10, 10]
+    var_acc: [0.02, 0.02, 0.02]
+    var_gyro: [0.03, 0.03, 0.03]
+    var_mag: [1, 1, 1]
+    process_var_pos: [0.005, 0.005, 0.005]
+    process_var_ang: [0.04, 0.04, 0.04]
+    process_var_vel: [0.1, 0.1, 0.1]
+    process_var_ang_vel: [0.1, 0.1, 0.1]
+    process_var_acc: [1000, 1000, 1000]
+    process_var_bias_acc: [0.001, 0.001, 0.001]
+    process_var_bias_gyro: [0.001, 0.001, 0.001]
+
+    ##################### Status #########################
+    motor_enable: 0
+
+control_node:
+  ros__parameters:
+    mass: 1.25
+    gravity: 9.806
+    ###################### CONTROLLER ##########################
+    x_C_des: [1.0, 0.0, 0.0]  # <-- ¡usa floats!
+    K_P: [1.0, 1.0, 1.0]
+    K_V: [1.0, 1.0, 1.0]
