@@ -1,0 +1,8 @@
+# Ignorar configuración de VS Code
+.vscode/
+
+# Ignorar archivos del sistema de macOS
+.DS_Store
+
+# .DS_Store en cualquier parte del repo
+**/.DS_Store
