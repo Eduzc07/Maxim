@@ -1,0 +1,13 @@
+# Untracked files:
+.[oa]
+devel/*
+install/*
+build/*
+.catkin_tools/*
+logs/*
+*.bag
+.catkin_workspace
+#src/CMakeLists.txt
+*.kdev4
+
+

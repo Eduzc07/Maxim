@@ -1,0 +1,734 @@
+
+
+
+//----------------------------------------------------------------------------
+//Sending only points
+//----------------------------------------------------------------------------
+ switch (point)
+    {
+    case 0:
+      
+      pos.pos.x = 0;
+      pos.pos.y = 0;
+      pos.pos.z = 0;
+      
+      break;
+    case 1:
+      
+      pos.pos.x = 1;
+      pos.pos.y = 1;
+      pos.pos.z = 1;
+   
+      break;
+    case 2:
+      
+      pos.pos.x = 2;
+      pos.pos.y = 0;
+      pos.pos.z = 2;
+   
+      break;
+    case 3:
+      
+      pos.pos.x = 3;
+      pos.pos.y = -1;
+      pos.pos.z = 1;
+   
+      break;
+    case 4:
+      
+      pos.pos.x = 4;
+      pos.pos.y = 0;
+      pos.pos.z = 0;
+   
+      break;
+
+    }
+
+  if(show){
+      ROS_INFO("Sending new position:[x:%0.1f,y:%0.1f,z:%0.1f]", pos.pos.x, pos.pos.y, pos.pos.z);
+      show=false;
+  }
+
+  if (time>So){
+  point++;
+  count=0; 
+   show=true;
+   So=So+5;
+  }
+  if (point == 5){
+  point=0;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------
+//Create Matrix A
+//----------------------------------------------------------------
+   Symbolic a1("a1", 8);
+   Symbolic a2("a2", 8);
+   Symbolic a3("a3", 8);
+   Symbolic a4("a4", 8);
+   Symbolic a5("a5", 8);
+   Symbolic a6("a6", 8);
+   Symbolic a7("a7", 8);
+   Symbolic a8("a8", 8);
+
+   Symbolic t("t");
+
+   Symbolic ft1("ft1", 7);
+   Symbolic ft2("ft2", 7);
+   Symbolic ft3("ft3", 7);
+   Symbolic ft4("ft4", 7);
+
+   //double Ti=d0[t_index-1];
+   double Ti;
+   Ti=3.4644;
+
+  //----------------------------------------------------------
+  //1
+   ft1(0)=a1(0)+
+	 a1(1)*(t/Ti)+
+         a1(2)*(t/Ti)*(t/Ti)+
+	 a1(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a1(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a1(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a1(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a1(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+       ft1(i)=df(ft1(i-1), t);
+   }
+
+  //----------------------------------------------------------
+  //2
+   ft2(0)=a2(0)+
+	 a2(1)*(t/Ti)+
+         a2(2)*(t/Ti)*(t/Ti)+
+	 a2(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a2(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a2(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a2(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a2(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+	 ft2(i)=df(ft2(i-1), t);
+   }
+
+  //----------------------------------------------------------
+  //3
+   ft3(0)=a3(0)+
+	 a3(1)*(t/Ti)+
+         a3(2)*(t/Ti)*(t/Ti)+
+	 a3(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a3(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a3(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a3(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a3(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+	 ft3(i)=df(ft3(i-1), t);
+   }
+
+  //----------------------------------------------------------
+  //4
+   ft4(0)=a4(0)+
+	 a4(1)*(t/Ti)+
+         a4(2)*(t/Ti)*(t/Ti)+
+	 a4(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a4(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a4(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a4(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a4(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+	 ft4(i)=df(ft4(i-1), t);
+   }
+
+  //Solution
+  MatrixXf A(32,32);
+  A.setZero(32,32);
+  VectorXf p(32);
+
+  //----------------------------------------------------------
+  //p1
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(0).coeff(a1(i))[t==0];
+  }
+  A.row(0)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(0).coeff(a1(i))[t==Ti];
+  }
+  A.row(1)=p.transpose();  
+
+  //----------------------------------------------------------
+  //p2
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(0).coeff(a2(i))[t==0];
+  }
+  A.row(2)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(0).coeff(a2(i))[t==Ti];
+  }
+  A.row(3)=p.transpose();  
+
+  //----------------------------------------------------------
+  //p3
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(0).coeff(a3(i))[t==0];
+  }
+  A.row(4)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(0).coeff(a3(i))[t==Ti];
+  }
+  A.row(5)=p.transpose();  
+
+
+  //----------------------------------------------------------
+  //p4
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(0).coeff(a4(i))[t==0];
+  }
+  A.row(6)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(0).coeff(a4(i))[t==Ti];
+  }
+  A.row(7)=p.transpose(); 
+
+ 
+  //----------------------------------------------------------
+  //Begin and end =0
+  //----------------------------------------------------------
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(1).coeff(a1(i))[t==0];
+  }
+  A.row(8)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(1).coeff(a4(i))[t==Ti];
+  }
+  A.row(9)=p.transpose(); 
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(2).coeff(a1(i))[t==0];
+  }
+  
+  A.row(10)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(2).coeff(a4(i))[t==Ti];
+  }
+  A.row(11)=p.transpose(); 
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(3).coeff(a1(i))[t==0];
+  }
+  
+  A.row(12)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(3).coeff(a4(i))[t==Ti];
+  }
+  A.row(13)=p.transpose();
+
+  //----------------------------------------------------------
+  //Velocity
+  //----------------------------------------------------------
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(1).coeff(a1(i))[t==Ti];
+      p(16+i)=-(double)ft2(1).coeff(a2(i))[t==0];
+  }
+  A.row(14)=p.transpose();  
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(1).coeff(a2(i))[t==Ti];
+      p(8+i)=-(double)ft3(1).coeff(a3(i))[t==0];
+  }
+  A.row(15)=p.transpose();
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(1).coeff(a3(i))[t==Ti];
+      p(i)=-(double)ft4(1).coeff(a4(i))[t==0];
+  }
+  A.row(16)=p.transpose();
+
+  //----------------------------------------------------------
+  //Aceleration
+  //----------------------------------------------------------
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(2).coeff(a1(i))[t==Ti];
+      p(16+i)=-(double)ft2(2).coeff(a2(i))[t==0];
+  }
+  A.row(17)=p.transpose();  
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(2).coeff(a2(i))[t==Ti];
+      p(8+i)=-(double)ft3(2).coeff(a3(i))[t==0];
+  }
+  A.row(18)=p.transpose();
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(2).coeff(a3(i))[t==Ti];
+      p(i)=-(double)ft4(2).coeff(a4(i))[t==0];
+  }
+  A.row(19)=p.transpose();
+
+  //----------------------------------------------------------
+  //Jerk ----->
+  //----------------------------------------------------------
+ for (int j=0; j<4;j++){
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(3+j).coeff(a1(i))[t==Ti];
+      p(16+i)=-(double)ft2(3+j).coeff(a2(i))[t==0];
+  }
+  A.row(20+3*j)=p.transpose();  
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(3+j).coeff(a2(i))[t==Ti];
+      p(8+i)=-(double)ft3(3+j).coeff(a3(i))[t==0];
+  }
+  A.row(21+3*j)=p.transpose();
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(3+j).coeff(a3(i))[t==Ti];
+      p(i)=-(double)ft4(3+j).coeff(a4(i))[t==0];
+  }
+  A.row(22+3*j)=p.transpose();
+ }
+
+// cout << "A:\n" << A << endl;
+ for (int i=0;i<3;i++){
+  	VectorXf b(32);
+	b.setZero(32);
+	b=B.col(i);//i <-------------------------------------------------------------------------------
+//	cout << "B:\n" << B.col(0).transpose() << endl;
+
+//Ax=B ----> B\A 
+  
+	VectorXf sol_i(32); 
+	sol_i.setZero(32);
+	sol_i =  A.colPivHouseholderQr().solve(b);
+	sol.col(i)=sol_i;
+  }
+  cout << "sol_i:\n" << sol.col(1).segment(0,8) << endl;
+
+
+  double scale = Ti/Ti; //(t-s0)/Ti
+ VectorXf fp(8);
+            fp << 1,
+                 scale, 
+                 scale*scale,
+                 scale*scale*scale, 
+                 scale*scale*scale*scale,
+                 scale*scale*scale*scale*scale, 
+                 scale*scale*scale*scale*scale*scale, 
+                 scale*scale*scale*scale*scale*scale*scale;
+
+ cout << "fp:\n" << fp.transpose() << endl;
+
+int t_index=3;
+cout << "alphax:\n" << sol.col(0).segment(24-8*t_index,8) << endl;
+cout << "alphay:\n" << sol.col(1).segment(24-8*t_index,8) << endl;
+cout << "alphaz:\n" << sol.col(2).segment(24-8*t_index,8) << endl;
+
+double ptx=fp.transpose()*sol.col(0).segment(24-8*t_index,8);
+double pty=fp.transpose()*sol.col(1).segment(24-8*t_index,8);
+double ptz=fp.transpose()*sol.col(2).segment(24-8*t_index,8);
+cout << "ptx: " << ptx << endl;
+cout << "pty: " << pty << endl;
+cout << "ptz: " << ptz << endl;
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------
+//Create Matrix A
+//----------------------------------------------------------------
+   Symbolic a1("a1", 8);
+   Symbolic a2("a2", 8);
+   Symbolic a3("a3", 8);
+   Symbolic a4("a4", 8);
+   Symbolic a5("a5", 8);
+   Symbolic a6("a6", 8);
+   Symbolic a7("a7", 8);
+   Symbolic a8("a8", 8);
+
+   Symbolic t("t");
+
+   Symbolic ft1("ft1", 7);
+   Symbolic ft2("ft2", 7);
+   Symbolic ft3("ft3", 7);
+   Symbolic ft4("ft4", 7);
+
+   //double Ti=d0[t_index-1];
+   double Ti;
+   Ti=3.4644;
+
+  //----------------------------------------------------------
+  //1
+   ft1(0)=a1(0)+
+	 a1(1)*(t/Ti)+
+         a1(2)*(t/Ti)*(t/Ti)+
+	 a1(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a1(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a1(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a1(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a1(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+       ft1(i)=df(ft1(i-1), t);
+   }
+
+  //----------------------------------------------------------
+  //2
+   ft2(0)=a2(0)+
+	 a2(1)*(t/Ti)+
+         a2(2)*(t/Ti)*(t/Ti)+
+	 a2(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a2(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a2(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a2(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a2(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+	 ft2(i)=df(ft2(i-1), t);
+   }
+
+  //----------------------------------------------------------
+  //3
+   ft3(0)=a3(0)+
+	 a3(1)*(t/Ti)+
+         a3(2)*(t/Ti)*(t/Ti)+
+	 a3(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a3(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a3(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a3(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a3(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+	 ft3(i)=df(ft3(i-1), t);
+   }
+
+  //----------------------------------------------------------
+  //4
+   ft4(0)=a4(0)+
+	 a4(1)*(t/Ti)+
+         a4(2)*(t/Ti)*(t/Ti)+
+	 a4(3)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a4(4)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+ 
+         a4(5)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a4(6)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)+
+         a4(7)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti)*(t/Ti);
+   for (int i=1;i<7;i++){
+	 ft4(i)=df(ft4(i-1), t);
+   }
+
+  //Solution
+  MatrixXf A(32,32);
+  A.setZero(32,32);
+  VectorXf p(32);
+
+  //----------------------------------------------------------
+  //p1
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(0).coeff(a1(i))[t==0];
+  }
+  A.row(0)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(0).coeff(a1(i))[t==Ti];
+  }
+  A.row(1)=p.transpose();  
+
+  //----------------------------------------------------------
+  //p2
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(0).coeff(a2(i))[t==0];
+  }
+  A.row(2)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(0).coeff(a2(i))[t==Ti];
+  }
+  A.row(3)=p.transpose();  
+
+  //----------------------------------------------------------
+  //p3
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(0).coeff(a3(i))[t==0];
+  }
+  A.row(4)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(0).coeff(a3(i))[t==Ti];
+  }
+  A.row(5)=p.transpose();  
+
+
+  //----------------------------------------------------------
+  //p4
+  //----------------------------------------------------------
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(0).coeff(a4(i))[t==0];
+  }
+  A.row(6)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(0).coeff(a4(i))[t==Ti];
+  }
+  A.row(7)=p.transpose(); 
+
+ 
+  //----------------------------------------------------------
+  //Begin and end =0
+  //----------------------------------------------------------
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(1).coeff(a1(i))[t==0];
+  }
+  A.row(8)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(1).coeff(a4(i))[t==Ti];
+  }
+  A.row(9)=p.transpose(); 
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(2).coeff(a1(i))[t==0];
+  }
+  
+  A.row(10)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(2).coeff(a4(i))[t==Ti];
+  }
+  A.row(11)=p.transpose(); 
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(3).coeff(a1(i))[t==0];
+  }
+  
+  A.row(12)=p.transpose();  
+
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(i)=(double)ft4(3).coeff(a4(i))[t==Ti];
+  }
+  A.row(13)=p.transpose();
+
+  //----------------------------------------------------------
+  //Velocity
+  //----------------------------------------------------------
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(1).coeff(a1(i))[t==Ti];
+      p(16+i)=-(double)ft2(1).coeff(a2(i))[t==0];
+  }
+  A.row(14)=p.transpose();  
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(1).coeff(a2(i))[t==Ti];
+      p(8+i)=-(double)ft3(1).coeff(a3(i))[t==0];
+  }
+  A.row(15)=p.transpose();
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(1).coeff(a3(i))[t==Ti];
+      p(i)=-(double)ft4(1).coeff(a4(i))[t==0];
+  }
+  A.row(16)=p.transpose();
+
+  //----------------------------------------------------------
+  //Aceleration
+  //----------------------------------------------------------
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(2).coeff(a1(i))[t==Ti];
+      p(16+i)=-(double)ft2(2).coeff(a2(i))[t==0];
+  }
+  A.row(17)=p.transpose();  
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(2).coeff(a2(i))[t==Ti];
+      p(8+i)=-(double)ft3(2).coeff(a3(i))[t==0];
+  }
+  A.row(18)=p.transpose();
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(2).coeff(a3(i))[t==Ti];
+      p(i)=-(double)ft4(2).coeff(a4(i))[t==0];
+  }
+  A.row(19)=p.transpose();
+
+  //----------------------------------------------------------
+  //Jerk ----->
+  //----------------------------------------------------------
+ for (int j=0; j<4;j++){
+  //P(1)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(24+i)=(double)ft1(3+j).coeff(a1(i))[t==Ti];
+      p(16+i)=-(double)ft2(3+j).coeff(a2(i))[t==0];
+  }
+  A.row(20+3*j)=p.transpose();  
+
+  //P(2)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(16+i)=(double)ft2(3+j).coeff(a2(i))[t==Ti];
+      p(8+i)=-(double)ft3(3+j).coeff(a3(i))[t==0];
+  }
+  A.row(21+3*j)=p.transpose();
+
+  //P(3)
+  p.setZero(32);
+  for(int i=0;i<8;i++){
+      p(8+i)=(double)ft3(3+j).coeff(a3(i))[t==Ti];
+      p(i)=-(double)ft4(3+j).coeff(a4(i))[t==0];
+  }
+  A.row(22+3*j)=p.transpose();
+ }
+
+// cout << "A:\n" << A << endl;
+ for (int i=0;i<3;i++){
+  	VectorXf b(32);
+	b.setZero(32);
+	b=B.col(i);//i <-------------------------------------------------------------------------------
+//	cout << "B:\n" << B.col(0).transpose() << endl;
+
+//Ax=B ----> B\A 
+  
+	VectorXf sol_i(32); 
+	sol_i.setZero(32);
+	sol_i =  A.colPivHouseholderQr().solve(b);
+	sol.col(i)=sol_i;
+  }
+  cout << "sol_i:\n" << sol.col(1).segment(0,8) << endl;
+
+
+  double scale = Ti/Ti; //(t-s0)/Ti
+ VectorXf fp(8);
+            fp << 1,
+                 scale, 
+                 scale*scale,
+                 scale*scale*scale, 
+                 scale*scale*scale*scale,
+                 scale*scale*scale*scale*scale, 
+                 scale*scale*scale*scale*scale*scale, 
+                 scale*scale*scale*scale*scale*scale*scale;
+
+ cout << "fp:\n" << fp.transpose() << endl;
+
+int t_index=3;
+cout << "alphax:\n" << sol.col(0).segment(24-8*t_index,8) << endl;
+cout << "alphay:\n" << sol.col(1).segment(24-8*t_index,8) << endl;
+cout << "alphaz:\n" << sol.col(2).segment(24-8*t_index,8) << endl;
+
+double ptx=fp.transpose()*sol.col(0).segment(24-8*t_index,8);
+double pty=fp.transpose()*sol.col(1).segment(24-8*t_index,8);
+double ptz=fp.transpose()*sol.col(2).segment(24-8*t_index,8);
+cout << "ptx: " << ptx << endl;
+cout << "pty: " << pty << endl;
+cout << "ptz: " << ptz << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

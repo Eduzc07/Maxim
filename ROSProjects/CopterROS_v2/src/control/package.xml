@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>control</name>
+  <version>1.0.0</version>
+  <description>Paquete de control para el quadrotor</description>
+
+  <maintainer email="beck.fabi@gmail.com">Fabian</maintainer>
+  <license>MIT</license>
+
+  <!-- Herramienta de construcción -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Dependencias en tiempo de construcción -->
+  <build_depend>rclcpp</build_depend>
+  <build_depend>copter</build_depend>
+
+  <!-- Dependencias en tiempo de ejecución -->
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>copter</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
