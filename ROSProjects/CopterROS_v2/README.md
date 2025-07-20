@@ -147,7 +147,7 @@ docker compose build
 docker compose up --build
 
 #Solo para inicializar
-docker compuse up
+docker compose up
 ```
 
 ---
@@ -260,6 +260,8 @@ It is possible to use the predefined startup scripts:
 Simulation:
 
 ```bash
+# Configurar entorno ROS 2
+source install/setup.bash
 ros2 launch copter simulation.launch.py
 ```
 Otherwise start the individual nodes using rosrun. For this see package documentation below.
@@ -271,6 +273,8 @@ Otherwise start the individual nodes using rosrun. For this see package document
 To generate trajectory for copter.
 
 ```bash
+# Configurar entorno ROS 2
+source install/setup.bash
 ros2 run trajectory trajectory_node
 ```
 
