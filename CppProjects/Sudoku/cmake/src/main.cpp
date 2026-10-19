@@ -232,7 +232,15 @@ int main(int argc, char *argv[])
 
     for (int i = 1; i < argc; i++) {
         string arg = argv[i];
-        if (arg == "--no-gui") {
+        if (arg == "--help" || arg == "-h") {
+            cout << "Usage: " << argv[0] << " [options] [input_image] [output_image]\n\n"
+                 << "Options:\n"
+                 << "  -c, --camera [id]      Open camera by index (default: 0)\n"
+                 << "  --no-gui               Run in headless mode without GUI windows\n"
+                 << "  --sim-camera <image>   Simulate real-time camera stream using a static image\n"
+                 << "  -h, --help             Show this help message\n";
+            return 0;
+        } else if (arg == "--no-gui") {
             showGui = false;
         } else if (arg == "--camera" || arg == "-c") {
             useCamera = true;
@@ -320,7 +328,9 @@ int main(int argc, char *argv[])
     imwrite(outputPath, input);
 
     if (showGui) {
-        destroyWindow("roi");
+        try {
+            destroyWindow("roi");
+        } catch (...) {}
         imshow("Original", input);
         waitKey(0);
         destroyAllWindows();

@@ -99,13 +99,22 @@ cv::Mat DigitRecognizer::preprocessImage(cv::Mat img)
 
 int DigitRecognizer::classify(const cv::Mat& img, int* secondBest, float* confidenceMargin)
 {
+    if (img.empty()) return 0;
+
     if (!knnPrinted || knnPrinted->empty()) {
         loadModel("../install/Character_Recognition/save.data");
     }
 
+    Mat resizedImg;
+    if (img.rows != 30 || img.cols != 20) {
+        resize(img, resizedImg, Size(20, 30));
+    } else {
+        resizedImg = img;
+    }
+
     Mat sample2 = Mat(1, 30 * 20, CV_32F);
     for (int n = 0; n < 20 * 30; n++) {
-        sample2.at<float>(n) = (float)img.data[n];
+        sample2.at<float>(n) = (float)resizedImg.data[n];
     }
 
     if (knnPrinted && !knnPrinted->empty()) {
@@ -158,11 +167,15 @@ bool DigitRecognizer::train(const char *trainPath, const char *labelsPath)
     FILE *fp = fopen(trainPath, "rb");
     FILE *fp2 = fopen(labelsPath, "rb");
 
-    if(!fp || !fp2)
-            return false;
+    if (!fp || !fp2) {
+        if (fp) fclose(fp);
+        if (fp2) fclose(fp2);
+        return false;
+    }
 
-   // Read bytes in flipped order
+    // Read bytes in flipped order
     int magicNumber = readFlippedInteger(fp);
+    (void)magicNumber;
     numImages = readFlippedInteger(fp);
     numRows = readFlippedInteger(fp);
     numCols = readFlippedInteger(fp);
