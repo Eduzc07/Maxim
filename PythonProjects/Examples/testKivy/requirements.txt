@@ -7,5 +7,5 @@ Kivy==1.11.1
 Kivy-examples==1.11.1
 Kivy-Garden==0.1.4
 Pygments==2.7.4
-requests==2.22.0
+requests==2.33.0
 urllib3==1.26.5
