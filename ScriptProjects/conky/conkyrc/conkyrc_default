@@ -1,84 +1,68 @@
-#--------------------------------------------------------
-# Conky RC
-#--------------------------------------------------------
+conky.config = {
+    background = true,
+    update_interval = 2,
 
-#######################################################
-# Conky settings
-#######################################################
-background yes
-update_interval 2
+    use_xft = true,
+    font = '123:size=9',
+    xftalpha = 0.1,
 
-use_xft yes
-xftfont 123:size=9
-xftalpha 0.1
+    double_buffer = true,
+    no_buffers = true,
 
-double_buffer yes
-no_buffers no
+    override_utf8_locale = true,
+    text_buffer_size = 256,
 
-override_utf8_locale yes
-text_buffer_size 256
+    total_run_times = 0,
 
-total_run_times 0
+    draw_shades = false,
+    draw_outline = false,
+    draw_borders = false,
+    draw_graph_borders = false,
+    default_color = 'gray',
+    default_shade_color = 'red',
+    default_outline_color = 'green',
 
-draw_shades no
-draw_outline no
-draw_borders no
-draw_graph_borders no
-default_color gray
-default_shade_color red
-default_outline_color green
+    uppercase = false,
+    cpu_avg_samples = 2,
+    net_avg_samples = 1,
 
-uppercase no
-cpu_avg_samples 2
-net_avg_samples 1
+    use_spacer = 'right',
 
-use_spacer yes
+    -- Window settings
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'normal',
+    own_window_transparent = false,
+    own_window_argb_visual = true,
+    own_window_argb_value = 200,
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
 
-#######################################################
-# Windows
-#######################################################
-own_window_class Conky
-own_window yes
-own_window_type normal
-#Here set Transparency
-own_window_transparent no
-own_window_argb_visual yes
-own_window_argb_value 200
-own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+    -- Position settings
+    alignment = 'top_right',
+    gap_x = 5,
+    gap_y = 10,
+    minimum_width = 310,
+    minimum_height = 500,
+    maximum_width = 310,
 
-#######################################################
-# Set Position
-#######################################################
-alignment top_right
-gap_x 5
-gap_y 10
-minimum_size 310 500
-maximum_width 310
+    -- Colors
+    color1 = '#06BA07',
+    color2 = '#1081E0',
+};
 
-########################################################
-# Defining colors
-########################################################
-# Green
-color1 06BA07
-# Blue
-color2 1081E0
-
-#######################################################
-# Here starts all the content
-#######################################################
-TEXT
+conky.text = [[
 #######################################################
 # Time
 #######################################################
 #${font Arial:bold:size=10}${color Tan2}TIME ${color DarkSlateGray}${hr 2}
-${font Arial:bold:size=12}${color1}E2i ${color DarkSlateGray}${hr 2}${font}
+${font Arial:bold:size=12}${color1}Edu ${color DarkSlateGray}${hr 2}${font}
 
-${alignr}${image ~/.conky/conky_e2i/img/logo_white.png -p 145, 0 -s 160x85}
+${alignr}${image ~/.conky/conky_e2i/img/Logo_e2i_220x80.png -p 140, 42 -s 165x60}
 ${voffset -30}
 ${color white}${font :size=30}${time %H:%Mh}
 ${voffset -30}${font :bold:size=10}${goto 27}${time %d %b. %Y}
 ${font :bold:size=8}${goto 45}${time %A}
-#
+
 #${voffset -30}
 #${color white}${font :size=30}${alignc}${time %H:%Mh}
 #${voffset -30}${font :bold:size=10}${alignc}${time %d %b. %Y}
@@ -93,73 +77,83 @@ ${font :bold:size=8}${goto 45}${time %A}
 ${voffset -30}
 ${color DimGray}
 ${font Arial:bold:size=10}${color1}SYSTEM ${color DarkSlateGray} ${hr 2}
-$font${color DimGray}Device Name $alignr$nodename
-$sysname $kernel $alignr $machine
-${execi 1000 cat /proc/cpuinfo | grep 'model name' | sed -e 's/model name.*: //'| uniq | cut -c 1-26} $alignr${freq_g cpu0}Ghz
-Uptime $alignr${uptime}
+$font${color DimGray}Device Name $alignr${color white}$nodename
+${color DimGray}$sysname $kernel $alignr${color white}$machine
+${color DimGray}${execi 1000 cat /proc/cpuinfo | grep 'model name' | sed -e 's/model name.*: //'| uniq | cut -c 1-26} $alignr${color white}${freq_g cpu0}Ghz
+${color DimGray}Uptime $alignr${color white}${uptime}
+
+#######################################################
+# AI Models (Agy)
+#######################################################
+${font Arial:bold:size=10}${color1}AI MODELS (ANTIGRAVITY) ${color DarkSlateGray}${hr 2}
+$font${goto 2}${color DimGray}Gemini AI: ${goto 66}${color white}${execi 30 ~/.conky/scripts/agy_quota.py gemini_used} ${goto 94}${color2}${execbar 5, 52 ~/.conky/scripts/agy_quota.py gemini_bar} ${goto 154}${color DimGray}Claude: ${goto 197}${color white}${execi 30 ~/.conky/scripts/agy_quota.py claude_used} ${goto 226}${color2}${execbar 5, 82 ~/.conky/scripts/agy_quota.py claude_bar}
 
 #######################################################
 # Processors
 #######################################################
-${font Arial:bold:size=10}${color1}PROCESSORS ${color DarkSlateGray}${hr 2}
-${font}${color DimGray}${color DimGray}CPU1:${alignr}${if_match ${cpu cpu1} > 90}${color red}${else}$color${endif}${cpu cpu1}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu1 5, 235}
-${color DimGray}CPU2:${alignr}${if_match ${cpu cpu2} > 90}${color red}${else}$color${endif}${cpu cpu2}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu2 5, 235}
-${color DimGray}CPU3:${alignr}${if_match ${cpu cpu3} > 90}${color red}${else}$color${endif}${cpu cpu3}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu3 5, 235}
-${color DimGray}CPU4:${alignr}${if_match ${cpu cpu4} > 90}${color red}${else}$color${endif}${cpu cpu4}% ${if_match ${cpu cpu1} > 90}${color red}${else}${color2}${endif}${alignr}${cpubar cpu4 5, 235}
+${font Arial:bold:size=10}${color1}PROCESSORS ${font :size=9}${color DimGray}Temp: ${if_match ${execi 2 ~/.conky/scripts/hw_stats.sh cpu_temp} >= 80}${color red}${else}${color white}${endif}${execi 2 ~/.conky/scripts/hw_stats.sh cpu_temp}°C ${color DarkSlateGray}${hr 2}${font}
+${goto 2}${color DimGray}CPU 1: ${goto 45}${if_match ${cpu cpu1} > 90}${color red}${else}$color${endif}${cpu cpu1}% ${goto 74}${color2}${cpubar cpu1 5, 72} ${goto 154}${color DimGray}CPU 2: ${goto 197}${if_match ${cpu cpu2} > 90}${color red}${else}$color${endif}${cpu cpu2}% ${goto 226}${color2}${cpubar cpu2 5, 82}
+${goto 2}${color DimGray}CPU 3: ${goto 45}${if_match ${cpu cpu3} > 90}${color red}${else}$color${endif}${cpu cpu3}% ${goto 74}${color2}${cpubar cpu3 5, 72} ${goto 154}${color DimGray}CPU 4: ${goto 197}${if_match ${cpu cpu4} > 90}${color red}${else}$color${endif}${cpu cpu4}% ${goto 226}${color2}${cpubar cpu4 5, 82}
+${goto 2}${color DimGray}CPU 5: ${goto 45}${if_match ${cpu cpu5} > 90}${color red}${else}$color${endif}${cpu cpu5}% ${goto 74}${color2}${cpubar cpu5 5, 72} ${goto 154}${color DimGray}CPU 6: ${goto 197}${if_match ${cpu cpu6} > 90}${color red}${else}$color${endif}${cpu cpu6}% ${goto 226}${color2}${cpubar cpu6 5, 82}
+${goto 2}${color DimGray}CPU 7: ${goto 45}${if_match ${cpu cpu7} > 90}${color red}${else}$color${endif}${cpu cpu7}% ${goto 74}${color2}${cpubar cpu7 5, 72} ${goto 154}${color DimGray}CPU 8: ${goto 197}${if_match ${cpu cpu8} > 90}${color red}${else}$color${endif}${cpu cpu8}% ${goto 226}${color2}${cpubar cpu8 5, 82}
+${goto 2}${color DimGray}CPU 9: ${goto 45}${if_match ${cpu cpu9} > 90}${color red}${else}$color${endif}${cpu cpu9}% ${goto 74}${color2}${cpubar cpu9 5, 72} ${goto 154}${color DimGray}CPU10: ${goto 197}${if_match ${cpu cpu10} > 90}${color red}${else}$color${endif}${cpu cpu10}% ${goto 226}${color2}${cpubar cpu10 5, 82}
+${goto 2}${color DimGray}CPU11: ${goto 45}${if_match ${cpu cpu11} > 90}${color red}${else}$color${endif}${cpu cpu11}% ${goto 74}${color2}${cpubar cpu11 5, 72} ${goto 154}${color DimGray}CPU12: ${goto 197}${if_match ${cpu cpu12} > 90}${color red}${else}$color${endif}${cpu cpu12}% ${goto 226}${color2}${cpubar cpu12 5, 82}
+${goto 2}${color DimGray}CPU13: ${goto 45}${if_match ${cpu cpu13} > 90}${color red}${else}$color${endif}${cpu cpu13}% ${goto 74}${color2}${cpubar cpu13 5, 72} ${goto 154}${color DimGray}CPU14: ${goto 197}${if_match ${cpu cpu14} > 90}${color red}${else}$color${endif}${cpu cpu14}% ${goto 226}${color2}${cpubar cpu14 5, 82}
+${goto 2}${color DimGray}CPU15: ${goto 45}${if_match ${cpu cpu15} > 90}${color red}${else}$color${endif}${cpu cpu15}% ${goto 74}${color2}${cpubar cpu15 5, 72} ${goto 154}${color DimGray}CPU16: ${goto 197}${if_match ${cpu cpu16} > 90}${color red}${else}$color${endif}${cpu cpu16}% ${goto 226}${color2}${cpubar cpu16 5, 82}
 
 #######################################################
 # Memory  RAM
 #######################################################
 ${font Arial:bold:size=10}${color1}RAM MEMORY ${color DarkSlateGray}${hr 2}
-$font${color DimGray}MEM $alignc $mem / $memmax $alignr ${color white}$memperc%
+$font${color DimGray}MEM $alignc $mem / $memmax $alignr ${if_match $memperc >= 90}${color red}${else}${color white}${endif}$memperc%
 ${color2}$membar
-
 ${color DimGray}Swap: ${alignr}$swap / $swapmax - ${color white}$swapperc% ${alignr}${color2}${swapbar 5,120}
-#${color DimGray}Processes: ${alignr}$processes
-#${color grey}Running: ${alignr}$running_processes
 
 #######################################################
 # Video
 #######################################################
 ${font Arial:bold:size=10}${color1}VIDEO ${color DarkSlateGray}${hr 2}
-$font${color DimGray}${nvidia modelname} ${alignr}${color white}${nvidia gpuutil}% ${color2}${nvidiabar 5,120 gpuutil}
-${color DimGray}GPU Frecuency $alignr ${nvidia gpufreq} Mhz
-GPU Memory ${alignr} ${nvidia membwutil}%
-Temperature $alignr ${nvidia temp} °C
+$font${color DimGray}${execi 3600 ~/.conky/scripts/nvidia_stats.sh name} ${alignr}${color white}${execi 2 ~/.conky/scripts/nvidia_stats.sh util}% ${color2}${execbar 5,120 ~/.conky/scripts/nvidia_stats.sh util}
+${color DimGray}Frequency: ${color white}${execi 2 ~/.conky/scripts/nvidia_stats.sh freq} MHz ${alignr}${color DimGray}Power: ${color white}${execi 2 ~/.conky/scripts/nvidia_stats.sh power} W
+${color DimGray}Memory: ${color white}${execi 2 ~/.conky/scripts/nvidia_stats.sh mem}% ${alignr}${color DimGray}VRAM: ${color white}${execi 2 ~/.conky/scripts/nvidia_stats.sh mem_used} / ${execi 3600 ~/.conky/scripts/nvidia_stats.sh mem_total} MB
+${color DimGray}Temperature: ${if_match ${execi 2 ~/.conky/scripts/nvidia_stats.sh temp} >= 80}${color red}${else}${color white}${endif}${execi 2 ~/.conky/scripts/nvidia_stats.sh temp} °C ${alignr}${color DimGray}Fan: ${color white}${execi 2 ~/.conky/scripts/nvidia_stats.sh fan}%
 #VIDEO ${nvidia videoutil}%
 #PCIe ${nvidia pcieutil}%
 
 #######################################################
 # HDD
 #######################################################
-${font Arial:bold:size=10}${color1}HDD ${color DarkSlateGray}${hr 2}
-$font${color DimGray}/home $alignc ${fs_used /home} / ${fs_size /home} $alignr${color white}${fs_used_perc /home}%
+${font Arial:bold:size=10}${color1}HDD ${font :size=9}${color DimGray}NVMe: ${if_match ${execi 5 ~/.conky/scripts/hw_stats.sh nvme_temp} >= 60}${color red}${else}${color white}${endif}${execi 5 ~/.conky/scripts/hw_stats.sh nvme_temp}°C ${color DarkSlateGray}${hr 2}${font}
+$font${color DimGray}/home $alignc ${fs_used /home} / ${fs_size /home} $alignr${if_match ${fs_used_perc /home} >= 90}${color red}${else}${color white}${endif}${fs_used_perc /home}%
 ${color2}${fs_bar /home}
 
 #######################################################
 # Top Process
 #######################################################
-${font Arial:bold:size=10}${color1}TOP PROCESSES ${color DarkSlateGray}${hr 2}
+${font Arial:bold:size=10}${color1}TOP PROCESSES (CPU) ${color DarkSlateGray}${hr 2}
 ${color white}${font}Name ${alignr}PID               CPU%           MEM%
-${color DimGray}$font${top_mem name 1}${alignr}${top pid 1}          ${top cpu 1}%         ${top mem 1}%
-$font${top_mem name 2}${alignr}${top pid 2}          ${top cpu 2}%         ${top mem 2}%
-$font${top_mem name 3}${alignr}${top pid 3}          ${top cpu 3}%         ${top mem 3}%
-$font${top_mem name 4}${alignr}${top pid 4}          ${top cpu 4}%         ${top mem 4}%
-#$font${top_mem name 5}${alignr}${top pid 5}               ${top cpu 5}          ${top mem 5}%
-#$font${top_mem name 6}${alignr}${top pid 6}               ${top cpu 6}          ${top mem 6}%
-#$font${top_mem name 7}${alignr}${top pid 7}               ${top cpu 7}          ${top mem 7}%
-#$font${top_mem name 8}${alignr}${top pid 8}               ${top cpu 8}          ${top mem 8}%
+${color DimGray}$font${top name 1}${alignr}${top pid 1}          ${top cpu 1}%         ${top mem 1}%
+$font${top name 2}${alignr}${top pid 2}          ${top cpu 2}%         ${top mem 2}%
+$font${top name 3}${alignr}${top pid 3}          ${top cpu 3}%         ${top mem 3}%
+$font${top name 4}${alignr}${top pid 4}          ${top cpu 4}%         ${top mem 4}%
+
+${font Arial:bold:size=10}${color1}TOP PROCESSES (MEM) ${color DarkSlateGray}${hr 2}
+${color white}${font}Name ${alignr}PID               CPU%           MEM%
+${color DimGray}$font${top_mem name 1}${alignr}${top_mem pid 1}          ${top_mem cpu 1}%         ${top_mem mem 1}%
+$font${top_mem name 2}${alignr}${top_mem pid 2}          ${top_mem cpu 2}%         ${top_mem mem 2}%
+$font${top_mem name 3}${alignr}${top_mem pid 3}          ${top_mem cpu 3}%         ${top_mem mem 3}%
+$font${top_mem name 4}${alignr}${top_mem pid 4}          ${top_mem cpu 4}%         ${top_mem mem 4}%
 
 #######################################################
 # Network
 #######################################################
 ${font Arial:bold:size=10}${color1}NETWORK ${color DarkSlateGray}${hr 2}
-$font${color DimGray}External IP  $alignr ${color white}${execi 1000  wget -q -O- http://ipecho.net/plain; echo}
-$font${color DimGray}Local IP $alignr ${addr wlp3s0}
-Down $alignr ${downspeed wlp3s0} kb/s
-Up $alignr ${upspeed wlp3s0} kb/s
-Downloaded: $alignr  ${totaldown wlp3s0}
-Uploaded: $alignr  ${totalup wlp3s0}
+$font${color DimGray}External IP  $alignr ${color white}${execi 1000 wget -q -O- https://api.ipify.org?format=plain; echo;}
+${if_existing /sys/class/net/enp6s0/carrier 1}$font${color DimGray}Local IP (ETH) $alignr ${color white}${addr enp6s0}
+${color DimGray}Down: ${color white}${downspeed enp6s0}${alignr}${color white}${upspeed enp6s0} ${color DimGray}Up
+${color DimGray}Downloaded: ${color white}${totaldown enp6s0}${alignr}${color white}${totalup enp6s0} ${color DimGray}Uploaded${else}$font${color DimGray}Local IP (WiFi) $alignr ${color white}${addr wlp7s0}
+${color DimGray}Down: ${color white}${downspeed wlp7s0}${alignr}${color white}${upspeed wlp7s0} ${color DimGray}Up
+${color DimGray}Downloaded: ${color white}${totaldown wlp7s0}${alignr}${color white}${totalup wlp7s0} ${color DimGray}Uploaded${endif}
 
 #Weather
 #${font Arial:bold:size=10}${color Tan2}WEATHER ${color DarkSlateGray}${hr 2}
@@ -173,3 +167,4 @@ Uploaded: $alignr  ${totalup wlp3s0}
 
 #${color DimGray}Sunrise: $alignr${execi 1800 conkyForecast –location=BEXX0008 –datatype=SR}${alignr}
 #Sunset: $alignr${execi 1800 conkyForecast –location=BEXX0008 –datatype=SS}$color
+]];
